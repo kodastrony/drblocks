@@ -28,7 +28,7 @@ export function Block3DViewerIsland() {
     >
       <div className="bg-grid-dark absolute inset-0 opacity-40" aria-hidden />
       <Image
-        src={asset("/assets/STANDARD-983x1024-1.png")}
+        src={asset("/assets/STANDARD-983x1024-1.webp")}
         alt="Regulowany bloczek fundamentowy DrBlocks Standard Block"
         fill
         sizes="(max-width: 1024px) 100vw, 50vw"

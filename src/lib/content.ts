@@ -123,7 +123,7 @@ export const products: Product[] = [
     short: "Podstawowy bloczek fundamentowy z regulacją wysokości do 55 mm. Solidna podstawa dla każdej konstrukcji.",
     intro:
       "Standard Block to solidny, precyzyjny i łatwy w montażu bloczek betonowy zaprojektowany dla budownictwa modułowego. Betonowy korpus klasy B30 oraz stalowa nakładka z gwintem regulacyjnym umożliwiają precyzyjne ustawienie wysokości posadowienia z dokładnością do 1 mm. Dzięki temu idealnie dopasujesz fundament do warunków terenowych – bez wylewki betonowej, bez mokrych robót.",
-    image: "/assets/STANDARD-983x1024-1.png",
+    image: "/assets/STANDARD-983x1024-1.webp",
     specs: baseSpecs,
     closer: {
       heading: "Zbuduj fundament bez kompromisów",
@@ -139,7 +139,7 @@ export const products: Product[] = [
     short: "Z magnetycznymi chwytakami do montażu obróbki dolnej. Funkcjonalność i estetyka w jednym.",
     intro:
       "Standard Plus Block to zaawansowana wersja bloczka z magnetycznymi chwytakami do montażu obróbki dolnej – elementu wykończeniowego zamykającego przestrzeń między budynkiem modułowym a gruntem. Łączy pełną funkcjonalność systemu DrBlocks z szybkim i precyzyjnym, estetycznym wykończeniem.",
-    image: "/assets/STANDARD-PLUS-1966x2048-1.png",
+    image: "/assets/STANDARD-PLUS-1966x2048-1.webp",
     specs: [...baseSpecs, { k: "Chwytaki magnetyczne", v: "Tak – do montażu obróbki dolnej", highlight: true }],
     closer: {
       heading: "Więcej niż fundament – wykończenie na najwyższym poziomie",
@@ -159,7 +159,7 @@ export const about = {
     "Fundamenty pod lekkie konstrukcje modułowe często traktowane są zbyt powierzchownie. Prowadzi to do nierównomiernego osiadania budynku, trudności z otwieraniem okien i drzwi oraz kosztownych napraw.",
     "Dlatego stworzyliśmy system, który daje precyzyjne, stabilne i trwałe posadowienie – bez prac mokrych, bez tygodni oczekiwania, bez kompromisów.",
   ],
-  images: ["/assets/grafika1.png"],
+  images: ["/assets/grafika1.webp"],
 };
 
 export const faq = {
