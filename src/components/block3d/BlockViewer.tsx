@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useState, useRef, useEffect, useCallback, useMemo } from "react";
+import type { CSSProperties } from "react";
 import * as THREE from "three";
 import { Canvas, useThree } from "@react-three/fiber";
 import {
@@ -16,12 +17,106 @@ import { ToneMappingMode } from "postprocessing";
 import { useReducedMotion } from "framer-motion";
 import { BlockModel, type Variant } from "./BlockModel";
 
-function Annotation({ position, label }: { position: [number, number, number]; label: string }) {
+/* =========================================================================
+   ETYKIETY — zakotwiczone, „matowoszklane" callouty (HUD).
+   Jeden drei <Html> na etykietę, ZACZEPIONY w dokładnym punkcie części:
+     • turkusowa kropka-celownik z poświatą leży NA części (sztywno przy auto-obrocie),
+     • cienki turkusowy łącznik (1px) wychodzi w PUSTĄ przestrzeń (−X / +Z),
+     • matowoszklana „pigułka" Oswald (ta sama rodzina co czipy w viewerze) na końcu.
+   BLISŻSZA krawędź pigułki kotwi się do końca łącznika → długie polskie etykiety
+   zawsze wychodzą NA ZEWNĄTRZ i nigdy nie przecinają sylwetki modelu.
+   pointerEvents:none · jeden węzeł (piksel-w-piksel złączenie) · brak stanu per-klatka
+   · brak occlude · TYLKO turkus (magenta zarezerwowana dla hero).
+   ========================================================================= */
+type Place =
+  | "left" | "left-up" | "left-down"
+  | "right" | "right-up" | "right-down"
+  | "up" | "down";
+
+// przesunięcie BLISKIEJ krawędzi pigułki względem kropki (px ekranu) + wyrównanie pigułki
+const PLACE: Record<Place, { dx: number; dy: number; tx: string }> = {
+  "left":       { dx: -58, dy:   0, tx: "translate(-100%, -50%)" },
+  "left-up":    { dx: -52, dy: -28, tx: "translate(-100%, -50%)" },
+  "left-down":  { dx: -52, dy:  28, tx: "translate(-100%, -50%)" },
+  "right":      { dx:  58, dy:   0, tx: "translate(0, -50%)" },
+  "right-up":   { dx:  52, dy: -28, tx: "translate(0, -50%)" },
+  "right-down": { dx:  52, dy:  28, tx: "translate(0, -50%)" },
+  "up":         { dx:   0, dy: -46, tx: "translate(-50%, -100%)" },
+  "down":       { dx:   0, dy:  46, tx: "translate(-50%, 0)" },
+};
+
+function Annotation({
+  anchor,
+  label,
+  sub,
+  place = "left",
+  compact = false,
+}: {
+  anchor: [number, number, number];
+  label: string;
+  sub?: string;
+  place?: Place;
+  compact?: boolean;
+}) {
+  const base = PLACE[place];
+  // na wąskim ekranie skracamy odsadzenie, żeby pigułki nie wychodziły poza płótno
+  const k = compact ? 0.62 : 1;
+  const dx = base.dx * k;
+  const dy = base.dy * k;
+  const len = Math.hypot(dx, dy);
+  const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
+
+  // łącznik: cienka linia od kropki (0,0) do bliskiej krawędzi pigułki (dx,dy)
+  const stemStyle: CSSProperties = {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    width: len,
+    height: 1,
+    transformOrigin: "0 0",
+    transform: `rotate(${angle}deg)`,
+    background:
+      "linear-gradient(to right, rgba(45,189,176,0) 0%, rgba(45,189,176,0.85) 28%, rgba(45,189,176,0.85) 100%)",
+  };
+  const tagStyle: CSSProperties = { position: "absolute", left: dx, top: dy, transform: base.tx };
+
   return (
-    <Html position={position} center zIndexRange={[20, 0]} style={{ pointerEvents: "none" }}>
-      <div className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-white/15 bg-navy/90 px-2 py-0.5 font-oswald text-[9px] font-semibold uppercase tracking-wider text-white shadow-lg">
-        <span className="size-1 rounded-full bg-teal" />
-        {label}
+    <Html position={anchor} zIndexRange={[20, 0]} style={{ pointerEvents: "none" }}>
+      <div className="relative select-none" style={{ width: 0, height: 0 }}>
+        {/* łącznik (pod kropką i pigułką) */}
+        <span aria-hidden style={stemStyle} />
+        {/* kropka-celownik — wyśrodkowana na dokładnym punkcie części (0,0) */}
+        <span aria-hidden className="absolute left-0 top-0 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal/25 blur-[2px]" />
+        <span aria-hidden className="absolute left-0 top-0 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full ring-1 ring-teal/50" />
+        <span
+          aria-hidden
+          className="absolute left-0 top-0 size-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal"
+          style={{ boxShadow: "0 0 6px 1px rgba(45,189,176,0.85)" }}
+        />
+        {/* matowoszklana pigułka — ta sama rodzina co czipy w viewerze */}
+        <div style={tagStyle}>
+          <div
+            className={`flex items-center gap-1.5 bg-ink/75 shadow-lg ring-1 ring-white/10 backdrop-blur-md ${
+              compact ? "max-w-[7rem] whitespace-normal rounded-2xl px-2 py-1" : "whitespace-nowrap rounded-full px-2.5 py-1"
+            }`}
+          >
+            <span className="size-1 shrink-0 rounded-full bg-teal" style={{ boxShadow: "0 0 5px rgba(45,189,176,0.85)" }} />
+            <span className="flex flex-col leading-tight">
+              <span
+                className={`font-oswald font-semibold uppercase tracking-[0.14em] text-white/85 ${
+                  compact ? "text-[8px]" : "text-[9px]"
+                }`}
+              >
+                {label}
+              </span>
+              {sub && (
+                <span className="mt-0.5 font-oswald text-[8px] font-semibold uppercase tracking-[0.12em] tabular text-teal/90">
+                  {sub}
+                </span>
+              )}
+            </span>
+          </div>
+        </div>
       </div>
     </Html>
   );
@@ -68,6 +163,9 @@ function Scene({
   grout: boolean;
 }) {
   const reduce = useReducedMotion();
+  // szerokość płótna → kompaktowe etykiety na wąskich (mobilnych) ekranach
+  const canvasW = useThree((s) => s.size.width);
+  const compact = canvasW > 0 && canvasW < 520;
   // auto-obrót: domyślnie WYŁ., włącza się sam po krótkiej bezczynności,
   // gaśnie gdy użytkownik chwyta model.
   const [auto, setAuto] = useState(false);
@@ -107,15 +205,48 @@ function Scene({
 
       <group position={[0, 0.05, 0]}>
         <BlockModel variant={variant} liftMm={liftMm} grout={grout} />
-        {showLabels && (
-          <>
-            <Annotation position={[1.25, -0.28, 0.5]} label="Korpus betonowy B30" />
-            <Annotation position={[0, 0.84, 0]} label="Stalowa stopa regulacyjna" />
-            <Annotation position={[0.7, 0.42, 1.85]} label="Śruby M16 (4×)" />
-            <Annotation position={[1.25, 0.45, -0.3]} label="Regulacja 0–55 mm" />
-            {variant === "plus" && <Annotation position={[-1.15, 1.25, 1.55]} label="Chwytak magnetyczny" />}
-          </>
-        )}
+        {showLabels && (() => {
+          // lift w jednostkach modelu (jak w BlockModel: (liftMm/55)·maxLift, maxLift=0.5)
+          const lift = (liftMm / 55) * 0.5;
+          /* TABELA ZACZEPÓW (układ lokalny modelu; grupa już +0.05 w Y).
+             Kamera widzi DŁUGIE lico −X (przód, nakrętki SZEŚCIOKĄTNE) + krótki koniec +Z,
+             więc wszystkie zaczepy mają x≤0 i/lub z≥0 i wychodzą NA ZEWNĄTRZ.
+             ─────────────────────────────────────────────────────────────────────────────
+             etykieta                    zaczep (x, y, z)              kier.       lift
+             ─────────────────────────────────────────────────────────────────────────────
+             Korpus betonowy B30         (-0.95, -0.22, 1.00)         down        — (statyczny beton)
+             Stalowa stopa regulacyjna   (-0.98, 0.72+lift, 0.50)     up          +lift (rośnie z czapą)
+             Śruby M16 (4×)              (-1.24, 0.32, 0.60)          left-down   — (zakotwione, Y stały)
+             Regulacja 0–55 mm           (-0.50, 0.60+lift/2, 1.50)   right-up    +lift/2 (rozwierana szpara)
+             Chwytak magnetyczny (plus)  (-1.50, 0.46+lift, 0.00)     left        +lift
+             Podlewka cementowa (grout)  (-0.30, 0.60+lift/2, 1.50)   right-down  +lift/2
+             ───────────────────────────────────────────────────────────────────────────── */
+          return (
+            <>
+              <Annotation anchor={[-0.95, -0.22, 1.0]} label="Korpus betonowy B30" place="down" compact={compact} />
+              <Annotation anchor={[-0.98, 0.72 + lift, 0.5]} label="Stalowa stopa regulacyjna" place="up" compact={compact} />
+              <Annotation anchor={[-1.24, 0.32, 0.6]} label="Śruby M16 (4×)" place="left-down" compact={compact} />
+              <Annotation
+                anchor={[-0.5, 0.6 + lift / 2, 1.5]}
+                label="Regulacja 0–55 mm"
+                sub={`${liftMm} mm`}
+                place={compact ? "up" : "right-up"}
+                compact={compact}
+              />
+              {variant === "plus" && (
+                <Annotation
+                  anchor={[-1.5, 0.46 + lift, 0]}
+                  label="Chwytak magnetyczny"
+                  place={compact ? "right" : "left"}
+                  compact={compact}
+                />
+              )}
+              {grout && lift > 0.001 && (
+                <Annotation anchor={[-0.3, 0.6 + lift / 2, 1.5]} label="Podlewka cementowa" place={compact ? "down" : "right-down"} compact={compact} />
+              )}
+            </>
+          );
+        })()}
       </group>
 
       <ContactShadows
@@ -145,7 +276,7 @@ function Scene({
         dampingFactor={0.09}
         rotateSpeed={0.55}
         zoomSpeed={0.7}
-        autoRotate={auto}
+        autoRotate={auto && !showLabels}
         autoRotateSpeed={0.5}
         minDistance={3.2}
         maxDistance={7.5}
