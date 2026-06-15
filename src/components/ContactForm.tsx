@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+import Link from "next/link";
 import { company } from "@/lib/content";
 import { Check, ArrowRight, Phone } from "@/components/Icons";
 
@@ -13,6 +14,27 @@ type Status = "idle" | "submitting" | "sent" | "error";
 export function ContactForm({ defaultMessage = "" }: { defaultMessage?: string }) {
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<Errors>({});
+  const [prefill, setPrefill] = useState(defaultMessage);
+
+  // Prefill from calculator/product links (?wymiary&bloczki&produkt) on the
+  // client — works on a static site with no server.
+  useEffect(() => {
+    if (defaultMessage) return;
+    const sp = new URLSearchParams(window.location.search);
+    const wymiary = sp.get("wymiary") || "";
+    const bloczki = sp.get("bloczki") || "";
+    const produkt = sp.get("produkt") || "";
+    const zastosowanie = sp.get("zastosowanie") || "";
+    const parts: string[] = [];
+    if (produkt) parts.push(`Interesuje mnie produkt: ${produkt}.`);
+    if (wymiary || bloczki || zastosowanie)
+      parts.push(
+        `Proszę o wycenę fundamentu${zastosowanie ? ` (${zastosowanie})` : ""}${
+          wymiary ? ` o wymiarach ${wymiary}` : ""
+        }${bloczki ? ` (orientacyjnie ${bloczki} bloczków wg kalkulatora)` : ""}.`,
+      );
+    if (parts.length) setPrefill(`Dzień dobry, ${parts.join(" ")} Proszę o kontakt.`);
+  }, [defaultMessage]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -43,13 +65,22 @@ export function ContactForm({ defaultMessage = "" }: { defaultMessage?: string }
     }
 
     setStatus("submitting");
+    // Static site (no backend): open the visitor's mail client with a
+    // prefilled message to our sales address.
     try {
-      const res = await fetch("/api/kontakt", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, message }),
-      });
-      if (!res.ok) throw new Error("send failed");
+      const subject = `Zapytanie ze strony DrBlocks – ${name}`;
+      const body = [
+        `Imię i nazwisko: ${name}`,
+        `E-mail: ${email}`,
+        phone ? `Telefon: ${phone}` : null,
+        "",
+        message,
+      ]
+        .filter((l) => l !== null)
+        .join("\n");
+      window.location.href = `mailto:${company.emailSales}?subject=${encodeURIComponent(
+        subject,
+      )}&body=${encodeURIComponent(body)}`;
       setStatus("sent");
     } catch {
       setStatus("error");
@@ -92,7 +123,7 @@ export function ContactForm({ defaultMessage = "" }: { defaultMessage?: string }
         </div>
 
         <Field id="message" label="Wiadomość" required error={errors.message}>
-          <textarea id="message" name="message" rows={5} defaultValue={defaultMessage} className={`${inputCls} resize-y`} placeholder="Opisz projekt: typ obiektu, wymiary, termin…" aria-invalid={!!errors.message} aria-describedby={errors.message ? "message-err" : undefined} />
+          <textarea key={prefill} id="message" name="message" rows={5} defaultValue={prefill} className={`${inputCls} resize-y`} placeholder="Opisz projekt: typ obiektu, wymiary, termin…" aria-invalid={!!errors.message} aria-describedby={errors.message ? "message-err" : undefined} />
         </Field>
 
         {/* honeypot – ukryte pole anty-spam */}
@@ -109,9 +140,9 @@ export function ContactForm({ defaultMessage = "" }: { defaultMessage?: string }
             <span>
               Wyrażam zgodę na przetwarzanie moich danych osobowych przez {company.legal} w celu
               obsługi zapytania, zgodnie z{" "}
-              <a href="/polityka-prywatnosci" className="text-teal-800 underline">
+              <Link href="/polityka-prywatnosci" className="text-teal-800 underline">
                 polityką prywatności
-              </a>
+              </Link>
               . <span className="text-teal-800">*</span>
             </span>
           </label>

@@ -13,25 +13,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/kontakt" },
 };
 
-export default async function KontaktPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ [k: string]: string | string[] | undefined }>;
-}) {
-  const sp = await searchParams;
-  const wymiary = typeof sp.wymiary === "string" ? sp.wymiary : "";
-  const bloczki = typeof sp.bloczki === "string" ? sp.bloczki : "";
-  const produkt = typeof sp.produkt === "string" ? sp.produkt : "";
-  const parts: string[] = [];
-  if (produkt) parts.push(`Interesuje mnie produkt: ${produkt}.`);
-  if (wymiary || bloczki)
-    parts.push(
-      `Proszę o wycenę fundamentu${wymiary ? ` o wymiarach ${wymiary}` : ""}${
-        bloczki ? ` (orientacyjnie ${bloczki} bloczków wg kalkulatora)` : ""
-      }.`,
-    );
-  const defaultMessage = parts.length > 0 ? `Dzień dobry, ${parts.join(" ")} Proszę o kontakt.` : "";
-
+export default function KontaktPage() {
   const contacts = [
     { icon: Phone, label: "Telefon", value: company.phone, href: company.phoneHref },
     { icon: Mail, label: "Sprzedaż", value: company.emailSales, href: `mailto:${company.emailSales}` },
@@ -86,7 +68,7 @@ export default async function KontaktPage({
           </Reveal>
 
           <Reveal delay={0.08}>
-            <ContactForm defaultMessage={defaultMessage} />
+            <ContactForm />
           </Reveal>
         </Container>
       </section>

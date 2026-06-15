@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 import { products, blog } from "@/lib/content";
 
+// allow generation under `output: export`
+export const dynamic = "force-static";
+
 const BASE = "https://drblocks.pl";
 
 export default function sitemap(): MetadataRoute.Sitemap {
