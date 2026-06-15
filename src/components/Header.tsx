@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import clsx from "clsx";
 import { nav, company } from "@/lib/content";
+import { asset } from "@/lib/asset";
 import { Phone, ChevronDown, Menu, Close } from "@/components/Icons";
 
 export function Header() {
@@ -81,7 +82,7 @@ export function Header() {
       <div className="mx-auto flex h-[68px] max-w-[1200px] items-center justify-between px-5 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center" aria-label="DrBlocks – strona główna">
           <Image
-            src="/assets/logo-dark.png"
+            src={asset("/assets/logo-dark.png")}
             alt="DrBlocks"
             width={180}
             height={33}
@@ -203,7 +204,7 @@ export function Header() {
           >
             <div className="flex h-[68px] items-center justify-between px-5">
               <Image
-                src="/assets/logo-light.png"
+                src={asset("/assets/logo-light.png")}
                 alt="DrBlocks"
                 width={180}
                 height={33}

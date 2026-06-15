@@ -2,10 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
-
-// <video>/<source> aren't auto-prefixed by Next basePath; prefix for the
-// GitHub Pages subpath deploy.
-const ASSET_PREFIX = process.env.NEXT_PUBLIC_BASE_PATH || "";
+import { asset } from "@/lib/asset";
 
 function PlayIcon({ className }: { className?: string }) {
   return (
@@ -121,7 +118,7 @@ export function VideoPlayer({
       <video
         ref={videoRef}
         className="h-full w-full object-cover"
-        poster={ASSET_PREFIX + poster}
+        poster={asset(poster)}
         preload="metadata"
         autoPlay
         playsInline
@@ -133,7 +130,7 @@ export function VideoPlayer({
         onLoadedData={() => setReady(true)}
         aria-label={label ?? "Film DrBlocks"}
       >
-        <source src={ASSET_PREFIX + src} type="video/mp4" />
+        <source src={asset(src)} type="video/mp4" />
       </video>
 
       {/* soft gradient for control legibility */}

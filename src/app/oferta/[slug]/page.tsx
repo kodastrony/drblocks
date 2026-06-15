@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { ProductCard } from "@/components/ProductCard";
 import { Check, Phone } from "@/components/Icons";
 import { products, company } from "@/lib/content";
+import { asset } from "@/lib/asset";
 
 export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
@@ -71,7 +72,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 </span>
               )}
               <Image
-                src={p.image}
+                src={asset(p.image)}
                 alt={p.name}
                 fill
                 priority

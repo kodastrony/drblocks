@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "@/components/Icons";
+import { asset } from "@/lib/asset";
 import type { Product } from "@/lib/content";
 
 export function ProductCard({ p }: { p: Product }) {
@@ -17,7 +18,7 @@ export function ProductCard({ p }: { p: Product }) {
           </span>
         )}
         <Image
-          src={p.image}
+          src={asset(p.image)}
           alt={p.name}
           fill
           sizes="(max-width: 768px) 100vw, 33vw"

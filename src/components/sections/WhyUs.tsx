@@ -3,6 +3,7 @@ import { Container } from "@/components/ui/Container";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { benefits } from "@/lib/content";
+import { asset } from "@/lib/asset";
 
 export function WhyUs() {
   return (
@@ -23,7 +24,7 @@ export function WhyUs() {
               <div className="group flex h-full flex-col items-center rounded-2xl border border-line bg-white p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:border-teal/40 hover:shadow-[var(--shadow-card)]">
                 <div className="relative size-20 transition-transform duration-300 group-hover:scale-105">
                   <Image
-                    src={b.img}
+                    src={asset(b.img)}
                     alt=""
                     fill
                     sizes="80px"

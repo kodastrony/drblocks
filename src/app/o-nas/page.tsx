@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { about, hero } from "@/lib/content";
+import { asset } from "@/lib/asset";
 
 export const metadata: Metadata = {
   title: "O nas – producent regulowanych bloczków fundamentowych",
@@ -36,7 +37,7 @@ export default function ONasPage() {
             <div className="relative aspect-square overflow-hidden rounded-3xl border border-line bg-mist">
               <div className="bg-grid absolute inset-0 opacity-60" aria-hidden />
               <Image
-                src={about.images[0]}
+                src={asset(about.images[0])}
                 alt="DrBlocks – regulowany bloczek fundamentowy"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"

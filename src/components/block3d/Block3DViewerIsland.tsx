@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import Image from "next/image";
+import { asset } from "@/lib/asset";
 
 const BlockViewer = dynamic(() => import("@/components/block3d/BlockViewer"), {
   ssr: false,
@@ -27,7 +28,7 @@ export function Block3DViewerIsland() {
     >
       <div className="bg-grid-dark absolute inset-0 opacity-40" aria-hidden />
       <Image
-        src="/assets/STANDARD-983x1024-1.png"
+        src={asset("/assets/STANDARD-983x1024-1.png")}
         alt="Regulowany bloczek fundamentowy DrBlocks Standard Block"
         fill
         sizes="(max-width: 1024px) 100vw, 50vw"
