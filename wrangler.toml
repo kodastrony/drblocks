@@ -1,0 +1,6 @@
+# Cloudflare Pages — DrBlocks (Next.js static export, served at ROOT)
+# The static `out/` folder is a fully pre-rendered site (output: 'export'),
+# so Cloudflare Pages just serves it — no Functions/Workers runtime needed.
+name = "drblocks"
+pages_build_output_dir = "out"
+compatibility_date = "2024-11-01"

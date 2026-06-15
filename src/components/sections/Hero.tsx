@@ -24,25 +24,27 @@ export function Hero() {
         className="pointer-events-none absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full bg-teal-50 blur-3xl"
         aria-hidden
       />
-      <Container className="relative grid items-center gap-12 py-16 lg:grid-cols-[0.88fr_1.12fr] lg:py-24">
-        <div>
-          <motion.div {...rise(0)}>
+
+      <Container className="relative py-14 lg:py-20">
+        {/* 1 — headline + CTAs, centered above the film */}
+        <div className="mx-auto max-w-3xl text-center">
+          <motion.div {...rise(0)} className="flex justify-center">
             <SectionLabel>{hero.eyebrow}</SectionLabel>
           </motion.div>
           <motion.h1
             {...rise(0.08)}
-            className="mt-6 text-balance text-[2.6rem] leading-[1.04] tracking-tight sm:text-6xl"
+            className="mt-5 text-balance text-[2.4rem] leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.4rem]"
           >
             {hero.title}
             <span className="mt-1 block text-teal-700">{hero.titleAccent}</span>
           </motion.h1>
           <motion.p
             {...rise(0.16)}
-            className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-steel"
+            className="mx-auto mt-5 max-w-xl text-pretty text-lg leading-relaxed text-steel"
           >
             {hero.subtitle}
           </motion.p>
-          <motion.div {...rise(0.24)} className="mt-8 flex flex-wrap gap-3">
+          <motion.div {...rise(0.24)} className="mt-7 flex flex-wrap justify-center gap-3">
             <Button href={hero.primaryCta.href} variant="primary" size="lg" arrow>
               {hero.primaryCta.label}
             </Button>
@@ -50,51 +52,48 @@ export function Hero() {
               {hero.secondaryCta.label}
             </Button>
           </motion.div>
-
-          <motion.dl {...rise(0.34)} className="mt-12 grid max-w-xl grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-4 sm:gap-3">
-            {hero.stats.map((s) => (
-              <div key={s.label} className="border-l-2 border-teal/60 pl-3">
-                <dt className="font-oswald text-xl font-bold tabular text-navy sm:text-2xl">
-                  {s.value}
-                </dt>
-                <dd className="mt-0.5 text-[11px] font-semibold uppercase tracking-wider text-mute">
-                  {s.label}
-                </dd>
-              </div>
-            ))}
-          </motion.dl>
         </div>
 
+        {/* 2 — the film: the centerpiece. Video fills the frame edge-to-edge. */}
         <motion.div
-          initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: 18 }}
+          initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.97, y: 16 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.2, ease }}
-          className="relative"
+          className="relative mx-auto mt-12 max-w-[1120px]"
         >
-          <div className="overflow-hidden rounded-2xl border border-line bg-navy shadow-[var(--shadow-lift)]">
-            <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-              <div className="flex items-center gap-2">
-                <span className="size-2.5 animate-pulse rounded-full bg-magenta" />
-                <span className="font-oswald text-xs font-semibold uppercase tracking-[0.18em] text-white/80">
-                  DrBlocks – trzyma poziom
-                </span>
-              </div>
-              <span className="font-oswald text-sm font-bold tracking-tight text-white">
-                Dr<span className="text-teal">·</span>BLOCKS
-              </span>
-            </div>
+          {/* ring-inset instead of border: the edge line sits ON the video (no
+              1px content inset, no rounded-corner background bleed) so the film
+              fills the frame exactly. */}
+          <div className="overflow-hidden rounded-2xl bg-white shadow-[var(--shadow-lift)] ring-1 ring-inset ring-line-strong">
             <VideoPlayer
-              src="/assets/drblocks-film.mp4"
-              poster="/assets/video-poster.jpg"
-              className="aspect-[1230/784]"
+              src="/assets/drblocks-film-clean.mp4"
+              poster="/assets/drblocks-film-poster.jpg"
+              label="Film produktowy DrBlocks – regulowany bloczek fundamentowy"
+              className="aspect-[1230/684]"
             />
           </div>
-          <div className="absolute -bottom-4 -left-4 hidden rounded-xl border border-line bg-white px-4 py-3 shadow-[var(--shadow-card)] sm:block">
-            <p className="font-oswald text-xs font-semibold uppercase tracking-wider text-teal-700">
-              Beton B30 · Stal · Regulacja
-            </p>
-          </div>
+          {/* subtle caption under the film */}
+          <p className="mt-3 text-center text-xs font-medium tracking-wide text-faint">
+            Beton B30 · Stal · Regulacja wysokości
+          </p>
         </motion.div>
+
+        {/* 3 — stats, joined under the film */}
+        <motion.dl
+          {...rise(0.34)}
+          className="mx-auto mt-10 grid max-w-[1120px] grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-4"
+        >
+          {hero.stats.map((s) => (
+            <div key={s.label} className="bg-paper px-5 py-4 text-center sm:text-left">
+              <dt className="font-oswald text-2xl font-bold tabular text-navy sm:text-3xl">
+                {s.value}
+              </dt>
+              <dd className="mt-1 text-[11px] font-semibold uppercase tracking-wider text-mute">
+                {s.label}
+              </dd>
+            </div>
+          ))}
+        </motion.dl>
       </Container>
     </section>
   );
