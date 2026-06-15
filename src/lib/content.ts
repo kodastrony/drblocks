@@ -110,7 +110,7 @@ const baseSpecs: Spec[] = [
   { k: "Zakres regulacji wysokości", v: "do 55 mm", highlight: true },
   { k: "Zakres wysokości posadowienia", v: "120–200 mm" },
   { k: "Precyzja regulacji", v: "do 1 mm", highlight: true },
-  { k: "Nośność", v: "1–2 t (bez podlewki), >2 t (z polewką cementową)", highlight: true },
+  { k: "Nośność", v: "1–2 t (bez podlewki), >2 t (z podlewką cementową)", highlight: true },
   { k: "Stopa regulacyjna", v: "Stal ocynkowana, 195 × 205 mm, grubość 5 mm" },
   { k: "Pręty gwintowane", v: "4× M16, klasa 8.8, z podkładkami i nakrętkami samokontrującymi" },
   { k: "Nakładka", v: "Stal 5 mm z przekładką izolacyjną" },

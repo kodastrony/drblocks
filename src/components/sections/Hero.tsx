@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { SectionLabel } from "@/components/ui/SectionLabel";
-import { YouTubeFacade } from "@/components/ui/YouTubeFacade";
+import { VideoPlayer } from "@/components/ui/VideoPlayer";
 import { hero } from "@/lib/content";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -24,7 +24,7 @@ export function Hero() {
         className="pointer-events-none absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full bg-teal-50 blur-3xl"
         aria-hidden
       />
-      <Container className="relative grid items-center gap-12 py-16 lg:grid-cols-[0.92fr_1.08fr] lg:py-24">
+      <Container className="relative grid items-center gap-12 py-16 lg:grid-cols-[0.88fr_1.12fr] lg:py-24">
         <div>
           <motion.div {...rise(0)}>
             <SectionLabel>{hero.eyebrow}</SectionLabel>
@@ -83,10 +83,10 @@ export function Hero() {
                 Dr<span className="text-teal">·</span>BLOCKS
               </span>
             </div>
-            <YouTubeFacade
-              id={hero.youtubeId}
-              title="DrBlocks – animacja montażu regulowanego bloczka fundamentowego"
-              poster="/assets/hero-poster.jpg"
+            <VideoPlayer
+              src="/assets/drblocks-film.mp4"
+              poster="/assets/video-poster.jpg"
+              className="aspect-[1230/784]"
             />
           </div>
           <div className="absolute -bottom-4 -left-4 hidden rounded-xl border border-line bg-white px-4 py-3 shadow-[var(--shadow-card)] sm:block">

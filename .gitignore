@@ -9,3 +9,6 @@ next-env.d.ts
 .DS_Store
 /_research/raw
 /_research/frames
+
+# temp video frame extraction (working artifacts)
+_vframes/

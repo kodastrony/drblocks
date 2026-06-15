@@ -19,7 +19,7 @@ export function TrustBar() {
                 src={logo.src}
                 alt={logo.alt}
                 loading="lazy"
-                className="h-8 w-auto max-w-[150px] object-contain opacity-55 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0 sm:h-10"
+                className="h-8 w-auto max-w-[150px] object-contain opacity-95 transition-all duration-300 hover:-translate-y-0.5 hover:opacity-100 sm:h-10"
               />
             </Reveal>
           ))}

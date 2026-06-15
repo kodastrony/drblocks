@@ -42,10 +42,14 @@ function makeConcreteTextures() {
   map.repeat.set(2, 2);
   map.anisotropy = 8;
 
-  // bump z tej samej grafiki
   const bump = map.clone();
   bump.needsUpdate = true;
   return { map, bump };
+}
+
+/* ---- geometria nakrętki sześciokątnej z fazą ---- */
+function hexNutGeometry(r: number, h: number) {
+  return new THREE.CylinderGeometry(r, r, h, 6);
 }
 
 export function BlockModel({
@@ -55,15 +59,16 @@ export function BlockModel({
   variant?: Variant;
   liftMm?: number;
 }) {
-  const W = 2.3;
-  const H = 1.15;
-  const D = 1.45;
-  const Wc = 1.0; // szerokość kanału
-  const floorH = 0.52; // grubość dna
+  // wymiary korpusu (proporcje ~ realny bloczek: szerszy niż wyższy)
+  const W = 2.4; // szerokość
+  const H = 1.2; // wysokość korpusu
+  const D = 1.7; // głębokość
+  const Wc = 0.96; // szerokość kanału (wnęki na stalową stopę)
+  const floorH = 0.4; // grubość dna betonu pod kanałem
 
   const { map, bump } = useMemo(makeConcreteTextures, []);
 
-  // przekrój betonu (profil U), wyśrodkowany
+  // przekrój betonu (profil U) — kanał otwarty od góry
   const concreteGeo = useMemo(() => {
     const w = W / 2;
     const h = H / 2;
@@ -82,8 +87,8 @@ export function BlockModel({
     const geo = new THREE.ExtrudeGeometry(s, {
       depth: D,
       bevelEnabled: true,
-      bevelThickness: 0.035,
-      bevelSize: 0.035,
+      bevelThickness: 0.04,
+      bevelSize: 0.04,
       bevelSegments: 2,
       steps: 1,
     });
@@ -92,131 +97,154 @@ export function BlockModel({
     return geo;
   }, []);
 
-  // czarna stalowa płyta regulacyjna z 2 pionowymi szczelinami
-  const plateGeo = useMemo(() => {
-    const pw = 0.92;
-    const ph = 0.72;
-    const r = 0.05;
-    const s = new THREE.Shape();
+  // stalowa stopa regulacyjna: korpus wypełniający kanał + nakładka (płyta nośna)
+  const insertBodyGeo = useMemo(
+    () => new THREE.BoxGeometry(Wc - 0.06, 1.0, D - 0.06),
+    [],
+  );
+  const capGeo = useMemo(() => {
+    // płyta z lekko sfazowanymi krawędziami
+    const pw = Wc + 0.18;
+    const pd = D + 0.02;
+    const ph = 0.1;
+    const r = 0.03;
+    const shape = new THREE.Shape();
     const x0 = -pw / 2;
-    const y0 = -ph / 2;
-    s.moveTo(x0 + r, y0);
-    s.lineTo(x0 + pw - r, y0);
-    s.quadraticCurveTo(x0 + pw, y0, x0 + pw, y0 + r);
-    s.lineTo(x0 + pw, y0 + ph - r);
-    s.quadraticCurveTo(x0 + pw, y0 + ph, x0 + pw - r, y0 + ph);
-    s.lineTo(x0 + r, y0 + ph);
-    s.quadraticCurveTo(x0, y0 + ph, x0, y0 + ph - r);
-    s.lineTo(x0, y0 + r);
-    s.quadraticCurveTo(x0, y0, x0 + r, y0);
-    // szczeliny (stadion: kapsuła pionowa)
-    const slot = (cx: number, cy: number) => {
-      const sw = 0.12;
-      const sh = 0.46;
-      const sr = sw / 2;
-      const p = new THREE.Path();
-      const top = cy + sh / 2 - sr;
-      const bot = cy - sh / 2 + sr;
-      p.moveTo(cx - sr, bot);
-      p.lineTo(cx - sr, top);
-      p.absarc(cx, top, sr, Math.PI, 0, true);
-      p.lineTo(cx + sr, bot);
-      p.absarc(cx, bot, sr, 0, Math.PI, true);
-      return p;
-    };
-    s.holes.push(slot(-0.24, -0.18));
-    s.holes.push(slot(0.24, -0.18));
-    const geo = new THREE.ExtrudeGeometry(s, {
-      depth: 0.07,
+    const z0 = -pd / 2;
+    shape.moveTo(x0 + r, z0);
+    shape.lineTo(x0 + pw - r, z0);
+    shape.quadraticCurveTo(x0 + pw, z0, x0 + pw, z0 + r);
+    shape.lineTo(x0 + pw, z0 + pd - r);
+    shape.quadraticCurveTo(x0 + pw, z0 + pd, x0 + pw - r, z0 + pd);
+    shape.lineTo(x0 + r, z0 + pd);
+    shape.quadraticCurveTo(x0, z0 + pd, x0, z0 + pd - r);
+    shape.lineTo(x0, z0 + r);
+    shape.quadraticCurveTo(x0, z0, x0 + r, z0);
+    const geo = new THREE.ExtrudeGeometry(shape, {
+      depth: ph,
       bevelEnabled: true,
-      bevelThickness: 0.012,
-      bevelSize: 0.01,
+      bevelThickness: 0.015,
+      bevelSize: 0.015,
       bevelSegments: 1,
-      steps: 1,
     });
-    geo.translate(0, 0, -0.035);
+    geo.rotateX(-Math.PI / 2); // leży poziomo (grubość wzdłuż Y)
     geo.computeVertexNormals();
     return geo;
   }, []);
+
+  const washerGeo = useMemo(() => new THREE.CylinderGeometry(0.17, 0.17, 0.04, 28), []);
+  const hexGeo = useMemo(() => hexNutGeometry(0.12, 0.14), []);
+  const studGeo = useMemo(() => new THREE.CylinderGeometry(0.05, 0.05, 0.4, 16), []);
 
   const concreteMat = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
         map,
         bumpMap: bump,
-        bumpScale: 0.025,
+        bumpScale: 0.03,
         color: "#c4c8cd",
-        roughness: 0.92,
+        roughness: 0.93,
         metalness: 0.02,
       }),
     [map, bump],
   );
   const steelDark = useMemo(
-    () => new THREE.MeshStandardMaterial({ color: "#1b1c20", roughness: 0.42, metalness: 0.7 }),
+    () => new THREE.MeshStandardMaterial({ color: "#212429", roughness: 0.46, metalness: 0.72 }),
     [],
   );
   const galv = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
-        color: "#b9bec6",
-        roughness: 0.32,
+        color: "#c2c8d0",
+        roughness: 0.3,
         metalness: 0.96,
-        envMapIntensity: 1.1,
+        envMapIntensity: 1.15,
       }),
     [],
   );
   const magnetMat = useMemo(
-    () => new THREE.MeshStandardMaterial({ color: "#141418", roughness: 0.35, metalness: 0.25 }),
+    () => new THREE.MeshStandardMaterial({ color: "#17191e", roughness: 0.34, metalness: 0.55 }),
     [],
   );
 
-  // pozycje
-  const lift = (liftMm / 55) * 0.3; // 0..0.3 jednostki
-  const plateBaseY = 0.28;
-  const plateZ = D / 2 - 0.28;
-  const boltY = 0.2; // śruby zakotwione w betonie (stałe)
-  const boltZFront = plateZ + 0.14;
+  // skala regulacji: 0..55 mm -> 0..0.42 jednostki
+  const lift = (liftMm / 55) * 0.42;
+
+  // bolce na froncie i z tyłu, na krawędziach kanału (x = ±boltX)
+  const boltX = 0.42;
+  const boltLocalY = 0.18; // wysokość bolca względem stopy (rośnie z regulacją)
+  const insertTopY0 = H / 2; // top stopy przy regulacji 0
+
+  // pojedynczy bolec M16: podkładka + nakrętka sześciokątna + trzpień
+  const Bolt = ({
+    x,
+    z,
+    front,
+  }: {
+    x: number;
+    z: number;
+    front: boolean;
+  }) => (
+    <group position={[x, boltLocalY + lift, z]} rotation={[Math.PI / 2, 0, 0]}>
+      {/* podkładka tuż przy licu (na zewnątrz) */}
+      <mesh geometry={washerGeo} material={galv} position={[0, front ? 0.03 : -0.03, 0]} castShadow />
+      {/* nakrętka sześciokątna (najbardziej na zewnątrz) */}
+      <mesh
+        geometry={hexGeo}
+        material={galv}
+        position={[0, front ? 0.11 : -0.11, 0]}
+        rotation={[0, front ? 0.26 : -0.26, 0]}
+        castShadow
+      />
+      {/* trzpień w głąb bloczka */}
+      <mesh geometry={studGeo} material={galv} position={[0, front ? -0.18 : 0.18, 0]} />
+    </group>
+  );
 
   return (
     <group rotation={[0, 0, 0]}>
       {/* korpus betonowy */}
       <mesh geometry={concreteGeo} material={concreteMat} castShadow receiveShadow />
 
-      {/* stalowa płyta regulacyjna (unosi się przy regulacji) */}
-      <group position={[0, plateBaseY + lift, plateZ]}>
-        <mesh geometry={plateGeo} material={steelDark} castShadow />
-        {/* górna krawędź / nakładka */}
-        <mesh position={[0, 0.36, 0.04]} castShadow material={steelDark}>
-          <boxGeometry args={[0.96, 0.06, 0.24]} />
-        </mesh>
+      {/* ===== zespół regulowany (unosi się przy regulacji) ===== */}
+      <group position={[0, lift, 0]}>
+        {/* korpus stalowej stopy w kanale */}
+        <mesh geometry={insertBodyGeo} material={steelDark} position={[0, insertTopY0 - 0.5, 0]} castShadow />
+        {/* nakładka / płyta nośna na szczycie */}
+        <mesh geometry={capGeo} material={steelDark} position={[0, insertTopY0 + 0.05, 0]} castShadow />
       </group>
 
-      {/* śruby M16 (stałe, w betonie) */}
-      {[-0.24, 0.24].map((x) => (
-        <group key={x} position={[x, boltY, boltZFront]} rotation={[Math.PI / 2, 0, 0]}>
-          {/* podkładka */}
-          <mesh material={galv} position={[0, -0.02, 0]}>
-            <cylinderGeometry args={[0.13, 0.13, 0.035, 28]} />
-          </mesh>
-          {/* nakrętka sześciokątna */}
-          <mesh material={galv} position={[0, 0.06, 0]} castShadow>
-            <cylinderGeometry args={[0.11, 0.11, 0.12, 6]} />
-          </mesh>
-          {/* trzpień do płyty */}
-          <mesh material={galv} position={[0, -0.18, 0]}>
-            <cylinderGeometry args={[0.045, 0.045, 0.32, 16]} />
-          </mesh>
-        </group>
-      ))}
+      {/* śruby M16 — 4 szt. (front L/P, tył L/P), przesuwają się z regulacją */}
+      <Bolt x={-boltX} z={D / 2} front />
+      <Bolt x={boltX} z={D / 2} front />
+      <Bolt x={-boltX} z={-D / 2} front={false} />
+      <Bolt x={boltX} z={-D / 2} front={false} />
 
-      {/* chwytak magnetyczny (tylko Plus) — z lewej śruby */}
+      {/* ===== chwytak magnetyczny — tylko STANDARD PLUS =====
+           Krążek magnetyczny licem do widza w górnej-lewej części + pozioma
+           śruba regulacyjna (gwint + łeb) — jak na renderze produktowym.
+           Unosi się razem ze stalową stopą. */}
       {variant === "plus" && (
-        <group position={[-0.24, boltY, boltZFront + 0.05]}>
-          <mesh material={galv} position={[-0.16, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[0.035, 0.035, 0.34, 14]} />
+        <group position={[-0.52, boltLocalY + lift + 0.22, D / 2 + 0.04]}>
+          {/* pozioma śruba gwintowana — od krążka w stronę środka, łeb sześciokątny */}
+          <mesh material={galv} position={[0.27, 0, -0.02]} rotation={[0, 0, Math.PI / 2]} castShadow>
+            <cylinderGeometry args={[0.045, 0.045, 0.46, 18]} />
           </mesh>
-          <mesh material={magnetMat} position={[-0.36, 0, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
-            <cylinderGeometry args={[0.12, 0.12, 0.07, 28]} />
+          {Array.from({ length: 7 }).map((_, i) => (
+            <mesh key={i} material={galv} position={[0.09 + i * 0.05, 0, -0.02]} rotation={[0, Math.PI / 2, 0]}>
+              <torusGeometry args={[0.047, 0.012, 6, 16]} />
+            </mesh>
+          ))}
+          {/* łeb sześciokątny po stronie środka */}
+          <mesh material={galv} position={[0.5, 0, -0.02]} rotation={[0, 0, Math.PI / 2]} castShadow>
+            <cylinderGeometry args={[0.09, 0.09, 0.1, 6]} />
+          </mesh>
+          {/* krążek magnetyczny — licem do przodu (oś Z) */}
+          <mesh material={galv} position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+            <cylinderGeometry args={[0.21, 0.21, 0.07, 40]} />
+          </mesh>
+          <mesh material={magnetMat} position={[0, 0, 0.03]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+            <cylinderGeometry args={[0.17, 0.17, 0.06, 40]} />
           </mesh>
         </group>
       )}

@@ -81,10 +81,10 @@ export function Header() {
       <div className="mx-auto flex h-[68px] max-w-[1200px] items-center justify-between px-5 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center" aria-label="DrBlocks – strona główna">
           <Image
-            src="/assets/logo.jpeg"
+            src="/assets/logo-dark.png"
             alt="DrBlocks"
-            width={172}
-            height={31}
+            width={180}
+            height={33}
             priority
             className="h-7 w-auto sm:h-8"
           />
@@ -203,11 +203,11 @@ export function Header() {
           >
             <div className="flex h-[68px] items-center justify-between px-5">
               <Image
-                src="/assets/logo.jpeg"
+                src="/assets/logo-light.png"
                 alt="DrBlocks"
-                width={172}
-                height={31}
-                className="h-7 w-auto rounded bg-white px-1"
+                width={180}
+                height={33}
+                className="h-7 w-auto"
               />
               <button
                 ref={closeBtnRef}

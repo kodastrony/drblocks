@@ -51,10 +51,13 @@ function Scene({
         <BlockModel variant={variant} liftMm={liftMm} />
         {showLabels && (
           <>
-            <Annotation position={[1.0, -0.28, 0.55]} label="Korpus betonowy B30" />
-            <Annotation position={[0, 0.85, 0.45]} label="Stalowa płyta regulacyjna" />
-            <Annotation position={[0.55, 0.1, 1.05]} label="Pręty gwintowane M16" />
-            <Annotation position={[-0.95, 0.5, 0.4]} label="Regulacja 0–55 mm" />
+            <Annotation position={[1.05, -0.32, 0.6]} label="Korpus betonowy B30" />
+            <Annotation position={[0, 0.95, 0.4]} label="Stalowa stopa regulacyjna" />
+            <Annotation position={[0.62, 0.2, 1.1]} label="Pręty M16 (4×)" />
+            <Annotation position={[-1.0, 0.45, 0.5]} label="Regulacja 0–55 mm" />
+            {variant === "plus" && (
+              <Annotation position={[-1.15, 0.95, 0.7]} label="Chwytak magnetyczny" />
+            )}
           </>
         )}
       </group>
