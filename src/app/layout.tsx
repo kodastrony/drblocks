@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     template: "%s | DrBlocks",
   },
   description:
-    "Regulowane bloczki fundamentowe DrBlocks dla budownictwa modułowego: precyzja do 1 mm, nośność do 2 ton, montaż w jeden dzień, bez prac mokrych. Alternatywa dla betonu i pali śrubowych.",
+    "Regulowane bloczki fundamentowe DrBlocks dla budownictwa modułowego: precyzja do 1 mm, nośność do 5 t z podlewką cementową, montaż w jeden dzień, bez prac mokrych. Alternatywa dla betonu i pali śrubowych.",
   keywords: [
     "regulowane bloczki fundamentowe",
     "fundament pod dom modułowy",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     siteName: "DrBlocks",
     title: "Regulowane bloczki fundamentowe – fundament w 1 dzień | DrBlocks",
     description:
-      "Precyzja do 1 mm, nośność do 2 ton, montaż w jeden dzień, bez prac mokrych. Regulowane bloczki fundamentowe dla budownictwa modułowego.",
+      "Precyzja do 1 mm, nośność do 5 t z podlewką cementową, montaż w jeden dzień, bez prac mokrych. Regulowane bloczki fundamentowe dla budownictwa modułowego.",
     images: [
       {
         url: "/assets/hero-poster.jpg",
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Regulowane bloczki fundamentowe – fundament w 1 dzień | DrBlocks",
-    description: "Precyzja do 1 mm, nośność do 2 ton, montaż w jeden dzień, bez prac mokrych.",
+    description: "Precyzja do 1 mm, nośność do 5 t z podlewką cementową, montaż w jeden dzień, bez prac mokrych.",
     images: ["/assets/hero-poster.jpg"],
   },
   alternates: { canonical: "/" },
@@ -82,13 +82,6 @@ const orgJsonLd = {
   url: "https://drblocks.pl",
   telephone: company.phone,
   email: company.emailContact,
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "ul. Krakowska 69/9",
-    postalCode: "43-300",
-    addressLocality: "Bielsko-Biała",
-    addressCountry: "PL",
-  },
   taxID: company.nip,
   areaServed: "PL",
   contactPoint: {

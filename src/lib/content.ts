@@ -10,7 +10,6 @@ export const company = {
   phoneHref: "tel:+48506057727",
   emailContact: "kontakt@drblocks.pl",
   emailSales: "sprzedaz@drblocks.pl",
-  address: "ul. Krakowska 69/9, 43-300 Bielsko-Biała",
   nip: "9372592697",
   regon: "362105276",
   instagram: "https://www.instagram.com/drblocksforbuildings/",
@@ -41,7 +40,7 @@ export const hero = {
   youtubeId: "lpWBq72v3HA",
   stats: [
     { value: "±1 mm", label: "Precyzja" },
-    { value: "2000 kg", label: "Nośność" },
+    { value: "1000 kg", label: "Nośność" },
     { value: "1 dzień", label: "Montaż" },
     { value: "0", label: "Prac mokrych" },
   ],
@@ -67,7 +66,7 @@ export const system = {
   steps: [
     { no: "01", icon: "grid", title: "Ustaw", desc: "Rozmieszczasz bloczki w siatce podpór pod konstrukcją." },
     { no: "02", icon: "level", title: "Wypoziomuj", desc: "Gwintowana stopa reguluje wysokość z dokładnością do 1 mm." },
-    { no: "03", icon: "load", title: "Obciąż", desc: "Posadawiasz moduł – nośność do 2 ton na bloczek." },
+    { no: "03", icon: "load", title: "Obciąż", desc: "Posadawiasz moduł – nośność do 1 t na bloczek (do 5 t z podlewką)." },
     { no: "04", icon: "check", title: "Gotowe", desc: "Konstrukcja gotowa do dalszych prac tego samego dnia." },
   ],
 };
@@ -80,7 +79,7 @@ export const benefits = {
     { img: "/assets/Zrzut-ekranu-2026-04-16-o-11.35.15.png", title: "Szybki montaż", desc: "Kompletne posadowienie w jeden dzień zamiast tygodni pracy." },
     { img: "/assets/Zrzut-ekranu-2026-04-16-o-11.37.21.png", title: "Precyzja do 1 mm", desc: "Gwintowana stopa pozwala idealnie wypoziomować konstrukcję." },
     { img: "/assets/Zrzut-ekranu-2026-04-16-o-11.38.20.png", title: "Bez mokrych robót", desc: "Zapomnij o betonie, szalowaniu i sezonowaniu." },
-    { img: "/assets/Zrzut-ekranu-2026-04-16-o-11.36.26.png", title: "Nośność do 2 ton", desc: "Każdy bloczek wytrzymuje obciążenie do 2000 kg." },
+    { img: "/assets/Zrzut-ekranu-2026-04-16-o-11.36.26.png", title: "Wysoka nośność", desc: "Każdy bloczek przenosi do 1000 kg bez podlewki, a z podlewką cementową nawet do 5000 kg." },
     { img: "/assets/Zrzut-ekranu-2026-04-16-o-11.37.59.png", title: "Możliwość demontażu w każdej chwili", desc: "Bloczki można zdemontować i wykorzystać ponownie." },
     { img: "/assets/Zrzut-ekranu-2026-04-16-o-11.36.53.png", title: "Sprawdzone rozwiązanie", desc: "Współpracujemy z liderami budownictwa modułowego." },
   ],
@@ -107,10 +106,9 @@ export type Product = {
 
 const baseSpecs: Spec[] = [
   { k: "Klasa betonu", v: "B30 (lany, wibrowany, zbrojony)" },
-  { k: "Zakres regulacji wysokości", v: "do 55 mm", highlight: true },
-  { k: "Zakres wysokości posadowienia", v: "120–200 mm" },
+  { k: "Regulacja wysokości", v: "120–200 mm (zakres regulacji 70 mm)", highlight: true },
   { k: "Precyzja regulacji", v: "do 1 mm", highlight: true },
-  { k: "Nośność", v: "1–2 t (bez podlewki), >2 t (z podlewką cementową)", highlight: true },
+  { k: "Nośność", v: "do 1 t (bez podlewki), do 5 t (z podlewką cementową)", highlight: true },
   { k: "Stopa regulacyjna", v: "Stal ocynkowana, 195 × 205 mm, grubość 5 mm" },
   { k: "Pręty gwintowane", v: "4× M16, klasa 8.8, z podkładkami i nakrętkami samokontrującymi" },
   { k: "Nakładka", v: "Stal 5 mm z przekładką izolacyjną" },
@@ -120,7 +118,7 @@ export const products: Product[] = [
   {
     slug: "standard-block",
     name: "Standard Block",
-    short: "Podstawowy bloczek fundamentowy z regulacją wysokości do 55 mm. Solidna podstawa dla każdej konstrukcji.",
+    short: "Podstawowy bloczek fundamentowy z regulacją wysokości 120–200 mm. Solidna podstawa dla każdej konstrukcji.",
     intro:
       "Standard Block to solidny, precyzyjny i łatwy w montażu bloczek betonowy zaprojektowany dla budownictwa modułowego. Betonowy korpus klasy B30 oraz stalowa nakładka z gwintem regulacyjnym umożliwiają precyzyjne ustawienie wysokości posadowienia z dokładnością do 1 mm. Dzięki temu idealnie dopasujesz fundament do warunków terenowych – bez wylewki betonowej, bez mokrych robót.",
     image: "/assets/STANDARD-983x1024-1.webp",
@@ -171,7 +169,7 @@ export const faq = {
     },
     {
       q: "Czym różni się Bloczek Standard od Bloczek Standard Plus?",
-      a: "Bloczek Standard to podstawowy model wyposażony w stalową nakładkę umożliwiającą regulację wysokości do 5,5 cm. Bloczek Standard Plus oferuje dodatkowo chwytaki magnetyczne, które ułatwiają montaż obróbki dolnej. Dzięki nim wykończenie przestrzeni pomiędzy budynkiem modułowym a gruntem jest bardziej precyzyjne i estetyczne.",
+      a: "Bloczek Standard to podstawowy model wyposażony w stalową nakładkę umożliwiającą regulację wysokości posadowienia w zakresie 120–200 mm (zakres regulacji do 7 cm). Bloczek Standard Plus oferuje dodatkowo chwytaki magnetyczne, które ułatwiają montaż obróbki dolnej. Dzięki nim wykończenie przestrzeni pomiędzy budynkiem modułowym a gruntem jest bardziej precyzyjne i estetyczne.",
     },
     {
       q: "Jakie są metody kotwienia Standard Blok L w gruncie?",
@@ -187,7 +185,7 @@ export const faq = {
     },
     {
       q: "Czym różni się standardowy bloczek betonowy od bloczka betonowego DrBlocks?",
-      a: "Bloczki DrBlocks mają innowacyjne możliwości, oferując większą elastyczność i precyzję. Modele Standard mają regulowaną stalową płytę (regulacja do 5,5 cm), a warianty Plus dodają chwytaki magnetyczne dla lepszego dopasowania fundamentu do warunków terenowych.",
+      a: "Bloczki DrBlocks mają innowacyjne możliwości, oferując większą elastyczność i precyzję. Modele Standard mają regulowaną stalową płytę (regulacja wysokości 120–200 mm), a warianty Plus dodają chwytaki magnetyczne dla lepszego dopasowania fundamentu do warunków terenowych.",
     },
     {
       q: "Czy warto zainwestować w bloczki DrBlocks?",

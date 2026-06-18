@@ -154,11 +154,13 @@ function GradientBackground() {
 function Scene({
   variant,
   liftMm,
+  heightMm,
   showLabels,
   grout,
 }: {
   variant: Variant;
   liftMm: number;
+  heightMm: number;
   showLabels: boolean;
   grout: boolean;
 }) {
@@ -217,7 +219,7 @@ function Scene({
              Korpus betonowy B30         (-0.95, -0.22, 1.00)         down        — (statyczny beton)
              Stalowa stopa regulacyjna   (-0.98, 0.72+lift, 0.50)     up          +lift (rośnie z czapą)
              Śruby M16 (4×)              (-1.24, 0.32, 0.60)          left-down   — (zakotwione, Y stały)
-             Regulacja 0–55 mm           (-0.50, 0.60+lift/2, 1.50)   right-up    +lift/2 (rozwierana szpara)
+             Regulacja wysokości         (-0.50, 0.60+lift/2, 1.50)   right-up    +lift/2 (rozwierana szpara)
              Chwytak magnetyczny (plus)  (-1.50, 0.46+lift, 0.00)     left        +lift
              Podlewka cementowa (grout)  (-0.30, 0.60+lift/2, 1.50)   right-down  +lift/2
              ───────────────────────────────────────────────────────────────────────────── */
@@ -228,8 +230,8 @@ function Scene({
               <Annotation anchor={[-1.24, 0.32, 0.6]} label="Śruby M16 (4×)" place="left-down" compact={compact} />
               <Annotation
                 anchor={[-0.5, 0.6 + lift / 2, 1.5]}
-                label="Regulacja 0–55 mm"
-                sub={`${liftMm} mm`}
+                label="Regulacja wysokości"
+                sub={`${heightMm} mm`}
                 place={compact ? "up" : "right-up"}
                 compact={compact}
               />
@@ -300,11 +302,32 @@ function Scene({
   );
 }
 
-export default function BlockViewer() {
+/* Sterowanie pętlą renderowania modelu. Gdy `active` jest false, Canvas
+   przechodzi w frameloop="never" (zero obciążenia GPU/CPU) — dzięki temu
+   reszta strony scrolluje się płynnie także na słabszym sprzęcie. Po powrocie
+   do active wymuszamy natychmiastową klatkę (invalidate), żeby model od razu
+   się odrysował, zanim wystartuje ciągła pętla. */
+function FrameloopGate({ active }: { active: boolean }) {
+  const invalidate = useThree((s) => s.invalidate);
+  useEffect(() => {
+    if (active) invalidate();
+  }, [active, invalidate]);
+  return null;
+}
+
+export default function BlockViewer({
+  active = true,
+  onClose,
+}: {
+  active?: boolean;
+  onClose?: () => void;
+}) {
   const [variant, setVariant] = useState<Variant>("standard");
-  const [liftMm, setLiftMm] = useState(0);
+  const [heightMm, setHeightMm] = useState(120);
   const [showLabels, setShowLabels] = useState(false);
   const [grout, setGrout] = useState(false);
+  // wysokość posadowienia 120–200 mm → skok modelu 0–55 (BlockModel liczy skok stopy w mm)
+  const liftMm = Math.round(((heightMm - 120) / 80) * 55);
 
   return (
     <div className="overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#1e2a38] to-[#11171f] shadow-2xl">
@@ -312,12 +335,14 @@ export default function BlockViewer() {
         <Canvas
           shadows
           flat
+          frameloop={active ? "always" : "never"}
           dpr={[1, 2]}
           camera={{ position: [-5.2, 3.0, 4.3], fov: 32 }}
           gl={{ antialias: false, preserveDrawingBuffer: false }}
         >
           <color attach="background" args={["#d6dade"]} />
-          <Scene variant={variant} liftMm={liftMm} showLabels={showLabels} grout={grout} />
+          <FrameloopGate active={active} />
+          <Scene variant={variant} liftMm={liftMm} heightMm={heightMm} showLabels={showLabels} grout={grout} />
         </Canvas>
 
         <div className="pointer-events-none absolute left-4 top-4">
@@ -325,6 +350,19 @@ export default function BlockViewer() {
             {variant === "plus" ? "Standard Plus Block" : "Standard Block"}
           </span>
         </div>
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Zamknij model 3D"
+            title="Zamknij model 3D (zwalnia zasoby)"
+            className="absolute right-3 top-3 z-10 flex size-8 items-center justify-center rounded-full bg-black/40 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/60 hover:text-white"
+          >
+            <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth={2}>
+              <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />
+            </svg>
+          </button>
+        )}
         <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/25 px-3 py-1 text-[11px] text-white/60 backdrop-blur-sm">
           Przeciągnij, aby obrócić · scroll, aby przybliżyć
         </div>
@@ -354,28 +392,28 @@ export default function BlockViewer() {
           </div>
         </div>
 
-        {/* regulacja wysokości */}
+        {/* regulacja wysokości posadowienia 120–200 mm */}
         <div>
           <div className="flex items-baseline justify-between">
             <label htmlFor="lift3d" className="text-sm font-medium text-white/80">
               Regulacja wysokości
             </label>
-            <span className="font-oswald text-lg font-semibold tabular text-teal">{liftMm} mm</span>
+            <span className="font-oswald text-lg font-semibold tabular text-teal">{heightMm} mm</span>
           </div>
           <input
             id="lift3d"
             type="range"
-            min={0}
-            max={55}
+            min={120}
+            max={200}
             step={1}
-            value={liftMm}
-            onChange={(e) => setLiftMm(+e.target.value)}
+            value={heightMm}
+            onChange={(e) => setHeightMm(+e.target.value)}
             className="mt-2 h-2 w-full cursor-pointer appearance-none rounded-full bg-white/15 accent-teal"
-            aria-label="Regulacja wysokości w milimetrach"
+            aria-label="Wysokość posadowienia w milimetrach"
           />
           <div className="mt-1 flex justify-between text-[10px] font-medium uppercase tracking-wide text-white/30">
-            <span>0</span>
-            <span>do 55 mm</span>
+            <span>120 mm</span>
+            <span>do 200 mm (zakres 70 mm)</span>
           </div>
         </div>
 
@@ -399,7 +437,7 @@ export default function BlockViewer() {
             onClick={() => {
               setGrout((g) => {
                 const next = !g;
-                if (next && liftMm === 0) setLiftMm(30); // pokaż efekt pod uniesioną stopą
+                if (next && heightMm === 120) setHeightMm(160); // pokaż efekt pod uniesioną stopą
                 return next;
               });
             }}

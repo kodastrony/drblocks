@@ -91,6 +91,21 @@
       linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
     background-size: 48px 48px;
   }
+  /* Logo carousel (marquee) — edge fade + continuous scroll. The two
+     identical tracks make translateX(-50%) loop seamlessly. The global
+     prefers-reduced-motion rule above pauses the animation automatically. */
+  .marquee-mask {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 7%, #000 93%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 7%, #000 93%, transparent 100%);
+  }
+  .animate-marquee {
+    animation: marquee 40s linear infinite;
+  }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 /* Lenis smooth scroll (only applied while Lenis is active) */

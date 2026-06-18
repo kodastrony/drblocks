@@ -6,7 +6,7 @@ import { Block3DViewerIsland } from "./Block3DViewerIsland";
 
 const points = [
   "Obróć i przybliż z każdej strony",
-  "Zobacz na żywo regulację 0–55 mm",
+  "Zobacz na żywo regulację 120–200 mm",
   "Korpus B30, stalowa stopa, 4× pręty M16",
   "Przełącz Standard / Plus i porównaj chwytak magnetyczny",
 ];

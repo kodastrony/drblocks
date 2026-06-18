@@ -12,7 +12,7 @@ import { ArrowRight } from "@/components/Icons";
    Kalkulator doboru bloczków DrBlocks
    Logika oparta na researchu: rozstaw to MAKSIMUM (nie cel), podpory zawsze
    w narożnikach + po obwodzie + siatka wewnętrzna, zaokrąglamy w górę.
-   Kontener = podparcie punktowe w narożach (nie siatka). Nośność do 2 t/bloczek.
+   Kontener = podparcie punktowe w narożach (nie siatka). Nośność do 1 t/bloczek (do 5 t z podlewką).
    ========================================================================= */
 
 type LoadProfile = "light" | "medium" | "heavy";
@@ -34,6 +34,10 @@ const PRESETS: Preset[] = [
   { id: "shed", label: "Domek narzędziowy", shape: "rect", spacing: 1.5, load: "light", variant: "standard", dims: { L: 3, W: 3 }, note: "Mała, lekka konstrukcja. Podpory w narożnikach + co ~1–1,5 m po obwodzie." },
   { id: "garden-room", label: "Domek / garden office", shape: "rect", spacing: 1.5, load: "medium", variant: "plus", dims: { L: 4, W: 3 }, note: "Cięższe niż taras (ściany, ocieplenie, dach). Gęstsza siatka pod ścianami nośnymi. Plus dla estetycznego cokołu (obróbka dolna)." },
   { id: "modular-house", label: "Dom modułowy", shape: "rect", spacing: 1.5, load: "heavy", variant: "plus", dims: { L: 8, W: 5 }, note: "Obciążenie skupione pod ramą nośną. Na słabym/zmiennym gruncie zagęść do 0,8–1,0 m i rozważ podlewkę cementową." },
+  { id: "biuro-modulowe", label: "Biuro modułowe", shape: "rect", spacing: 1.5, load: "heavy", variant: "plus", dims: { L: 6, W: 3 }, note: "Cięższe niż domek – wyposażenie, instalacje, ludzie. Zagęść siatkę pod ścianami nośnymi i rozważ podlewkę cementową. Plus dla estetycznego cokołu." },
+  { id: "salon-samochodowy", label: "Salon samochodowy", shape: "rect", spacing: 1.2, load: "heavy", variant: "plus", dims: { L: 12, W: 8 }, note: "Duża powierzchnia i skupione obciążenia (pojazdy, posadzka, witryny). Gęsta siatka 1,0–1,2 m, pod słupami fundament punktowy. Zalecana podlewka cementowa." },
+  { id: "magazyn", label: "Magazyn", shape: "rect", spacing: 1.0, load: "heavy", variant: "standard", dims: { L: 12, W: 8 }, note: "Wysokie obciążenia użytkowe (regały, towar, wózki). Zagęść podpory do 0,8–1,0 m, pod słupami i regałami dodatkowe bloczki. Podlewka cementowa zalecana." },
+  { id: "zestaw-kontenerowy", label: "Zestawy kontenerowe", shape: "rect", spacing: 1.5, load: "heavy", variant: "standard", dims: { L: 12, W: 6 }, note: "Zestaw połączonych modułów / kontenerów. Podpory pod narożami i stykami każdego modułu oraz wzdłuż ram nośnych. Rozważ podlewkę cementową." },
   { id: "container", label: "Kontener", shape: "container", spacing: 1.5, load: "heavy", variant: "standard", dims: { L: 6.06, W: 2.44 }, note: "Kontener przenosi obciążenie WYŁĄCZNIE przez 4 dolne naroża. To layout punktowy, nie siatka. 20 ft → 4 bloczki, 40 ft → 6." },
   { id: "hot-tub", label: "Jacuzzi / balia", shape: "rect", spacing: 1.0, load: "heavy", variant: "standard", dims: { L: 2.5, W: 2.5 }, note: "Napełnione + osoby to ~390–635 kg/m², znacznie powyżej tarasu. Zagęść podpory do 0,6–1,0 m. Rozważ podlewkę." },
   { id: "sauna", label: "Sauna ogrodowa", shape: "rect", spacing: 1.5, load: "medium", variant: "standard", dims: { L: 3, W: 2.5 }, note: "Podpory po obwodzie co 1,0–1,5 m oraz na przecięciach ścian wewnętrznych." },
@@ -47,7 +51,12 @@ const PRESETS: Preset[] = [
 const Q: Record<LoadProfile, number> = { light: 250, medium: 400, heavy: 600 };
 const LOAD_LABEL: Record<LoadProfile, string> = { light: "Lekkie", medium: "Średnie", heavy: "Ciężkie" };
 const GROUP_LABEL: Record<LoadProfile, string> = { light: "Lekkie obciążenie", medium: "Średnie obciążenie", heavy: "Ciężkie obciążenie" };
-const BLOCK_CAPACITY = 2000; // kg / bloczek (bez podlewki)
+const BLOCK_CAPACITY = 1000; // kg / bloczek (bez podlewki)
+const BLOCK_CAPACITY_GROUT = 5000; // kg / bloczek (z podlewką cementową)
+
+/* orientacyjna waga budynku z profilu obciążenia [kg], zaokrąglona do 500 kg */
+const estWeight = (p: Preset) =>
+  Math.min(40000, Math.max(500, Math.round((p.dims.L * p.dims.W * Q[p.load]) / 500) * 500));
 
 type Pt = { x: number; y: number; type: "corner" | "edge" | "interior" };
 type Layout = {
@@ -176,7 +185,7 @@ export function Calculator() {
   const [notchL, setNotchL] = useState(2);
   const [notchW, setNotchW] = useState(1.5);
   const [spacing, setSpacing] = useState(preset.spacing);
-  const [hardGround, setHardGround] = useState(false);
+  const [buildingWeight, setBuildingWeight] = useState(() => estWeight(PRESETS[0]));
   const [grout, setGrout] = useState(false);
 
   // zastosowanie presetu → ustawia rozsądne wartości startowe
@@ -187,7 +196,7 @@ export function Calculator() {
     setLength(p.dims.L);
     setWidth(p.dims.W);
     setSpacing(p.spacing);
-    setHardGround(false);
+    setBuildingWeight(estWeight(p));
     setGrout(p.load === "heavy");
   };
 
@@ -197,13 +206,18 @@ export function Calculator() {
     setWidth(2.44);
   };
 
-  // efektywny rozstaw: trudny grunt → zagęszczamy o ~15% (więcej podpór)
-  const effS = hardGround ? spacing * 0.85 : spacing;
+  // rozstaw bierzemy wprost z suwaka
+  const effS = spacing;
 
   // wcięcie nie może przekroczyć wymiaru obrysu — jedna wartość dla suwaka,
   // etykiety, pola powierzchni i geometrii (spójność na małych wymiarach)
   const effNotchL = Math.min(notchL, Math.max(0.5, length - 1));
   const effNotchW = Math.min(notchW, Math.max(0.5, width - 1));
+
+  const area =
+    shape === "lshape"
+      ? Math.max(0, length * width - effNotchL * effNotchW)
+      : length * width;
 
   const layout = useMemo<Layout>(() => {
     let lay: Layout;
@@ -214,22 +228,21 @@ export function Calculator() {
     } else {
       lay = gridLayout(length, width, effS);
     }
-    const q = Q[preset.load];
+    // ciśnienie powierzchniowe q [kg/m²]: z wagi budynku, inaczej z profilu obciążenia
+    const q = buildingWeight > 0 && area > 0 ? buildingWeight / area : Q[preset.load];
     lay.worstLoad = shape === "container" ? 0 : Math.round(lay.sx * lay.sy * q);
     return lay;
-  }, [shape, length, width, effS, effNotchL, effNotchW, preset.load]);
+  }, [shape, length, width, effS, effNotchL, effNotchW, preset.load, buildingWeight, area]);
 
-  const overCapacity = layout.worstLoad > BLOCK_CAPACITY;
-  const area =
-    shape === "lshape"
-      ? Math.max(0, length * width - effNotchL * effNotchW)
-      : length * width;
+  const capacity = grout ? BLOCK_CAPACITY_GROUT : BLOCK_CAPACITY;
+  const overCapacity = layout.worstLoad > capacity;
 
   const inquiry =
     `/kontakt?zastosowanie=${encodeURIComponent(preset.label)}` +
     `&wymiary=${pl(length)}x${pl(width)}+m` +
     `&bloczki=${layout.counts.total}` +
-    `&wariant=${preset.variant === "plus" ? "Standard+Plus" : "Standard"}`;
+    `&wariant=${preset.variant === "plus" ? "Standard+Plus" : "Standard"}` +
+    `&waga=${buildingWeight}+kg`;
 
   // NOTE: no overflow-hidden on the section itself — it would break
   // position:sticky on the result panel. Decorations clip via an inner wrapper.
@@ -383,15 +396,27 @@ export function Calculator() {
                 </div>
               )}
 
-              {/* warunki */}
-              <div className="mt-5 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                <Toggle active={hardGround} onClick={() => setHardGround((v) => !v)} disabled={shape === "container"}>
-                  Trudny lub pochyły grunt
-                  <span className="mt-0.5 block text-[11px] font-normal text-mute">+20% podpór</span>
-                </Toggle>
+              {/* waga budynku + podlewka */}
+              <div className="mt-5 space-y-4">
+                <Field label="Waga budynku (orientacyjnie)" value={`${pl(buildingWeight, 0)} kg`}>
+                  <input
+                    type="range"
+                    min={500}
+                    max={40000}
+                    step={500}
+                    value={buildingWeight}
+                    onChange={(e) => setBuildingWeight(+e.target.value)}
+                    className="w-full cursor-pointer accent-teal"
+                    aria-label="Waga budynku w kilogramach"
+                  />
+                  <div className="mt-1 flex justify-between text-[11px] text-mute">
+                    <span>lekka</span>
+                    <span>ciężka</span>
+                  </div>
+                </Field>
                 <Toggle active={grout} onClick={() => setGrout((v) => !v)}>
                   Podlewka cementowa
-                  <span className="mt-0.5 block text-[11px] font-normal text-mute">stabilizacja</span>
+                  <span className="mt-0.5 block text-[11px] font-normal text-mute">nośność do 5 t/bloczek</span>
                 </Toggle>
               </div>
 
@@ -462,19 +487,20 @@ export function Calculator() {
                     <div className="flex items-start justify-between gap-3">
                       <span className="min-w-0">Maks. obciążenie na bloczek</span>
                       <span className="shrink-0 font-oswald font-semibold tabular">
-                        ~{pl(layout.worstLoad, 0)} / {BLOCK_CAPACITY} kg
+                        ~{pl(layout.worstLoad, 0)} / {pl(capacity, 0)} kg
                       </span>
                     </div>
                     <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-navy/10">
                       <div
                         className={`h-full rounded-full ${overCapacity ? "bg-amber-500" : "bg-teal"}`}
-                        style={{ width: `${Math.min(100, (layout.worstLoad / BLOCK_CAPACITY) * 100)}%` }}
+                        style={{ width: `${Math.min(100, (layout.worstLoad / capacity) * 100)}%` }}
                       />
                     </div>
                     {overCapacity && (
                       <p className="mt-2 leading-relaxed">
-                        Przekroczona nośność bez podlewki. Zagęść siatkę (mniejszy rozstaw) lub zastosuj
-                        podlewkę cementową.
+                        {grout
+                          ? "Przekroczona nośność nawet z podlewką (5 t/bloczek). Zagęść siatkę – zmniejsz rozstaw podpór."
+                          : "Przekroczona nośność bez podlewki (1 t/bloczek). Zagęść siatkę lub włącz podlewkę cementową (do 5 t)."}
                       </p>
                     )}
                   </div>
@@ -497,6 +523,9 @@ export function Calculator() {
           <span className="whitespace-nowrap rounded-full bg-paper px-3 py-1.5 font-semibold text-slate ring-1 ring-line">
             Obciążenie: {LOAD_LABEL[preset.load]}
           </span>
+          <span className="whitespace-nowrap rounded-full bg-paper px-3 py-1.5 font-semibold text-slate ring-1 ring-line">
+            Waga budynku: {pl(buildingWeight, 0)} kg
+          </span>
           <span className="whitespace-nowrap rounded-full bg-teal-50 px-3 py-1.5 font-semibold text-teal-800">
             Zalecany wariant: {preset.variant === "plus" ? "Standard Plus" : "Standard"}
           </span>
@@ -509,7 +538,7 @@ export function Calculator() {
         <p className="mt-3 max-w-3xl text-pretty text-xs leading-relaxed text-mute">
           Szacunek poglądowy, niewiążący. Nie zastępuje projektu konstrukcyjnego. Ostateczny układ,
           głębokość przemarzania, nośność gruntu i sposób kotwienia potwierdza projektant. Nośność do
-          2 t/bloczek jest deklarowana przez producenta.
+          1 t/bloczek bez podlewki (do 5 t z podlewką cementową) jest deklarowana przez producenta.
         </p>
       </Container>
     </section>
@@ -747,6 +776,34 @@ function PresetIcon({ id, className }: { id: string; className?: string }) {
       <>
         <rect x="3" y="6" width="18" height="6" rx="1" />
         <rect x="3" y="13" width="18" height="6" rx="1" stroke={TEAL} />
+      </>
+    ),
+    "biuro-modulowe": (
+      <>
+        <rect x="5" y="4" width="14" height="16" rx="1" />
+        <path d="M8.5 7.5h2.5M13 7.5h2.5M8.5 11h2.5M13 11h2.5M8.5 14.5h2.5M13 14.5h2.5" stroke={TEAL} />
+      </>
+    ),
+    "salon-samochodowy": (
+      <>
+        <path d="M4 16v-3l2-4h12l2 4v3" />
+        <path d="M3 16h18" />
+        <circle cx="8" cy="17.5" r="1.4" stroke={TEAL} />
+        <circle cx="16" cy="17.5" r="1.4" stroke={TEAL} />
+      </>
+    ),
+    magazyn: (
+      <>
+        <path d="M3 20V9l9-4 9 4v11z" />
+        <path d="M8 20v-6h8v6" stroke={TEAL} />
+        <path d="M8 16.5h8" stroke={TEAL} />
+      </>
+    ),
+    "zestaw-kontenerowy": (
+      <>
+        <rect x="3" y="12" width="18" height="7" rx="0.5" />
+        <rect x="3.5" y="5" width="10.5" height="6" rx="0.5" stroke={TEAL} />
+        <path d="M7 12.5v6M11 12.5v6M15 12.5v6M18.5 12.5v6" stroke={TEAL} />
       </>
     ),
     container: (

@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { asset } from "@/lib/asset";
 
@@ -16,8 +16,65 @@ const BlockViewer = dynamic(() => import("@/components/block3d/BlockViewer"), {
 
 export function Block3DViewerIsland() {
   const [show, setShow] = useState(false);
+  const [active, setActive] = useState(true);
+  const wrapRef = useRef<HTMLDivElement>(null);
 
-  if (show) return <BlockViewer />;
+  // Po załadowaniu modelu pauzujemy jego pętlę renderowania, gdy NIE jest
+  // potrzebna — tzn. gdy jest poza ekranem, w trakcie scrollowania strony,
+  // albo karta jest nieaktywna. Dzięki temu ciężki render 3D (post-processing,
+  // cienie) nie obciąża przeglądarki i scrollowanie reszty strony pozostaje
+  // płynne także na słabszym sprzęcie. Wznawiamy, gdy model jest w kadrze,
+  // scroll się zatrzymał i karta jest widoczna.
+  useEffect(() => {
+    if (!show) return;
+    const el = wrapRef.current;
+    if (!el) return;
+
+    let onScreen = true;
+    let scrolling = false;
+    let scrollTimer: ReturnType<typeof setTimeout> | undefined;
+    const recompute = () => setActive(onScreen && !scrolling && !document.hidden);
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+        recompute();
+      },
+      { rootMargin: "300px 0px", threshold: 0 },
+    );
+    io.observe(el);
+
+    // Pauza w trakcie scrollowania (stan zmieniamy tylko na początku i końcu
+    // scrolla — bez setState na każde zdarzenie, żeby samo to nie kosztowało).
+    const onScroll = () => {
+      if (!scrolling) {
+        scrolling = true;
+        recompute();
+      }
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        scrolling = false;
+        recompute();
+      }, 180);
+    };
+    const onVis = () => recompute();
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("visibilitychange", onVis);
+    return () => {
+      io.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("visibilitychange", onVis);
+      clearTimeout(scrollTimer);
+    };
+  }, [show]);
+
+  if (show)
+    return (
+      <div ref={wrapRef}>
+        <BlockViewer active={active} onClose={() => setShow(false)} />
+      </div>
+    );
 
   return (
     <button

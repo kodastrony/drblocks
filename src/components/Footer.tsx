@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { company } from "@/lib/content";
-import { Phone, Mail, MapPin, Instagram, ArrowRight } from "@/components/Icons";
+import { Phone, Mail, Instagram, ArrowRight } from "@/components/Icons";
 
 const cols = [
   {
@@ -80,9 +80,6 @@ export function Footer() {
                 <a href={`mailto:${company.emailSales}`} className="flex items-center gap-2.5 text-white/70 transition-colors hover:text-teal">
                   <Mail className="size-4 shrink-0 text-teal" /> {company.emailSales}
                 </a>
-              </li>
-              <li className="flex items-start gap-2.5 text-white/60">
-                <MapPin className="mt-0.5 size-4 shrink-0 text-teal" /> {company.address}
               </li>
             </ul>
             <Link

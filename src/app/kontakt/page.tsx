@@ -3,7 +3,7 @@ import { Container } from "@/components/ui/Container";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { ContactForm } from "@/components/ContactForm";
-import { Phone, Mail, MapPin, Instagram } from "@/components/Icons";
+import { Phone, Mail, Instagram } from "@/components/Icons";
 import { company } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -18,7 +18,6 @@ export default function KontaktPage() {
     { icon: Phone, label: "Telefon", value: company.phone, href: company.phoneHref },
     { icon: Mail, label: "Sprzedaż", value: company.emailSales, href: `mailto:${company.emailSales}` },
     { icon: Mail, label: "Kontakt ogólny", value: company.emailContact, href: `mailto:${company.emailContact}` },
-    { icon: MapPin, label: "Adres", value: company.address },
   ];
 
   return (

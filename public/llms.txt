@@ -1,24 +1,22 @@
 # DrBlocks
 
-> DrBlocks to polski producent regulowanych bloczków fundamentowych dla budownictwa modułowego. System łączy betonowy korpus klasy B30 ze stalową nakładką z gwintem regulacyjnym, co pozwala wypoziomować fundament z dokładnością do 1 mm – bez wylewki betonowej i bez mokrych robót. Nośność do 2 ton na bloczek, montaż w jeden dzień.
+> DrBlocks to polski producent regulowanych bloczków fundamentowych dla budownictwa modułowego. System łączy betonowy korpus klasy B30 ze stalową nakładką z gwintem regulacyjnym, co pozwala wypoziomować fundament z dokładnością do 1 mm – bez wylewki betonowej i bez mokrych robót. Nośność do 1 t na bloczek bez podlewki (do 5 t z podlewką cementową), montaż w jeden dzień.
 
 Producent: Jimmyworld Jakub Stryjewski (NIP 9372592697, REGON 362105276).
-Adres: ul. Krakowska 69/9, 43-300 Bielsko-Biała, Polska.
 Kontakt: +48 506 057 727, kontakt@drblocks.pl, sprzedaż: sprzedaz@drblocks.pl.
 
 ## Produkty
 
-- [Standard Block](https://drblocks.pl/oferta/standard-block): Podstawowy regulowany bloczek fundamentowy. Korpus betonowy B30 + stalowa nakładka z gwintem. Regulacja wysokości do 55 mm, precyzja do 1 mm, nośność 1–2 t (>2 t z podlewką cementową).
+- [Standard Block](https://drblocks.pl/oferta/standard-block): Podstawowy regulowany bloczek fundamentowy. Korpus betonowy B30 + stalowa nakładka z gwintem. Regulacja wysokości 120–200 mm (zakres regulacji 70 mm), precyzja do 1 mm, nośność do 1 t bez podlewki (do 5 t z podlewką cementową).
 - [Standard Plus Block](https://drblocks.pl/oferta/standard-plus-block): Wersja premium z magnetycznymi chwytakami do montażu obróbki dolnej (wykończenie przestrzeni między budynkiem modułowym a gruntem). Wszystkie cechy Standard Block plus estetyczne i szybkie wykończenie.
 - [Pełna oferta](https://drblocks.pl/oferta): Zestawienie wszystkich wariantów bloczków fundamentowych DrBlocks.
 
 ## Specyfikacja techniczna
 
 - Klasa betonu: B30 (lany, wibrowany, zbrojony)
-- Zakres regulacji wysokości: do 55 mm
-- Zakres wysokości posadowienia: 120–200 mm
+- Regulacja wysokości: 120–200 mm (zakres regulacji 70 mm)
 - Precyzja regulacji: do 1 mm
-- Nośność: 1–2 t bez podlewki, >2 t z podlewką cementową
+- Nośność: do 1 t bez podlewki, do 5 t z podlewką cementową
 - Stopa regulacyjna: stal ocynkowana, 195 × 205 mm, grubość 5 mm
 - Pręty gwintowane: 4× M16, klasa 8.8, z podkładkami i nakrętkami samokontrującymi
 - Nakładka: stal 5 mm z przekładką izolacyjną
@@ -34,7 +32,7 @@ Kontakt: +48 506 057 727, kontakt@drblocks.pl, sprzedaż: sprzedaz@drblocks.pl.
 
 1. Ustaw – rozmieszczasz bloczki w siatce podpór pod konstrukcją.
 2. Wypoziomuj – gwintowana stopa reguluje wysokość z dokładnością do 1 mm.
-3. Obciąż – posadawiasz moduł (nośność do 2 ton na bloczek).
+3. Obciąż – posadawiasz moduł (nośność do 1 t na bloczek bez podlewki, do 5 t z podlewką cementową).
 4. Gotowe – konstrukcja gotowa do dalszych prac tego samego dnia.
 
 ## Informacje

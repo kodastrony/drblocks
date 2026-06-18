@@ -13,19 +13,33 @@ export function TrustBar() {
             {trust.heading}
           </p>
         </Reveal>
-        <div className="mt-9 flex flex-wrap items-center justify-center gap-x-10 gap-y-7 sm:gap-x-14">
-          {trust.logos.map((logo, i) => (
-            <Reveal key={logo.alt} delay={i * 0.04}>
-              <img
-                src={asset(logo.src)}
-                alt={logo.alt}
-                loading="lazy"
-                className="h-8 w-auto max-w-[150px] object-contain opacity-95 transition-all duration-300 hover:-translate-y-0.5 hover:opacity-100 sm:h-10"
-              />
-            </Reveal>
+      </Container>
+
+      {/* Auto-scrolling carousel: one track holds two identical logo copies and
+          slides left by exactly one copy (-50%) for a seamless loop. Pauses on
+          hover and (via globals.css) for reduced-motion users. */}
+      <div className="group marquee-mask mt-9 overflow-hidden">
+        <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused]">
+          {[0, 1].map((copy) => (
+            <ul
+              key={copy}
+              aria-hidden={copy === 1}
+              className="flex shrink-0 items-center gap-x-14 pr-14 sm:gap-x-20 sm:pr-20"
+            >
+              {trust.logos.map((logo) => (
+                <li key={logo.alt} className="shrink-0">
+                  <img
+                    src={asset(logo.src)}
+                    alt={copy === 1 ? "" : logo.alt}
+                    loading="lazy"
+                    className="h-12 w-auto max-w-[210px] object-contain opacity-90 transition-opacity duration-300 hover:opacity-100 sm:h-16"
+                  />
+                </li>
+              ))}
+            </ul>
           ))}
         </div>
-      </Container>
+      </div>
     </section>
   );
 }

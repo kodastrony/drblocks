@@ -25,13 +25,16 @@ export function ContactForm({ defaultMessage = "" }: { defaultMessage?: string }
     const bloczki = sp.get("bloczki") || "";
     const produkt = sp.get("produkt") || "";
     const zastosowanie = sp.get("zastosowanie") || "";
+    const waga = sp.get("waga") || "";
     const parts: string[] = [];
     if (produkt) parts.push(`Interesuje mnie produkt: ${produkt}.`);
-    if (wymiary || bloczki || zastosowanie)
+    if (wymiary || bloczki || zastosowanie || waga)
       parts.push(
         `Proszę o wycenę fundamentu${zastosowanie ? ` (${zastosowanie})` : ""}${
           wymiary ? ` o wymiarach ${wymiary}` : ""
-        }${bloczki ? ` (orientacyjnie ${bloczki} bloczków wg kalkulatora)` : ""}.`,
+        }${waga ? `, waga budynku ok. ${waga}` : ""}${
+          bloczki ? ` (orientacyjnie ${bloczki} bloczków wg kalkulatora)` : ""
+        }.`,
       );
     if (parts.length) setPrefill(`Dzień dobry, ${parts.join(" ")} Proszę o kontakt.`);
   }, [defaultMessage]);

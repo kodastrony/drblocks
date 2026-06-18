@@ -25,7 +25,7 @@ export async function generateMetadata({
   if (!p) return {};
   return {
     title: `${p.name} – regulowany bloczek fundamentowy`,
-    description: `${p.name} DrBlocks: ${p.short} Beton B30, regulacja do 55 mm, nośność do 2 ton, montaż w jeden dzień.`,
+    description: `${p.name} DrBlocks: ${p.short} Beton B30, regulacja wysokości 120–200 mm, nośność do 5 t z podlewką cementową, montaż w jeden dzień.`,
     alternates: { canonical: `/oferta/${p.slug}` },
   };
 }

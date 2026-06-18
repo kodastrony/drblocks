@@ -179,7 +179,7 @@ W praktyce, aby wyrównać wysokość fundamentów, często konieczne jest stoso
 
 Bloczki betonowe fundamentowe od DrBlocks są odpowiedzią na potrzeby nowoczesnego budownictwa, oferując zaawansowane funkcje, które znacząco przewyższają możliwości standardowych bloczków. Oto, co wyróżnia bloczki DrBlocks:
 
-- **Regulacja wysokości:** Bloczek Standard jest wyposażony w stalową nakładkę, która umożliwia precyzyjną regulację wysokości nawet do 5,5 cm. Dzięki temu fundamenty mogą być idealnie dopasowane do warunków terenowych, co minimalizuje ryzyko osiadania budynku.
+- **Regulacja wysokości:** Bloczek Standard jest wyposażony w stalową nakładkę, która umożliwia precyzyjną regulację wysokości posadowienia w zakresie 120–200 mm (zakres regulacji do 7 cm). Dzięki temu fundamenty mogą być idealnie dopasowane do warunków terenowych, co minimalizuje ryzyko osiadania budynku.
 - **Chwytaki magnetyczne:** W modelach takich jak Bloczek Standard Plus dodatkowo zastosowano innowacyjne chwytaki magnetyczne, które ułatwiają montaż obróbki dolnej. To rozwiązanie nie tylko przyspiesza proces budowy, ale także zapewnia estetyczne i trwałe wykończenie przestrzeni pomiędzy budynkiem a gruntem.
 - **Zakotwienie:** Standard Blok L oraz jego wersja Plus oferują możliwość chemicznego lub mechanicznego zakotwienia w gruncie, co zapewnia jeszcze większą stabilność konstrukcji. Dzięki temu fundamenty są nie tylko stabilne, ale również odporne na zmienne warunki gruntowe i atmosferyczne.
 

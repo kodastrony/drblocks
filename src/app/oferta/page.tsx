@@ -9,15 +9,16 @@ import { products } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Regulowane bloczki fundamentowe – oferta",
   description:
-    "Oferta DrBlocks: Standard Block i Standard Plus Block. Regulowane bloczki fundamentowe do budownictwa modułowego – nośność do 2 ton, precyzja do 1 mm, montaż w jeden dzień.",
+    "Oferta DrBlocks: Standard Block i Standard Plus Block. Regulowane bloczki fundamentowe do budownictwa modułowego – nośność do 5 t z podlewką cementową, regulacja wysokości 120–200 mm, montaż w jeden dzień.",
   alternates: { canonical: "/oferta" },
 };
 
 const compareRows: { label: string; values: [string | boolean, string | boolean] }[] = [
   { label: "Korpus betonowy", values: ["B30", "B30"] },
-  { label: "Regulacja wysokości", values: ["do 55 mm", "do 55 mm"] },
+  { label: "Regulacja wysokości", values: ["120–200 mm", "120–200 mm"] },
+  { label: "Zakres regulacji", values: ["70 mm", "70 mm"] },
   { label: "Precyzja regulacji", values: ["1 mm", "1 mm"] },
-  { label: "Nośność", values: ["do 2 t", "do 2 t"] },
+  { label: "Nośność", values: ["do 1 t (5 t z podlewką)", "do 1 t (5 t z podlewką)"] },
   { label: "Chwytaki magnetyczne", values: [false, true] },
   { label: "Montaż obróbki dolnej (cokół)", values: [false, true] },
   { label: "Przeznaczenie", values: ["uniwersalne", "wykończenie cokołu"] },

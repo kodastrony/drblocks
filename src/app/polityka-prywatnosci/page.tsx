@@ -22,8 +22,8 @@ export default function PolitykaPage() {
           <div className="prose prose-slate max-w-none prose-headings:font-display prose-headings:text-navy prose-a:text-teal-700 prose-strong:text-navy">
             <h2>§1. Administrator danych</h2>
             <p>
-              Administratorem danych osobowych jest <strong>{company.legal}</strong>,{" "}
-              {company.address}, NIP {company.nip}, REGON {company.regon} (dalej „Administrator”).
+              Administratorem danych osobowych jest <strong>{company.legal}</strong>, NIP{" "}
+              {company.nip}, REGON {company.regon} (dalej „Administrator”).
               W sprawach dotyczących ochrony danych osobowych można kontaktować się pod adresem{" "}
               <a href={`mailto:${company.emailContact}`}>{company.emailContact}</a>.
             </p>
