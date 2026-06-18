@@ -48,14 +48,20 @@ export const hero = {
 
 export const trust = {
   heading: "Zaufali nam liderzy budownictwa modułowego",
+  // Logotypy mają różną „gęstość" (ilość pustego marginesu w pliku), więc każdy
+  // dostaje indywidualny `scale` (optyczna wielkość) i `pad` (odstęp) — żeby
+  // wyglądały na równo duże i równo rozstawione. `w`/`h` = wymiary natywne pliku
+  // (rezerwują miejsce zanim obraz się wczyta → karuzela rusza od razu z pełną
+  // szerokością, bez „pełzania"). Skala/odstęp skalują się responsywnie przez
+  // zmienne CSS (--logo-h / --logo-gap) zdefiniowane w globals.css.
   logos: [
-    { src: "/assets/global-containers-1024x195-1.png", alt: "Global Home Containers" },
-    { src: "/assets/JR.png", alt: "JR Modular Systems" },
-    { src: "/assets/Komato.png", alt: "Komato Kontenery" },
-    { src: "/assets/Cont4you.png", alt: "CONT4YOU" },
-    { src: "/assets/art-pawilony.png", alt: "art pawilony" },
-    { src: "/assets/syrek-1.png", alt: "Syrek" },
-    { src: "/assets/NoviPawilony-1.png", alt: "Novi Pawilony" },
+    { src: "/assets/global-containers-1024x195-1.png", alt: "Global Home Containers", w: 480, h: 91, scale: 0.86, pad: 0.95 },
+    { src: "/assets/JR.png", alt: "JR Modular Systems", w: 480, h: 125, scale: 0.92, pad: 1 },
+    { src: "/assets/Komato.png", alt: "Komato Kontenery", w: 480, h: 125, scale: 1.08, pad: 0.95 },
+    { src: "/assets/Cont4you.png", alt: "CONT4YOU", w: 480, h: 125, scale: 1.04, pad: 0.9 },
+    { src: "/assets/art-pawilony.png", alt: "art pawilony", w: 480, h: 125, scale: 1.32, pad: 0.85 },
+    { src: "/assets/syrek-1.png", alt: "Syrek", w: 480, h: 125, scale: 1.16, pad: 0.9 },
+    { src: "/assets/NoviPawilony-1.png", alt: "Novi Pawilony", w: 480, h: 125, scale: 1.28, pad: 0.9 },
   ],
 };
 

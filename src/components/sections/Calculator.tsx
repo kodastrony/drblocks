@@ -38,12 +38,8 @@ const PRESETS: Preset[] = [
   { id: "salon-samochodowy", label: "Salon samochodowy", shape: "rect", spacing: 1.2, load: "heavy", variant: "plus", dims: { L: 12, W: 8 }, note: "Duża powierzchnia i skupione obciążenia (pojazdy, posadzka, witryny). Gęsta siatka 1,0–1,2 m, pod słupami fundament punktowy. Zalecana podlewka cementowa." },
   { id: "magazyn", label: "Magazyn", shape: "rect", spacing: 1.0, load: "heavy", variant: "standard", dims: { L: 12, W: 8 }, note: "Wysokie obciążenia użytkowe (regały, towar, wózki). Zagęść podpory do 0,8–1,0 m, pod słupami i regałami dodatkowe bloczki. Podlewka cementowa zalecana." },
   { id: "zestaw-kontenerowy", label: "Zestawy kontenerowe", shape: "rect", spacing: 1.5, load: "heavy", variant: "standard", dims: { L: 12, W: 6 }, note: "Zestaw połączonych modułów / kontenerów. Podpory pod narożami i stykami każdego modułu oraz wzdłuż ram nośnych. Rozważ podlewkę cementową." },
-  { id: "container", label: "Kontener", shape: "container", spacing: 1.5, load: "heavy", variant: "standard", dims: { L: 6.06, W: 2.44 }, note: "Kontener przenosi obciążenie WYŁĄCZNIE przez 4 dolne naroża. To layout punktowy, nie siatka. 20 ft → 4 bloczki, 40 ft → 6." },
-  { id: "hot-tub", label: "Jacuzzi / balia", shape: "rect", spacing: 1.0, load: "heavy", variant: "standard", dims: { L: 2.5, W: 2.5 }, note: "Napełnione + osoby to ~390–635 kg/m², znacznie powyżej tarasu. Zagęść podpory do 0,6–1,0 m. Rozważ podlewkę." },
   { id: "sauna", label: "Sauna ogrodowa", shape: "rect", spacing: 1.5, load: "medium", variant: "standard", dims: { L: 3, W: 2.5 }, note: "Podpory po obwodzie co 1,0–1,5 m oraz na przecięciach ścian wewnętrznych." },
   { id: "carport", label: "Wiata / pergola", shape: "rect", spacing: 1.75, load: "light", variant: "standard", dims: { L: 5, W: 3 }, note: "Obciążenie pionowe małe, ale rządzi WIATR/wypór. Krytyczne jest zakotwienie. Podpory pod każdym słupem." },
-  { id: "glamping", label: "Glamping / tiny house", shape: "rect", spacing: 1.5, load: "medium", variant: "plus", dims: { L: 4, W: 3 }, note: "Bloczek w każdym narożniku + dodatkowe po obwodzie co 1,0–1,5 m. Cięższe modele → zagęść." },
-  { id: "mobile-home", label: "Dom mobilny", shape: "rect", spacing: 1.5, load: "heavy", variant: "plus", dims: { L: 9, W: 4 }, note: "Podpory pod każdym podłużnym elementem ramy, skrajne blisko końców. Wymagane zakotwienie/odciągi." },
   { id: "pavilion", label: "Pawilon / kiosk", shape: "rect", spacing: 1.5, load: "medium", variant: "plus", dims: { L: 4, W: 3 }, note: "Fundament punktowy pod słupami/ramą, bloczek pod każdym słupem. Plus dla estetycznego cokołu." },
 ];
 
@@ -414,10 +410,47 @@ export function Calculator() {
                     <span>ciężka</span>
                   </div>
                 </Field>
-                <Toggle active={grout} onClick={() => setGrout((v) => !v)}>
-                  Podlewka cementowa
-                  <span className="mt-0.5 block text-[11px] font-normal text-mute">nośność do 5 t/bloczek</span>
-                </Toggle>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={grout}
+                  onClick={() => setGrout((v) => !v)}
+                  className={`flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition-colors ${
+                    grout ? "border-teal bg-teal-50" : "border-line bg-paper hover:border-line-strong"
+                  }`}
+                >
+                  <span
+                    className={`flex size-9 shrink-0 items-center justify-center rounded-lg transition-colors ${
+                      grout ? "bg-teal text-white" : "bg-mist text-mute"
+                    }`}
+                    aria-hidden
+                  >
+                    <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 3c3 3.6 5 6.3 5 8.8a5 5 0 0 1-10 0C7 9.3 9 6.6 12 3z" />
+                      <path d="M9.5 12.4c.5 1.2 1.5 2 2.8 2.1" />
+                    </svg>
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className={`block text-sm font-semibold ${grout ? "text-teal-800" : "text-slate"}`}>
+                      Podlewka cementowa
+                    </span>
+                    <span className="block text-[11px] text-mute">
+                      {grout ? "Nośność do 5 t na bloczek" : "Zwiększa nośność do 5 t na bloczek"}
+                    </span>
+                  </span>
+                  <span
+                    className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
+                      grout ? "bg-teal" : "bg-line-strong"
+                    }`}
+                    aria-hidden
+                  >
+                    <span
+                      className={`inline-block size-5 transform rounded-full bg-white shadow transition-transform duration-200 ${
+                        grout ? "translate-x-[22px]" : "translate-x-0.5"
+                      }`}
+                    />
+                  </span>
+                </button>
               </div>
 
             </div>
@@ -683,34 +716,6 @@ function Stat({ label, value }: { label: string; value: number }) {
   );
 }
 
-function Toggle({
-  active,
-  onClick,
-  disabled,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  disabled?: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      aria-pressed={active}
-      className={`min-w-0 rounded-xl border px-3.5 py-3 text-left text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
-        active
-          ? "border-teal bg-teal-50 text-teal-800"
-          : "border-line bg-paper text-slate hover:border-line-strong"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
-
 function Field({
   label,
   value,
@@ -806,18 +811,6 @@ function PresetIcon({ id, className }: { id: string; className?: string }) {
         <path d="M7 12.5v6M11 12.5v6M15 12.5v6M18.5 12.5v6" stroke={TEAL} />
       </>
     ),
-    container: (
-      <>
-        <rect x="3" y="7" width="18" height="10" rx="1" />
-        <path d="M8 7.5v9M12 7.5v9M16 7.5v9" stroke={TEAL} />
-      </>
-    ),
-    "hot-tub": (
-      <>
-        <rect x="4" y="9" width="16" height="9" rx="3" />
-        <path d="M6 9c1.5-2 3 2 4.5 0s3-2 4.5 0" stroke={TEAL} />
-      </>
-    ),
     sauna: (
       <>
         <path d="M3.5 9 12 4l8.5 5" />
@@ -830,20 +823,6 @@ function PresetIcon({ id, className }: { id: string; className?: string }) {
         <path d="M3 9 12 5l9 4" stroke={TEAL} />
         <path d="M5 9v10M19 9v10" />
         <path d="M3 19h18" />
-      </>
-    ),
-    glamping: (
-      <>
-        <path d="M12 4 3 20h18z" />
-        <path d="M12 9v11" stroke={TEAL} />
-      </>
-    ),
-    "mobile-home": (
-      <>
-        <rect x="3" y="7" width="15" height="8" rx="1" />
-        <path d="M18 11h3" stroke={TEAL} />
-        <circle cx="8" cy="17.5" r="1.6" />
-        <circle cx="14" cy="17.5" r="1.6" />
       </>
     ),
     pavilion: (

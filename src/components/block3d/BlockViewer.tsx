@@ -326,8 +326,11 @@ export default function BlockViewer({
   const [heightMm, setHeightMm] = useState(120);
   const [showLabels, setShowLabels] = useState(false);
   const [grout, setGrout] = useState(false);
-  // wysokość posadowienia 120–200 mm → skok modelu 0–55 (BlockModel liczy skok stopy w mm)
-  const liftMm = Math.round(((heightMm - 120) / 80) * 55);
+  // Wysokość posadowienia 120–200 mm steruje uniesieniem czarnej stopy PROPORCJONALNIE
+  // do wysokości: przy 120 mm stopa jest już wysunięta (~0,30 jednostki modelu), przy
+  // 200 mm osiąga maksimum (0,50). BlockModel: lift = liftMm/55 · 0,5; 120/200·55≈33 → 0,30,
+  // 200/200·55=55 → 0,50 (cały zakres mieści się w zweryfikowanym skoku modelu).
+  const liftMm = Math.round((heightMm / 200) * 55);
 
   return (
     <div className="overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#1e2a38] to-[#11171f] shadow-2xl">

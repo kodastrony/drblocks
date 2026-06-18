@@ -16,23 +16,32 @@ export function TrustBar() {
       </Container>
 
       {/* Auto-scrolling carousel: one track holds two identical logo copies and
-          slides left by exactly one copy (-50%) for a seamless loop. Pauses on
-          hover and (via globals.css) for reduced-motion users. */}
-      <div className="group marquee-mask mt-9 overflow-hidden">
+          slides left by exactly one copy (-50%) for a seamless loop. Each logo
+          is individually sized (`scale`) and spaced (`pad` via per-li padding,
+          so the loop stays seamless). `width`/`height` reserve space before the
+          image loads, so the track is full-width from the first frame (no slow
+          crawl). Pauses on hover and (via globals.css) for reduced-motion. */}
+      <div className="group marquee-mask logo-row mt-9 overflow-hidden">
         <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused]">
           {[0, 1].map((copy) => (
-            <ul
-              key={copy}
-              aria-hidden={copy === 1}
-              className="flex shrink-0 items-center gap-x-14 pr-14 sm:gap-x-20 sm:pr-20"
-            >
+            <ul key={copy} aria-hidden={copy === 1} className="flex shrink-0 items-center">
               {trust.logos.map((logo) => (
-                <li key={logo.alt} className="shrink-0">
+                <li
+                  key={logo.alt}
+                  className="flex shrink-0 items-center"
+                  style={{
+                    paddingLeft: `calc(var(--logo-gap) * ${logo.pad} / 2)`,
+                    paddingRight: `calc(var(--logo-gap) * ${logo.pad} / 2)`,
+                  }}
+                >
                   <img
                     src={asset(logo.src)}
                     alt={copy === 1 ? "" : logo.alt}
-                    loading="lazy"
-                    className="h-12 w-auto max-w-[210px] object-contain opacity-90 transition-opacity duration-300 hover:opacity-100 sm:h-16"
+                    width={logo.w}
+                    height={logo.h}
+                    decoding="async"
+                    style={{ height: `calc(var(--logo-h) * ${logo.scale})`, width: "auto" }}
+                    className="max-w-none object-contain opacity-90 transition-opacity duration-300 hover:opacity-100"
                   />
                 </li>
               ))}

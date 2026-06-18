@@ -108,6 +108,19 @@
   to { transform: translateX(-50%); }
 }
 
+/* Responsywna baza dla karuzeli logotypów (wysokość logo + odstęp).
+   Pojedyncze marki skalują te wartości przez własne `scale`/`pad`. */
+.logo-row {
+  --logo-h: 3rem;     /* 48px — telefon */
+  --logo-gap: 1.5rem; /* 24px */
+}
+@media (min-width: 640px) {
+  .logo-row { --logo-h: 3.75rem; --logo-gap: 2rem; } /* 60px / 32px — tablet */
+}
+@media (min-width: 1024px) {
+  .logo-row { --logo-h: 5.75rem; --logo-gap: 2.5rem; } /* 92px / 40px — desktop */
+}
+
 /* Lenis smooth scroll (only applied while Lenis is active) */
 html.lenis,
 html.lenis body {
