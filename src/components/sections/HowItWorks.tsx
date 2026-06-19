@@ -1,9 +1,11 @@
 import { Container } from "@/components/ui/Container";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
 import { stepIcons } from "@/components/Icons";
-import { system } from "@/lib/content";
+import { getContent } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
-export function HowItWorks() {
+export function HowItWorks({ locale }: { locale: Locale }) {
+  const { system } = getContent(locale);
   return (
     <section id="jak-to-dziala" className="scroll-mt-24 bg-mist py-20 lg:py-28">
       <Container>

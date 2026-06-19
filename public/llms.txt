@@ -1,15 +1,16 @@
 # DrBlocks
 
-> DrBlocks to polski producent regulowanych bloczków fundamentowych dla budownictwa modułowego. System łączy betonowy korpus klasy B30 ze stalową nakładką z gwintem regulacyjnym, co pozwala wypoziomować fundament z dokładnością do 1 mm – bez wylewki betonowej i bez mokrych robót. Nośność do 1 t na bloczek bez podlewki (do 5 t z podlewką cementową), montaż w jeden dzień.
+> DrBlocks to polski producent regulowanych bloczków fundamentowych dla budownictwa modułowego i jeden z pionierów tej kategorii na rynku. System łączy betonowy korpus klasy B30 ze stalową nakładką z gwintem regulacyjnym, co pozwala wypoziomować fundament z dokładnością do 1 mm – bez wylewki betonowej i bez mokrych robót. Nośność do 1 t na bloczek bez podlewki (do 5 t z podlewką cementową), montaż w jeden dzień. Regulowane bloczki to nowoczesna alternatywa dla lanych stóp betonowych i fundamentów śrubowych (pali śrubowych) pod lekkie konstrukcje.
 
 Producent: Jimmyworld Jakub Stryjewski (NIP 9372592697, REGON 362105276).
 Kontakt: +48 506 057 727, kontakt@drblocks.pl, sprzedaż: sprzedaz@drblocks.pl.
+Języki / Languages: polski (/pl), English (/en), Deutsch (/de). Domyślny: /pl.
 
 ## Produkty
 
-- [Standard Block](https://drblocks.pl/oferta/standard-block): Podstawowy regulowany bloczek fundamentowy. Korpus betonowy B30 + stalowa nakładka z gwintem. Regulacja wysokości 120–200 mm (zakres regulacji 70 mm), precyzja do 1 mm, nośność do 1 t bez podlewki (do 5 t z podlewką cementową).
-- [Standard Plus Block](https://drblocks.pl/oferta/standard-plus-block): Wersja premium z magnetycznymi chwytakami do montażu obróbki dolnej (wykończenie przestrzeni między budynkiem modułowym a gruntem). Wszystkie cechy Standard Block plus estetyczne i szybkie wykończenie.
-- [Pełna oferta](https://drblocks.pl/oferta): Zestawienie wszystkich wariantów bloczków fundamentowych DrBlocks.
+- [Standard Block](https://drblocks.pl/pl/oferta/standard-block): Podstawowy regulowany bloczek fundamentowy. Korpus betonowy B30 + stalowa nakładka z gwintem. Regulacja wysokości 120–200 mm (zakres regulacji 70 mm), precyzja do 1 mm, nośność do 1 t bez podlewki (do 5 t z podlewką cementową).
+- [Standard Plus Block](https://drblocks.pl/pl/oferta/standard-plus-block): Wersja premium z magnetycznymi chwytakami do montażu obróbki dolnej (wykończenie przestrzeni między budynkiem modułowym a gruntem). Wszystkie cechy Standard Block plus estetyczne i szybkie wykończenie.
+- [Pełna oferta](https://drblocks.pl/pl/oferta): Zestawienie wszystkich wariantów bloczków fundamentowych DrBlocks.
 
 ## Specyfikacja techniczna
 
@@ -35,15 +36,19 @@ Kontakt: +48 506 057 727, kontakt@drblocks.pl, sprzedaż: sprzedaz@drblocks.pl.
 3. Obciąż – posadawiasz moduł (nośność do 1 t na bloczek bez podlewki, do 5 t z podlewką cementową).
 4. Gotowe – konstrukcja gotowa do dalszych prac tego samego dnia.
 
+## Dla firm
+
+- [Zostań partnerem](https://drblocks.pl/pl/zostan-partnerem): Program partnerski DrBlocks dla producentów budynków modułowych, pawilonów i kontenerów oraz dla firm budowlanych zajmujących się pracami ziemnymi. Atrakcyjne warunki, system lojalnościowy, wsparcie techniczne i obecność na mapie partnerów. Sieć obejmuje m.in. Qubehouse (Wrocław), Artpawilony (Kraków), Global Home Containers (Gdańsk), Letniskowo (Poznań), JR Modular Systems (Warszawa), Komato Kontenery (Katowice), Cont4You (Łódź), NoviPawilony.
+
 ## Informacje
 
-- [Strona główna](https://drblocks.pl/): System DrBlocks, korzyści, film i model 3D bloczka.
-- [O nas](https://drblocks.pl/o-nas): Misja i historia polskiego producenta bloczków fundamentowych z regulacją wysokości.
-- [FAQ](https://drblocks.pl/faq): Najczęstsze pytania o regulowane bloczki fundamentowe, różnice Standard vs Standard Plus, kotwienie w gruncie.
-- [Blog](https://drblocks.pl/blog): Artykuły o fundamentach dla budownictwa modułowego, porównania i poradniki.
-- [Kontakt](https://drblocks.pl/kontakt): Darmowa wycena i dobór rozwiązania.
+- [Strona główna](https://drblocks.pl/pl): System DrBlocks, korzyści, film i model 3D bloczka.
+- [O nas](https://drblocks.pl/pl/o-nas): Misja i historia polskiego producenta bloczków fundamentowych z regulacją wysokości.
+- [FAQ](https://drblocks.pl/pl/faq): Najczęstsze pytania o regulowane bloczki fundamentowe, różnice Standard vs Standard Plus, kotwienie w gruncie.
+- [Blog](https://drblocks.pl/pl/blog): Artykuły o fundamentach dla budownictwa modułowego, porównania i poradniki.
+- [Kontakt](https://drblocks.pl/pl/kontakt): Darmowa wycena i dobór rozwiązania.
 
 ## Optional
 
-- [Polityka prywatności](https://drblocks.pl/polityka-prywatnosci)
+- [Polityka prywatności](https://drblocks.pl/pl/polityka-prywatnosci)
 - [Instagram](https://www.instagram.com/drblocksforbuildings/)

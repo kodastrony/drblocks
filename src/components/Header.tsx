@@ -6,11 +6,18 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import clsx from "clsx";
-import { nav, company } from "@/lib/content";
+import { company } from "@/lib/company";
 import { asset } from "@/lib/asset";
+import { localizedHref } from "@/i18n";
+import { locales, localeShort, type Locale } from "@/i18n/config";
+import type { SiteContent } from "@/i18n/types";
 import { Phone, ChevronDown, Menu, Close } from "@/components/Icons";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
-export function Header() {
+export function Header({ locale, content }: { locale: Locale; content: SiteContent }) {
+  const { nav, ui } = content;
+  const href = (h: string) => localizedHref(locale, h);
+
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [drop, setDrop] = useState<string | null>(null);
@@ -38,7 +45,6 @@ export function Header() {
     };
   }, [open]);
 
-  // Mobile dialog: focus management, Escape, focus trap
   useEffect(() => {
     if (!open) return;
     closeBtnRef.current?.focus();
@@ -80,7 +86,7 @@ export function Header() {
       )}
     >
       <div className="mx-auto flex h-[68px] max-w-[1200px] items-center justify-between px-5 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center" aria-label="DrBlocks – strona główna">
+        <Link href={href("/")} className="flex items-center" aria-label={ui.homeAria}>
           <Image
             src={asset("/assets/logo-dark.png")}
             alt="DrBlocks"
@@ -91,7 +97,7 @@ export function Header() {
           />
         </Link>
 
-        <nav aria-label="Główna nawigacja" className="hidden items-center gap-1 lg:flex">
+        <nav aria-label={ui.mainNavAria} className="hidden items-center gap-1 lg:flex">
           {nav.map((item) =>
             item.children ? (
               <div
@@ -131,16 +137,16 @@ export function Header() {
                       <div className="overflow-hidden rounded-xl border border-line bg-white p-1.5 shadow-[var(--shadow-lift)]">
                         <Link
                           role="menuitem"
-                          href={item.href}
+                          href={href(item.href)}
                           className="block rounded-lg px-3.5 py-2.5 text-sm font-medium text-slate transition-colors hover:bg-mist hover:text-navy"
                         >
-                          Przegląd oferty
+                          {ui.offerOverview}
                         </Link>
                         {item.children.map((c) => (
                           <Link
                             role="menuitem"
                             key={c.href}
-                            href={c.href}
+                            href={href(c.href)}
                             className="block rounded-lg px-3.5 py-2.5 text-sm font-medium text-slate transition-colors hover:bg-mist hover:text-navy"
                           >
                             {c.label}
@@ -154,7 +160,7 @@ export function Header() {
             ) : (
               <Link
                 key={item.label}
-                href={item.href}
+                href={href(item.href)}
                 className="rounded-lg px-3.5 py-2 text-sm font-medium text-slate transition-colors hover:text-navy"
               >
                 {item.label}
@@ -164,24 +170,25 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2.5">
+          <LanguageSwitcher current={locale} className="hidden sm:block" />
           <a
             href={company.phoneHref}
-            className="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-navy transition-colors hover:text-teal-800 md:flex"
+            className="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-navy transition-colors hover:text-teal-800 xl:flex"
           >
             <Phone className="size-4 text-teal" />
             {company.phone}
           </a>
           <Link
-            href="/kontakt"
+            href={href("/kontakt")}
             className="hidden rounded-xl bg-navy px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_30px_-12px_rgba(15,23,42,0.5)] transition-colors hover:bg-teal sm:inline-flex"
           >
-            Darmowa wycena
+            {ui.freeQuote}
           </Link>
           <button
             ref={menuBtnRef}
             onClick={() => setOpen(true)}
             className="inline-flex size-11 items-center justify-center rounded-lg border border-line text-navy lg:hidden"
-            aria-label="Otwórz menu"
+            aria-label={ui.openMenu}
             aria-expanded={open}
           >
             <Menu className="size-5" />
@@ -195,7 +202,7 @@ export function Header() {
             ref={dialogRef}
             role="dialog"
             aria-modal="true"
-            aria-label="Menu nawigacji"
+            aria-label={ui.mobileNavAria}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -214,12 +221,12 @@ export function Header() {
                 ref={closeBtnRef}
                 onClick={() => setOpen(false)}
                 className="inline-flex size-11 items-center justify-center rounded-lg border border-white/20 text-white"
-                aria-label="Zamknij menu"
+                aria-label={ui.closeMenu}
               >
                 <Close className="size-5" />
               </button>
             </div>
-            <nav aria-label="Menu mobilne" className="flex flex-col gap-1 px-5 pb-10 pt-4">
+            <nav aria-label={ui.mobileNavAria} className="flex flex-col gap-1 px-5 pb-10 pt-4">
               {nav.map((item, i) => (
                 <motion.div
                   key={item.label}
@@ -228,7 +235,7 @@ export function Header() {
                   transition={{ delay: 0.05 + i * 0.05 }}
                 >
                   <Link
-                    href={item.href}
+                    href={href(item.href)}
                     className="block border-b border-white/10 py-3.5 font-display text-2xl font-semibold text-white"
                   >
                     {item.label}
@@ -236,7 +243,11 @@ export function Header() {
                   {item.children && (
                     <div className="flex flex-col gap-1 py-2 pl-4">
                       {item.children.map((c) => (
-                        <Link key={c.href} href={c.href} className="py-1.5 text-sm text-white/75">
+                        <Link
+                          key={c.href}
+                          href={href(c.href)}
+                          className="py-1.5 text-sm text-white/75"
+                        >
                           {c.label}
                         </Link>
                       ))}
@@ -245,17 +256,38 @@ export function Header() {
                 </motion.div>
               ))}
               <Link
-                href="/o-nas"
+                href={href("/o-nas")}
                 className="border-b border-white/10 py-3.5 font-display text-2xl font-semibold text-white"
               >
-                O nas
+                {ui.footerCompany}
               </Link>
-              <div className="mt-6 flex flex-col gap-3">
+              <div className="mt-6 flex items-center gap-2">
+                {locales.map((l) => {
+                  const rest = (pathname || `/${locale}`).replace(/^\/(pl|en|de)(?=\/|$)/, "");
+                  return (
+                    <Link
+                      key={l}
+                      href={`/${l}${rest}`}
+                      hrefLang={l}
+                      aria-current={l === locale ? "true" : undefined}
+                      className={clsx(
+                        "rounded-lg border px-3.5 py-2 text-sm font-semibold transition-colors",
+                        l === locale
+                          ? "border-teal bg-teal text-white"
+                          : "border-white/20 text-white/75 hover:border-white/40 hover:text-white",
+                      )}
+                    >
+                      {localeShort[l]}
+                    </Link>
+                  );
+                })}
+              </div>
+              <div className="mt-4 flex flex-col gap-3">
                 <Link
-                  href="/kontakt"
+                  href={href("/kontakt")}
                   className="rounded-xl bg-teal px-5 py-4 text-center font-semibold text-white"
                 >
-                  Darmowa wycena
+                  {ui.freeQuote}
                 </Link>
                 <a
                   href={company.phoneHref}

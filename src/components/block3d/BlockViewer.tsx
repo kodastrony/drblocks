@@ -15,6 +15,7 @@ import {
 import { EffectComposer, N8AO, Bloom, SMAA, ToneMapping, BrightnessContrast } from "@react-three/postprocessing";
 import { ToneMappingMode } from "postprocessing";
 import { useReducedMotion } from "framer-motion";
+import { useContent } from "@/i18n/LocaleProvider";
 import { BlockModel, type Variant } from "./BlockModel";
 
 /* =========================================================================
@@ -165,6 +166,8 @@ function Scene({
   grout: boolean;
 }) {
   const reduce = useReducedMotion();
+  const { viewer3d } = useContent();
+  const ann = viewer3d.annotations;
   // szerokość płótna → kompaktowe etykiety na wąskich (mobilnych) ekranach
   const canvasW = useThree((s) => s.size.width);
   const compact = canvasW > 0 && canvasW < 520;
@@ -225,12 +228,12 @@ function Scene({
              ───────────────────────────────────────────────────────────────────────────── */
           return (
             <>
-              <Annotation anchor={[-0.95, -0.22, 1.0]} label="Korpus betonowy B30" place="down" compact={compact} />
-              <Annotation anchor={[-0.98, 0.72 + lift, 0.5]} label="Stalowa stopa regulacyjna" place="up" compact={compact} />
-              <Annotation anchor={[-1.24, 0.32, 0.6]} label="Śruby M16 (4×)" place="left-down" compact={compact} />
+              <Annotation anchor={[-0.95, -0.22, 1.0]} label={ann.body} place="down" compact={compact} />
+              <Annotation anchor={[-0.98, 0.72 + lift, 0.5]} label={ann.foot} place="up" compact={compact} />
+              <Annotation anchor={[-1.24, 0.32, 0.6]} label={ann.bolts} place="left-down" compact={compact} />
               <Annotation
                 anchor={[-0.5, 0.6 + lift / 2, 1.5]}
-                label="Regulacja wysokości"
+                label={ann.height}
                 sub={`${heightMm} mm`}
                 place={compact ? "up" : "right-up"}
                 compact={compact}
@@ -238,13 +241,13 @@ function Scene({
               {variant === "plus" && (
                 <Annotation
                   anchor={[-1.5, 0.46 + lift, 0]}
-                  label="Chwytak magnetyczny"
+                  label={ann.magnet}
                   place={compact ? "right" : "left"}
                   compact={compact}
                 />
               )}
               {grout && lift > 0.001 && (
-                <Annotation anchor={[-0.3, 0.6 + lift / 2, 1.5]} label="Podlewka cementowa" place={compact ? "down" : "right-down"} compact={compact} />
+                <Annotation anchor={[-0.3, 0.6 + lift / 2, 1.5]} label={ann.grout} place={compact ? "down" : "right-down"} compact={compact} />
               )}
             </>
           );
@@ -322,6 +325,7 @@ export default function BlockViewer({
   active?: boolean;
   onClose?: () => void;
 }) {
+  const { viewer3d } = useContent();
   const [variant, setVariant] = useState<Variant>("standard");
   const [heightMm, setHeightMm] = useState(120);
   const [showLabels, setShowLabels] = useState(false);
@@ -357,8 +361,8 @@ export default function BlockViewer({
           <button
             type="button"
             onClick={onClose}
-            aria-label="Zamknij model 3D"
-            title="Zamknij model 3D (zwalnia zasoby)"
+            aria-label={viewer3d.closeAria}
+            title={viewer3d.closeTitle}
             className="absolute right-3 top-3 z-10 flex size-8 items-center justify-center rounded-full bg-black/40 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/60 hover:text-white"
           >
             <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -367,7 +371,7 @@ export default function BlockViewer({
           </button>
         )}
         <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/25 px-3 py-1 text-[11px] text-white/60 backdrop-blur-sm">
-          Przeciągnij, aby obrócić · scroll, aby przybliżyć
+          {viewer3d.dragHint}
         </div>
       </div>
 
@@ -376,7 +380,7 @@ export default function BlockViewer({
         {/* wariant */}
         <div className="flex flex-wrap items-center gap-3">
           <span className="w-16 shrink-0 text-[11px] font-semibold uppercase tracking-wider text-white/40">
-            Wariant
+            {viewer3d.variant}
           </span>
           <div className="inline-flex rounded-xl border border-white/15 bg-white/5 p-1">
             {(["standard", "plus"] as Variant[]).map((v) => (
@@ -399,7 +403,7 @@ export default function BlockViewer({
         <div>
           <div className="flex items-baseline justify-between">
             <label htmlFor="lift3d" className="text-sm font-medium text-white/80">
-              Regulacja wysokości
+              {viewer3d.heightAdjust}
             </label>
             <span className="font-oswald text-lg font-semibold tabular text-teal">{heightMm} mm</span>
           </div>
@@ -412,18 +416,18 @@ export default function BlockViewer({
             value={heightMm}
             onChange={(e) => setHeightMm(+e.target.value)}
             className="mt-2 h-2 w-full cursor-pointer appearance-none rounded-full bg-white/15 accent-teal"
-            aria-label="Wysokość posadowienia w milimetrach"
+            aria-label={viewer3d.heightAria}
           />
           <div className="mt-1 flex justify-between text-[10px] font-medium uppercase tracking-wide text-white/30">
-            <span>120 mm</span>
-            <span>do 200 mm (zakres 70 mm)</span>
+            <span>{viewer3d.heightFrom}</span>
+            <span>{viewer3d.heightTo}</span>
           </div>
         </div>
 
         {/* opcje podglądu */}
         <div className="flex flex-wrap items-center gap-2">
           <span className="w-16 shrink-0 text-[11px] font-semibold uppercase tracking-wider text-white/40">
-            Podgląd
+            {viewer3d.preview}
           </span>
           <button
             type="button"
@@ -433,7 +437,7 @@ export default function BlockViewer({
               showLabels ? "border-teal/60 bg-teal/15 text-teal" : "border-white/15 text-white/60 hover:text-white"
             }`}
           >
-            Etykiety
+            {viewer3d.labels}
           </button>
           <button
             type="button"
@@ -445,12 +449,12 @@ export default function BlockViewer({
               });
             }}
             aria-pressed={grout}
-            title="Świeża (mokra) podlewka cementowa w luce pod regulowaną stopą"
+            title={viewer3d.groutTitle}
             className={`rounded-lg border px-3 py-2 text-xs font-semibold transition-colors ${
               grout ? "border-teal/60 bg-teal/15 text-teal" : "border-white/15 text-white/60 hover:text-white"
             }`}
           >
-            Podlewka cementowa
+            {viewer3d.grout}
           </button>
         </div>
       </div>

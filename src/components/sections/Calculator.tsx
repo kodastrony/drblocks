@@ -7,6 +7,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Container } from "@/components/ui/Container";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { ArrowRight } from "@/components/Icons";
+import { useHref } from "@/i18n/LocaleProvider";
 
 /* =========================================================================
    Kalkulator doboru bloczków DrBlocks
@@ -172,6 +173,7 @@ function containerLayout(L: number, W: number): Layout {
 
 export function Calculator() {
   const reduce = useReducedMotion();
+  const href = useHref();
   const [presetId, setPresetId] = useState("deck-terrace");
   const preset = PRESETS.find((p) => p.id === presetId)!;
 
@@ -313,8 +315,8 @@ export function Calculator() {
 
               {/* kształt */}
               <div className="mt-5">
-                <span className="text-sm font-medium text-steel">Kształt obrysu</span>
-                <div className="mt-2.5 inline-flex rounded-xl border border-line bg-mist p-1">
+                <span className="block text-sm font-medium text-steel">Kształt obrysu</span>
+                <div className="mt-2.5 flex w-max max-w-full flex-wrap rounded-xl border border-line bg-mist p-1">
                   {(
                     [
                       { v: "rect", l: "Prostokąt" },
@@ -540,7 +542,7 @@ export function Calculator() {
                 )}
 
                 <Link
-                  href={inquiry}
+                  href={href(inquiry)}
                   className="group mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-teal px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_10px_30px_-12px_rgba(45,189,176,0.7)] transition-colors hover:bg-teal-600"
                 >
                   Wyślij zapytanie o dokładną wycenę

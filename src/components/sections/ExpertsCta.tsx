@@ -2,9 +2,12 @@ import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { Phone } from "@/components/Icons";
-import { experts, company } from "@/lib/content";
+import { getContent, localizedHref } from "@/i18n";
+import type { Locale } from "@/i18n/config";
+import { company } from "@/lib/company";
 
-export function ExpertsCta() {
+export function ExpertsCta({ locale }: { locale: Locale }) {
+  const { experts } = getContent(locale);
   return (
     <section className="bg-white py-20 lg:py-24">
       <Container>
@@ -22,7 +25,7 @@ export function ExpertsCta() {
               {experts.body}
             </p>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-              <Button href={experts.cta.href} variant="primary" size="lg" arrow>
+              <Button href={localizedHref(locale, experts.cta.href)} variant="primary" size="lg" arrow>
                 {experts.cta.label}
               </Button>
               <Button href={company.phoneHref} variant="outline" size="lg">

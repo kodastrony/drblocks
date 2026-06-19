@@ -18,6 +18,8 @@ export function SmoothScroll() {
       easing: (t) => 1 - Math.pow(1 - t, 3), // ease-out-cubic, no overshoot
       smoothWheel: true,
     });
+    // Expose for anchor links / programmatic scrolling.
+    (window as unknown as { lenis?: Lenis }).lenis = lenis;
 
     let raf = 0;
     const loop = (time: number) => {

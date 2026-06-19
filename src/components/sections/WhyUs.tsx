@@ -2,10 +2,12 @@ import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
-import { benefits } from "@/lib/content";
+import { getContent, localizedHref } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 import { asset } from "@/lib/asset";
 
-export function WhyUs() {
+export function WhyUs({ locale }: { locale: Locale }) {
+  const { benefits } = getContent(locale);
   return (
     <section className="bg-mist py-20 lg:py-28">
       <Container>
@@ -39,8 +41,8 @@ export function WhyUs() {
         </Stagger>
 
         <Reveal className="mt-12 flex justify-center">
-          <Button href="/kontakt" variant="primary" size="lg" arrow>
-            Darmowa wycena
+          <Button href={localizedHref(locale, "/kontakt")} variant="primary" size="lg" arrow>
+            {benefits.cta}
           </Button>
         </Reveal>
       </Container>

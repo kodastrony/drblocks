@@ -5,11 +5,13 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { VideoPlayer } from "@/components/ui/VideoPlayer";
-import { hero } from "@/lib/content";
+import { useContent, useHref } from "@/i18n/LocaleProvider";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
 export function Hero() {
+  const { hero } = useContent();
+  const href = useHref();
   const reduce = useReducedMotion();
   const rise = (delay: number) => ({
     initial: reduce ? { opacity: 0 } : { opacity: 0, y: 24 },
@@ -45,10 +47,10 @@ export function Hero() {
             {hero.subtitle}
           </motion.p>
           <motion.div {...rise(0.24)} className="mt-7 flex flex-wrap justify-center gap-3">
-            <Button href={hero.primaryCta.href} variant="primary" size="lg" arrow>
+            <Button href={href(hero.primaryCta.href)} variant="primary" size="lg" arrow>
               {hero.primaryCta.label}
             </Button>
-            <Button href={hero.secondaryCta.href} variant="outline" size="lg">
+            <Button href={href(hero.secondaryCta.href)} variant="outline" size="lg">
               {hero.secondaryCta.label}
             </Button>
           </motion.div>
@@ -68,13 +70,13 @@ export function Hero() {
             <VideoPlayer
               src="/assets/drblocks-film-clean.mp4"
               poster="/assets/drblocks-film-poster.jpg"
-              label="Film produktowy DrBlocks – regulowany bloczek fundamentowy"
+              label={hero.videoLabel}
               className="aspect-[1230/684]"
             />
           </div>
           {/* subtle caption under the film */}
           <p className="mt-3 text-center text-xs font-medium tracking-wide text-faint">
-            Beton B30 · Stal · Regulacja wysokości
+            {hero.badge}
           </p>
         </motion.div>
 

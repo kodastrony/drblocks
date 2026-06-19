@@ -12,3 +12,6 @@ next-env.d.ts
 
 # temp video frame extraction (working artifacts)
 _vframes/
+
+# working scratch: SEO/build specs, captured live HTML, parse scripts
+/_spec/

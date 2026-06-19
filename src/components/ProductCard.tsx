@@ -2,12 +2,22 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "@/components/Icons";
 import { asset } from "@/lib/asset";
-import type { Product } from "@/lib/content";
+import { localizedHref } from "@/i18n";
+import type { Locale } from "@/i18n/config";
+import type { Product, SiteContent } from "@/i18n/types";
 
-export function ProductCard({ p }: { p: Product }) {
+export function ProductCard({
+  p,
+  locale,
+  learnMore,
+}: {
+  p: Product;
+  locale: Locale;
+  learnMore: SiteContent["ui"]["learnMore"];
+}) {
   return (
     <Link
-      href={`/oferta/${p.slug}`}
+      href={localizedHref(locale, `/oferta/${p.slug}`)}
       className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white transition-all duration-300 hover:-translate-y-1.5 hover:border-teal/40 hover:shadow-[var(--shadow-lift)]"
     >
       <div className="relative aspect-[5/4] overflow-hidden bg-gradient-to-b from-mist to-white">
@@ -29,7 +39,7 @@ export function ProductCard({ p }: { p: Product }) {
         <h3 className="text-xl">{p.name}</h3>
         <p className="mt-2.5 flex-1 text-sm leading-relaxed text-steel">{p.short}</p>
         <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-teal-700">
-          Dowiedz się więcej
+          {learnMore}
           <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" />
         </span>
       </div>

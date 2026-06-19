@@ -1,10 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
-import { trust } from "@/lib/content";
+import { getContent } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 import { asset } from "@/lib/asset";
 
-export function TrustBar() {
+export function TrustBar({ locale }: { locale: Locale }) {
+  const { trust } = getContent(locale);
   return (
     <section className="border-b border-line bg-white py-12">
       <Container>
@@ -20,9 +22,9 @@ export function TrustBar() {
           is individually sized (`scale`) and spaced (`pad` via per-li padding,
           so the loop stays seamless). `width`/`height` reserve space before the
           image loads, so the track is full-width from the first frame (no slow
-          crawl). Pauses on hover and (via globals.css) for reduced-motion. */}
-      <div className="group marquee-mask logo-row mt-9 overflow-hidden">
-        <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused]">
+          crawl). Keeps moving on hover; pauses only for reduced-motion (globals.css). */}
+      <div className="marquee-mask logo-row mt-9 overflow-hidden">
+        <div className="flex w-max animate-marquee">
           {[0, 1].map((copy) => (
             <ul key={copy} aria-hidden={copy === 1} className="flex shrink-0 items-center">
               {trust.logos.map((logo) => (

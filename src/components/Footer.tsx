@@ -1,27 +1,32 @@
 import Link from "next/link";
-import { company } from "@/lib/content";
+import { company } from "@/lib/company";
+import { localizedHref } from "@/i18n";
+import type { Locale } from "@/i18n/config";
+import type { SiteContent } from "@/i18n/types";
 import { Phone, Mail, Instagram, ArrowRight } from "@/components/Icons";
 
-const cols = [
-  {
-    title: "Oferta",
-    links: [
-      { label: "Standard Block", href: "/oferta/standard-block" },
-      { label: "Standard Plus Block", href: "/oferta/standard-plus-block" },
-    ],
-  },
-  {
-    title: "Informacje",
-    links: [
-      { label: "O firmie", href: "/o-nas" },
-      { label: "FAQ", href: "/faq" },
-      { label: "Blog", href: "/blog" },
-      { label: "Kontakt", href: "/kontakt" },
-    ],
-  },
-];
+export function Footer({ locale, content }: { locale: Locale; content: SiteContent }) {
+  const { ui, nav } = content;
+  const href = (h: string) => localizedHref(locale, h);
 
-export function Footer() {
+  // Build the footer columns from the nav contract + fixed info links.
+  const offer = nav.find((n) => n.children);
+  const cols = [
+    {
+      title: ui.offerOverview,
+      links: offer?.children ?? [],
+    },
+    {
+      title: ui.footerInfo,
+      links: [
+        { label: ui.footerCompany, href: "/o-nas" },
+        { label: nav.find((n) => n.href === "/faq")?.label ?? "FAQ", href: "/faq" },
+        { label: nav.find((n) => n.href === "/blog")?.label ?? "Blog", href: "/blog" },
+        { label: ui.footerContact, href: "/kontakt" },
+      ],
+    },
+  ];
+
   return (
     <footer className="relative overflow-hidden bg-ink text-white/70">
       <div className="bg-grid-dark absolute inset-0 opacity-60" aria-hidden />
@@ -32,8 +37,7 @@ export function Footer() {
               Dr<span className="text-teal">·</span>BLOCKS
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">
-              Regulowane bloczki fundamentowe dla budownictwa modułowego. Fundament w jeden dzień,
-              precyzja do milimetra.
+              {ui.footerTagline}
             </p>
             <a
               href={company.instagram}
@@ -55,7 +59,7 @@ export function Footer() {
                 {col.links.map((l) => (
                   <li key={l.href}>
                     <Link
-                      href={l.href}
+                      href={href(l.href)}
                       className="text-sm text-white/60 transition-colors hover:text-teal"
                     >
                       {l.label}
@@ -68,7 +72,7 @@ export function Footer() {
 
           <div>
             <h3 className="font-oswald text-xs font-semibold uppercase tracking-[0.18em] text-white">
-              Kontakt
+              {ui.footerContact}
             </h3>
             <ul className="mt-4 space-y-3 text-sm">
               <li>
@@ -83,10 +87,10 @@ export function Footer() {
               </li>
             </ul>
             <Link
-              href="/kontakt"
+              href={href("/kontakt")}
               className="group mt-5 inline-flex items-center gap-2 text-sm font-semibold text-white"
             >
-              Zamów darmową wycenę
+              {ui.freeQuote}
               <ArrowRight className="size-4 text-teal transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
@@ -96,8 +100,8 @@ export function Footer() {
           <p>
             © {new Date().getFullYear()} DrBlocks · {company.legal} · NIP {company.nip}
           </p>
-          <Link href="/polityka-prywatnosci" className="transition-colors hover:text-white/80">
-            Polityka prywatności
+          <Link href={href("/polityka-prywatnosci")} className="transition-colors hover:text-white/80">
+            {ui.privacyPolicy}
           </Link>
         </div>
       </div>

@@ -8,34 +8,55 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { ProductCard } from "@/components/ProductCard";
 import { Check, Phone } from "@/components/Icons";
-import { products, company } from "@/lib/content";
+import { getContent, localizedHref } from "@/i18n";
+import { locales, isLocale, defaultLocale, localeHreflang, type Locale } from "@/i18n/config";
+import { company } from "@/lib/company";
 import { asset } from "@/lib/asset";
 
+const SITE = "https://drblocks.pl";
+
 export function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }));
+  return locales.flatMap((locale) =>
+    getContent(locale).products.list.map((p) => ({ locale, slug: p.slug })),
+  );
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const p = products.find((x) => x.slug === slug);
-  if (!p) return {};
+  const { locale: raw, slug } = await params;
+  const locale: Locale = isLocale(raw) ? raw : defaultLocale;
+  const m = getContent(locale).meta[`product-${slug}`];
+  if (!m) return {};
+  const languages: Record<string, string> = {
+    "x-default": `${SITE}/${defaultLocale}/oferta/${slug}`,
+  };
+  for (const l of locales) languages[localeHreflang[l]] = `${SITE}/${l}/oferta/${slug}`;
   return {
-    title: `${p.name} – regulowany bloczek fundamentowy`,
-    description: `${p.name} DrBlocks: ${p.short} Beton B30, regulacja wysokości 120–200 mm, nośność do 5 t z podlewką cementową, montaż w jeden dzień.`,
-    alternates: { canonical: `/oferta/${p.slug}` },
+    title: { absolute: m.title },
+    description: m.description,
+    keywords: m.keywords,
+    alternates: { canonical: `/${locale}/oferta/${slug}`, languages },
   };
 }
 
-export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const p = products.find((x) => x.slug === slug);
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}) {
+  const { locale: raw, slug } = await params;
+  const locale: Locale = isLocale(raw) ? raw : defaultLocale;
+  const c = getContent(locale);
+  const { products, ui } = c;
+  const detail = products.detail;
+
+  const p = products.list.find((x) => x.slug === slug);
   if (!p) notFound();
 
-  const related = products.find((x) => x.slug === p.related);
+  const related = products.list.find((x) => x.slug === p.related);
   const highlights = p.specs.filter((s) => s.highlight).slice(0, 3);
 
   const jsonLd = {
@@ -43,11 +64,26 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     "@type": "Product",
     name: p.name,
     description: p.short,
+    image: `${SITE}${p.image}`,
     brand: { "@type": "Brand", name: "DrBlocks" },
+    manufacturer: { "@type": "Organization", name: "DrBlocks", url: SITE },
     material: "Beton B30",
     category: "Regulowane bloczki fundamentowe",
-    url: `https://drblocks.pl/oferta/${p.slug}`,
+    url: `${SITE}/${locale}/oferta/${p.slug}`,
   };
+
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: ui.breadcrumbHome, item: `${SITE}/${locale}` },
+      { "@type": "ListItem", position: 2, name: detail.breadcrumbOffer, item: `${SITE}/${locale}/oferta` },
+      { "@type": "ListItem", position: 3, name: p.name, item: `${SITE}/${locale}/oferta/${p.slug}` },
+    ],
+  };
+
+  // priceNote may contain a {link} token rendered as a link to FAQ.
+  const priceParts = detail.priceNote.split("{link}");
 
   return (
     <>
@@ -55,8 +91,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         title={p.name}
         lead={p.short}
         crumbs={[
-          { label: "Strona główna", href: "/" },
-          { label: "Oferta", href: "/oferta" },
+          { label: ui.breadcrumbHome, href: localizedHref(locale, "/") },
+          { label: detail.breadcrumbOffer, href: localizedHref(locale, "/oferta") },
           { label: p.name },
         ]}
       />
@@ -90,23 +126,44 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <Reveal delay={0.06} className="mt-7 grid grid-cols-3 gap-3">
               {highlights.map((h) => (
                 <div key={h.k} className="rounded-xl border border-line bg-mist/60 p-4">
-                  <p className="font-oswald text-lg font-bold leading-tight text-navy">{h.v.split("(")[0].trim()}</p>
+                  <p className="font-oswald text-lg font-bold leading-tight text-navy">
+                    {h.v.split("(")[0].trim()}
+                  </p>
                   <p className="mt-1 text-xs text-steel">{h.k}</p>
                 </div>
               ))}
             </Reveal>
 
-            <Reveal delay={0.1} className="mt-7 rounded-xl border border-line bg-mist/60 p-4 text-sm leading-relaxed text-steel">
-              <span className="font-semibold text-navy">Cena ustalana indywidualnie</span> do projektu
-              i ilości. To jednorazowa inwestycja stanowiąca ułamek kosztu całej budowy.{" "}
-              <Link href="/faq" className="font-semibold text-teal-800">
-                Więcej w FAQ
-              </Link>
-              .
+            <Reveal
+              delay={0.1}
+              className="mt-7 rounded-xl border border-line bg-mist/60 p-4 text-sm leading-relaxed text-steel"
+            >
+              <span className="font-semibold text-navy">{priceParts[0]}</span>
+              {priceParts.length > 1 ? (
+                <>
+                  <Link href={localizedHref(locale, "/faq")} className="font-semibold text-teal-800">
+                    {detail.priceNoteLink}
+                  </Link>
+                  {priceParts[1]}
+                </>
+              ) : (
+                <>
+                  {" "}
+                  <Link href={localizedHref(locale, "/faq")} className="font-semibold text-teal-800">
+                    {detail.priceNoteLink}
+                  </Link>
+                  .
+                </>
+              )}
             </Reveal>
 
             <Reveal delay={0.14} className="mt-6 flex flex-wrap gap-3">
-              <Button href={`/kontakt?produkt=${encodeURIComponent(p.name)}`} variant="primary" size="lg" arrow>
+              <Button
+                href={localizedHref(locale, `/kontakt?produkt=${encodeURIComponent(p.name)}`)}
+                variant="primary"
+                size="lg"
+                arrow
+              >
                 {p.closer.cta}
               </Button>
               <Button href={company.phoneHref} variant="outline" size="lg">
@@ -116,7 +173,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </Reveal>
 
             <Reveal delay={0.16} className="mt-10">
-              <h2 className="text-2xl">Parametry techniczne</h2>
+              <h2 className="text-2xl">{detail.specsHeading}</h2>
               <dl className="mt-5 overflow-hidden rounded-2xl border border-line">
                 {p.specs.map((s, i) => (
                   <div
@@ -148,7 +205,12 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               {p.closer.body}
             </p>
             <div className="mt-8 flex justify-center">
-              <Button href={`/kontakt?produkt=${encodeURIComponent(p.name)}`} variant="accent" size="lg" arrow>
+              <Button
+                href={localizedHref(locale, `/kontakt?produkt=${encodeURIComponent(p.name)}`)}
+                variant="accent"
+                size="lg"
+                arrow
+              >
                 {p.closer.cta}
               </Button>
             </div>
@@ -159,18 +221,16 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       {related && (
         <section className="bg-white py-16 lg:py-20">
           <Container>
-            <h2 className="text-2xl">Zobacz też</h2>
+            <h2 className="text-2xl">{detail.seeAlso}</h2>
             <div className="mt-6 max-w-sm">
-              <ProductCard p={related} />
+              <ProductCard p={related} locale={locale} learnMore={ui.learnMore} />
             </div>
           </Container>
         </section>
       )}
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
     </>
   );
 }
