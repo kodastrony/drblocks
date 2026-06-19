@@ -107,15 +107,15 @@ export default async function PartnerPage({ params }: { params: Promise<{ locale
                 <p key={i}>{para}</p>
               ))}
             </div>
-            <Link
-              href={href("/kontakt")}
+            <a
+              href="#zgloszenie"
               className="group mt-6 inline-flex items-center gap-2 font-semibold text-teal-800"
             >
               {p.growth.cta}
               <svg viewBox="0 0 24 24" className="size-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-            </Link>
+            </a>
           </div>
           <div className="grid grid-cols-2 gap-4">
             {p.growth.stats.map((stat) => (

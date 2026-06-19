@@ -78,41 +78,13 @@ export const de: SiteContent = {
   trust: {
     heading: "Führende Unternehmen im Modulbau vertrauen uns",
     logos: [
-      {
-        src: "/assets/global-containers-1024x195-1.png",
-        alt: "Global Home Containers",
-        w: 480,
-        h: 91,
-        scale: 0.86,
-        pad: 0.95,
-      },
-      { src: "/assets/JR.png", alt: "JR Modular Systems", w: 480, h: 125, scale: 0.92, pad: 1 },
-      {
-        src: "/assets/Komato.png",
-        alt: "Komato Kontenery",
-        w: 480,
-        h: 125,
-        scale: 1.08,
-        pad: 0.95,
-      },
-      { src: "/assets/Cont4you.png", alt: "CONT4YOU", w: 480, h: 125, scale: 1.04, pad: 0.9 },
-      {
-        src: "/assets/art-pawilony.png",
-        alt: "art pawilony",
-        w: 480,
-        h: 125,
-        scale: 1.32,
-        pad: 0.85,
-      },
-      { src: "/assets/syrek-1.png", alt: "Syrek", w: 480, h: 125, scale: 1.16, pad: 0.9 },
-      {
-        src: "/assets/NoviPawilony-1.png",
-        alt: "Novi Pawilony",
-        w: 480,
-        h: 125,
-        scale: 1.28,
-        pad: 0.9,
-      },
+      { src: "/assets/global-containers-1024x195-1.png", alt: "Global Home Containers", w: 480, h: 91, scale: 0.6, mx: 0.02 },
+      { src: "/assets/JR.png", alt: "JR Modular Systems", w: 480, h: 125, scale: 0.72, mx: 0.71 },
+      { src: "/assets/Komato.png", alt: "Komato Kontenery", w: 480, h: 125, scale: 1.12, mx: 0.9 },
+      { src: "/assets/Cont4you.png", alt: "CONT4YOU", w: 480, h: 125, scale: 0.92, mx: 1.09 },
+      { src: "/assets/art-pawilony.png", alt: "art pawilony", w: 480, h: 125, scale: 0.97, mx: 1.01 },
+      { src: "/assets/syrek-1.png", alt: "Syrek", w: 480, h: 125, scale: 0.95, mx: 1.57 },
+      { src: "/assets/NoviPawilony-1.png", alt: "Novi Pawilony", w: 480, h: 125, scale: 1.32, mx: 1.56 },
     ],
   },
 
@@ -518,7 +490,7 @@ export const de: SiteContent = {
       title: "Werden Sie DrBlocks-Partner",
       subtitle:
         "Wir bauen ein europaweites Partnernetzwerk auf und suchen Unternehmen, mit denen wir den Markt für moderne, verstellbare Fundamente gemeinsam gestalten. Schließen Sie sich den Herstellern und Bauunternehmen an, die uns bereits vertrauen.",
-      primaryCta: "Kostenloses Angebot anfordern",
+      primaryCta: "Partner werden",
       secondaryCta: "Mehr erfahren",
     },
     growth: {
@@ -533,7 +505,7 @@ export const de: SiteContent = {
         { value: "1 Tag", label: "Montage" },
         { value: "0", label: "Nassarbeiten" },
       ],
-      cta: "Kostenloses Angebot anfordern",
+      cta: "Partner werden",
     },
     paths: {
       heading: "Zwei Kooperationswege",
@@ -783,7 +755,7 @@ export const de: SiteContent = {
         ],
       },
     kontakt: {
-      title: "Kontakt — Kostenloses Angebot anfordern | DrBlocks",
+      title: "Kontakt — Partner werden | DrBlocks",
       description:
         "Kontaktieren Sie DrBlocks: Tel. +48 506 057 727, kontakt@drblocks.pl, sprzedaz@drblocks.pl. Wir erstellen Ihr Angebot für verstellbare Fundamentblöcke.",
       keywords: ["Kontakt DrBlocks", "Angebot Fundamentblöcke"],

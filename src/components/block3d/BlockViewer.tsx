@@ -60,58 +60,56 @@ function Annotation({
   compact?: boolean;
 }) {
   const base = PLACE[place];
-  // na wąskim ekranie skracamy odsadzenie, żeby pigułki nie wychodziły poza płótno
+  // na wąskim ekranie skracamy odsadzenie, żeby etykiety nie wychodziły poza płótno
   const k = compact ? 0.62 : 1;
   const dx = base.dx * k;
   const dy = base.dy * k;
-  const len = Math.hypot(dx, dy);
-  const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
-
-  // łącznik: cienka linia od kropki (0,0) do bliskiej krawędzi pigułki (dx,dy)
-  const stemStyle: CSSProperties = {
-    position: "absolute",
-    left: 0,
-    top: 0,
-    width: len,
-    height: 1,
-    transformOrigin: "0 0",
-    transform: `rotate(${angle}deg)`,
-    background:
-      "linear-gradient(to right, rgba(45,189,176,0) 0%, rgba(45,189,176,0.85) 28%, rgba(45,189,176,0.85) 100%)",
-  };
+  const len = Math.hypot(dx, dy) || 1;
+  const ux = dx / len, uy = dy / len; // kierunek część → etykieta
+  const nx = -uy, ny = ux; // prostopadła (szerokość grota)
+  // STRZAŁKA: grot TUŻ przy części (celuje w dokładny punkt), baza dalej ku etykiecie,
+  // linia łączy bazę grota z krawędzią etykiety.
+  const tip: [number, number] = [ux * 3, uy * 3];
+  const baseC: [number, number] = [ux * 13, uy * 13];
+  const head =
+    `${tip[0].toFixed(1)},${tip[1].toFixed(1)} ` +
+    `${(baseC[0] + nx * 5).toFixed(1)},${(baseC[1] + ny * 5).toFixed(1)} ` +
+    `${(baseC[0] - nx * 5).toFixed(1)},${(baseC[1] - ny * 5).toFixed(1)}`;
   const tagStyle: CSSProperties = { position: "absolute", left: dx, top: dy, transform: base.tx };
 
   return (
     <Html position={anchor} zIndexRange={[20, 0]} style={{ pointerEvents: "none" }}>
       <div className="relative select-none" style={{ width: 0, height: 0 }}>
-        {/* łącznik (pod kropką i pigułką) */}
-        <span aria-hidden style={stemStyle} />
-        {/* kropka-celownik — wyśrodkowana na dokładnym punkcie części (0,0) */}
-        <span aria-hidden className="absolute left-0 top-0 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal/25 blur-[2px]" />
-        <span aria-hidden className="absolute left-0 top-0 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full ring-1 ring-teal/50" />
+        {/* STRZAŁKA-łącznik: od etykiety DO dokładnego punktu części (grot na części) */}
+        <svg aria-hidden style={{ position: "absolute", left: 0, top: 0, width: 1, height: 1, overflow: "visible" }}>
+          <line x1={dx} y1={dy} x2={baseC[0]} y2={baseC[1]} stroke="rgba(45,189,176,0.92)" strokeWidth={1.6} strokeLinecap="round" />
+          <polygon points={head} fill="rgb(45,189,176)" />
+        </svg>
+        {/* celownik na dokładnym punkcie części (0,0) */}
+        <span aria-hidden className="absolute left-0 top-0 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal/20 blur-[2px]" />
         <span
           aria-hidden
-          className="absolute left-0 top-0 size-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal"
-          style={{ boxShadow: "0 0 6px 1px rgba(45,189,176,0.85)" }}
+          className="absolute left-0 top-0 size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal ring-2 ring-white/70"
+          style={{ boxShadow: "0 0 6px 1px rgba(45,189,176,0.9)" }}
         />
-        {/* matowoszklana pigułka — ta sama rodzina co czipy w viewerze */}
+        {/* etykieta — czysta matowoszklana karta z turkusowym paskiem-akcentem */}
         <div style={tagStyle}>
           <div
-            className={`flex items-center gap-1.5 bg-ink/75 shadow-lg ring-1 ring-white/10 backdrop-blur-md ${
-              compact ? "max-w-[7rem] whitespace-normal rounded-2xl px-2 py-1" : "whitespace-nowrap rounded-full px-2.5 py-1"
+            className={`flex items-stretch overflow-hidden rounded-lg bg-ink/85 shadow-xl ring-1 ring-white/15 backdrop-blur-md ${
+              compact ? "max-w-[7.5rem]" : ""
             }`}
           >
-            <span className="size-1 shrink-0 rounded-full bg-teal" style={{ boxShadow: "0 0 5px rgba(45,189,176,0.85)" }} />
-            <span className="flex flex-col leading-tight">
+            <span aria-hidden className="w-1 shrink-0 bg-teal" />
+            <span className={`flex flex-col justify-center leading-tight ${compact ? "px-2 py-1" : "px-2.5 py-1.5"}`}>
               <span
-                className={`font-oswald font-semibold uppercase tracking-[0.14em] text-white/85 ${
-                  compact ? "text-[8px]" : "text-[9px]"
+                className={`font-oswald font-semibold uppercase tracking-[0.14em] text-white/90 ${
+                  compact ? "text-[8px] whitespace-normal" : "text-[9px] whitespace-nowrap"
                 }`}
               >
                 {label}
               </span>
               {sub && (
-                <span className="mt-0.5 font-oswald text-[8px] font-semibold uppercase tracking-[0.12em] tabular text-teal/90">
+                <span className="mt-0.5 font-oswald text-[8px] font-semibold uppercase tracking-[0.12em] tabular text-teal">
                   {sub}
                 </span>
               )}

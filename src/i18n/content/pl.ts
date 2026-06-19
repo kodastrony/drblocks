@@ -78,41 +78,13 @@ export const pl: SiteContent = {
   trust: {
     heading: "Zaufali nam liderzy budownictwa modułowego",
     logos: [
-      {
-        src: "/assets/global-containers-1024x195-1.png",
-        alt: "Global Home Containers",
-        w: 480,
-        h: 91,
-        scale: 0.86,
-        pad: 0.95,
-      },
-      { src: "/assets/JR.png", alt: "JR Modular Systems", w: 480, h: 125, scale: 0.92, pad: 1 },
-      {
-        src: "/assets/Komato.png",
-        alt: "Komato Kontenery",
-        w: 480,
-        h: 125,
-        scale: 1.08,
-        pad: 0.95,
-      },
-      { src: "/assets/Cont4you.png", alt: "CONT4YOU", w: 480, h: 125, scale: 1.04, pad: 0.9 },
-      {
-        src: "/assets/art-pawilony.png",
-        alt: "art pawilony",
-        w: 480,
-        h: 125,
-        scale: 1.32,
-        pad: 0.85,
-      },
-      { src: "/assets/syrek-1.png", alt: "Syrek", w: 480, h: 125, scale: 1.16, pad: 0.9 },
-      {
-        src: "/assets/NoviPawilony-1.png",
-        alt: "Novi Pawilony",
-        w: 480,
-        h: 125,
-        scale: 1.28,
-        pad: 0.9,
-      },
+      { src: "/assets/global-containers-1024x195-1.png", alt: "Global Home Containers", w: 480, h: 91, scale: 0.6, mx: 0.02 },
+      { src: "/assets/JR.png", alt: "JR Modular Systems", w: 480, h: 125, scale: 0.72, mx: 0.71 },
+      { src: "/assets/Komato.png", alt: "Komato Kontenery", w: 480, h: 125, scale: 1.12, mx: 0.9 },
+      { src: "/assets/Cont4you.png", alt: "CONT4YOU", w: 480, h: 125, scale: 0.92, mx: 1.09 },
+      { src: "/assets/art-pawilony.png", alt: "art pawilony", w: 480, h: 125, scale: 0.97, mx: 1.01 },
+      { src: "/assets/syrek-1.png", alt: "Syrek", w: 480, h: 125, scale: 0.95, mx: 1.57 },
+      { src: "/assets/NoviPawilony-1.png", alt: "Novi Pawilony", w: 480, h: 125, scale: 1.32, mx: 1.56 },
     ],
   },
 
@@ -518,7 +490,7 @@ export const pl: SiteContent = {
       title: "Zostań partnerem DrBlocks",
       subtitle:
         "Rozwijamy ogólnopolską sieć partnerów i szukamy firm, z którymi zbudujemy rynek nowoczesnych, regulowanych fundamentów. Dołącz do grona producentów i wykonawców, którzy już nam zaufali.",
-      primaryCta: "Zamów darmową wycenę",
+      primaryCta: "Zostań partnerem",
       secondaryCta: "Dowiedz się więcej",
     },
     growth: {
@@ -533,7 +505,7 @@ export const pl: SiteContent = {
         { value: "1 dzień", label: "Montaż" },
         { value: "0", label: "Prac mokrych" },
       ],
-      cta: "Zamów darmową wycenę",
+      cta: "Zostań partnerem",
     },
     paths: {
       heading: "Dwie ścieżki współpracy",

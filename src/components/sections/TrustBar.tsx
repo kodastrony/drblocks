@@ -32,8 +32,12 @@ export function TrustBar({ locale }: { locale: Locale }) {
                   key={logo.alt}
                   className="flex shrink-0 items-center"
                   style={{
-                    paddingLeft: `calc(var(--logo-gap) * ${logo.pad} / 2)`,
-                    paddingRight: `calc(var(--logo-gap) * ${logo.pad} / 2)`,
+                    // UJEMNY margines przycina pusty obszar danego logo do jego TREŚCI
+                    // (mx = poziomy margines / wysokość canvasu), a potem dokładamy POŁOWĘ
+                    // jednolitego odstępu → odstęp treść↔treść jest IDENTYCZNY dla każdego loga,
+                    // mimo że każde logo inaczej wypełnia swój plik.
+                    marginLeft: `calc(var(--logo-gap) / 2 - var(--logo-h) * ${logo.scale} * ${logo.mx})`,
+                    marginRight: `calc(var(--logo-gap) / 2 - var(--logo-h) * ${logo.scale} * ${logo.mx})`,
                   }}
                 >
                   <img

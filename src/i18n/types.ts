@@ -79,7 +79,7 @@ export type SiteContent = {
   };
   trust: {
     heading: string;
-    logos: { src: string; alt: string; w: number; h: number; scale: number; pad: number }[];
+    logos: { src: string; alt: string; w: number; h: number; scale: number; mx: number }[];
   };
   system: {
     heading: string;

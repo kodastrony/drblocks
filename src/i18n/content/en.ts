@@ -78,41 +78,13 @@ export const en: SiteContent = {
   trust: {
     heading: "Trusted by leaders in modular construction",
     logos: [
-      {
-        src: "/assets/global-containers-1024x195-1.png",
-        alt: "Global Home Containers",
-        w: 480,
-        h: 91,
-        scale: 0.86,
-        pad: 0.95,
-      },
-      { src: "/assets/JR.png", alt: "JR Modular Systems", w: 480, h: 125, scale: 0.92, pad: 1 },
-      {
-        src: "/assets/Komato.png",
-        alt: "Komato Kontenery",
-        w: 480,
-        h: 125,
-        scale: 1.08,
-        pad: 0.95,
-      },
-      { src: "/assets/Cont4you.png", alt: "CONT4YOU", w: 480, h: 125, scale: 1.04, pad: 0.9 },
-      {
-        src: "/assets/art-pawilony.png",
-        alt: "art pawilony",
-        w: 480,
-        h: 125,
-        scale: 1.32,
-        pad: 0.85,
-      },
-      { src: "/assets/syrek-1.png", alt: "Syrek", w: 480, h: 125, scale: 1.16, pad: 0.9 },
-      {
-        src: "/assets/NoviPawilony-1.png",
-        alt: "Novi Pawilony",
-        w: 480,
-        h: 125,
-        scale: 1.28,
-        pad: 0.9,
-      },
+      { src: "/assets/global-containers-1024x195-1.png", alt: "Global Home Containers", w: 480, h: 91, scale: 0.6, mx: 0.02 },
+      { src: "/assets/JR.png", alt: "JR Modular Systems", w: 480, h: 125, scale: 0.72, mx: 0.71 },
+      { src: "/assets/Komato.png", alt: "Komato Kontenery", w: 480, h: 125, scale: 1.12, mx: 0.9 },
+      { src: "/assets/Cont4you.png", alt: "CONT4YOU", w: 480, h: 125, scale: 0.92, mx: 1.09 },
+      { src: "/assets/art-pawilony.png", alt: "art pawilony", w: 480, h: 125, scale: 0.97, mx: 1.01 },
+      { src: "/assets/syrek-1.png", alt: "Syrek", w: 480, h: 125, scale: 0.95, mx: 1.57 },
+      { src: "/assets/NoviPawilony-1.png", alt: "Novi Pawilony", w: 480, h: 125, scale: 1.32, mx: 1.56 },
     ],
   },
 
@@ -518,7 +490,7 @@ export const en: SiteContent = {
       title: "Become a DrBlocks partner",
       subtitle:
         "We're building a Europe-wide partner network and looking for companies to grow the market for modern adjustable foundations together. Join the manufacturers and contractors who already work with us.",
-      primaryCta: "Request a Free Quote",
+      primaryCta: "Become a partner",
       secondaryCta: "Learn More",
     },
     growth: {
@@ -533,7 +505,7 @@ export const en: SiteContent = {
         { value: "1 Day", label: "Installation" },
         { value: "0", label: "Wet trades" },
       ],
-      cta: "Request a Free Quote",
+      cta: "Become a partner",
     },
     paths: {
       heading: "Two partnership paths",
@@ -783,7 +755,7 @@ export const en: SiteContent = {
         ],
       },
     kontakt: {
-      title: "Contact — Request a Free Quote | DrBlocks",
+      title: "Contact — Become a partner | DrBlocks",
       description:
         "Contact DrBlocks: tel. +48 506 057 727, kontakt@drblocks.pl, sprzedaz@drblocks.pl. We'll prepare a quote for adjustable foundation blocks tailored to your project.",
       keywords: ["contact drblocks", "adjustable foundation block quote"],
