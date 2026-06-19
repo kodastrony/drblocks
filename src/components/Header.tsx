@@ -209,7 +209,7 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
             transition={{ duration: 0.2 }}
             className="fixed inset-0 z-[60] overflow-y-auto bg-navy lg:hidden"
           >
-            <div className="flex h-[68px] items-center justify-between px-5">
+            <div className="sticky top-0 z-10 flex h-[68px] items-center justify-between border-b border-white/10 bg-navy px-5">
               <Image
                 src={asset("/assets/logo-light.png")}
                 alt="DrBlocks"

@@ -6,8 +6,10 @@ import { company } from "@/lib/company";
 import { useContent, useHref } from "@/i18n/LocaleProvider";
 import { Check, ArrowRight, Phone } from "@/components/Icons";
 
+// text-base (16px) — pola formularza MUSZĄ mieć ≥16px, inaczej iOS Safari
+// zoomuje stronę przy fokusie pola.
 const inputCls =
-  "w-full rounded-xl border border-line bg-white px-4 py-3 text-[15px] text-navy outline-none transition-colors placeholder:text-mute focus:border-teal focus:ring-2 focus:ring-teal/30 aria-[invalid=true]:border-red-400 aria-[invalid=true]:ring-red-200";
+  "w-full rounded-xl border border-line bg-white px-4 py-3 text-base text-navy outline-none transition-colors placeholder:text-mute focus:border-teal focus:ring-2 focus:ring-teal/30 aria-[invalid=true]:border-red-400 aria-[invalid=true]:ring-red-200";
 
 type Errors = { name?: string; email?: string; message?: string; consent?: string };
 type Status = "idle" | "submitting" | "sent" | "error";
@@ -185,7 +187,7 @@ export function ContactForm({ defaultMessage = "" }: { defaultMessage?: string }
         <button
           type="submit"
           disabled={status === "submitting"}
-          className="group inline-flex items-center justify-center gap-2 rounded-xl bg-navy px-6 py-4 text-[15px] font-semibold text-white transition-colors hover:bg-teal disabled:cursor-not-allowed disabled:opacity-70"
+          className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-navy px-6 py-4 text-[15px] font-semibold text-white transition-colors hover:bg-teal disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
         >
           {status === "submitting" ? (
             f.submitting

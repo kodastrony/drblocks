@@ -66,6 +66,11 @@ export function PartnerMap({ t }: { t: MapStrings }) {
 
   // Stable, guaranteed non-overlapping label layout (independent of hover).
   const labels = useMemo(() => {
+    // Na wąskiej, pełnoekranowej mapie (telefon) chowamy etykiety W MAPIE — 8 chipów
+    // (w tym „Global Home Containers") nachodziłoby na siebie. Pinezki + linie znikają
+    // razem z etykietami (oba null-checkują labels[i]); pełna lista partnerów po prawej
+    // / pod mapą i tak pokazuje każdego z miastem i kategorią.
+    if (cw < 520) return {} as Record<number, Rect>;
     const placed: Rect[] = [];
     const pinRects: Rect[] = screen.map((p) => ({ x: p.x - 8, y: p.y - 8, w: 16, h: 16 }));
     const order = [...partners.keys()].sort((a, b) => screen[a].y - screen[b].y);

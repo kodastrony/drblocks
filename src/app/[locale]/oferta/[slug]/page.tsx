@@ -123,7 +123,7 @@ export default async function ProductPage({
               <p className="text-lg leading-relaxed text-steel">{p.intro}</p>
             </Reveal>
 
-            <Reveal delay={0.06} className="mt-7 grid grid-cols-3 gap-3">
+            <Reveal delay={0.06} className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3">
               {highlights.map((h) => (
                 <div key={h.k} className="rounded-xl border border-line bg-mist/60 p-4">
                   <p className="font-oswald text-lg font-bold leading-tight text-navy">

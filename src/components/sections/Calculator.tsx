@@ -329,7 +329,7 @@ export function Calculator() {
                       type="button"
                       onClick={() => setShape(s.v)}
                       aria-pressed={shape === s.v}
-                      className={`rounded-lg px-3.5 py-2 text-sm font-semibold transition-colors ${
+                      className={`inline-flex min-h-[44px] items-center justify-center rounded-lg px-3.5 py-2 text-sm font-semibold transition-colors ${
                         shape === s.v ? "bg-teal text-white shadow-sm" : "text-steel hover:text-navy"
                       }`}
                     >
@@ -345,14 +345,14 @@ export function Calculator() {
                     <button
                       type="button"
                       onClick={() => setContainerFt(20)}
-                      className="rounded-lg border border-line bg-paper px-4 py-2.5 text-sm font-semibold text-slate transition-colors hover:border-teal hover:text-navy"
+                      className="inline-flex min-h-[44px] items-center rounded-lg border border-line bg-paper px-4 py-2.5 text-sm font-semibold text-slate transition-colors hover:border-teal hover:text-navy"
                     >
                       20 ft (6,06 m)
                     </button>
                     <button
                       type="button"
                       onClick={() => setContainerFt(40)}
-                      className="rounded-lg border border-line bg-paper px-4 py-2.5 text-sm font-semibold text-slate transition-colors hover:border-teal hover:text-navy"
+                      className="inline-flex min-h-[44px] items-center rounded-lg border border-line bg-paper px-4 py-2.5 text-sm font-semibold text-slate transition-colors hover:border-teal hover:text-navy"
                     >
                       40 ft (12,19 m)
                     </button>
@@ -729,8 +729,8 @@ function Field({
 }) {
   return (
     <div className="min-w-0">
-      <div className="flex items-baseline justify-between gap-3">
-        <span className="min-w-0 truncate text-sm font-medium text-steel">{label}</span>
+      <div className="flex items-start justify-between gap-3">
+        <span className="min-w-0 text-sm font-medium text-steel">{label}</span>
         <span className="shrink-0 font-oswald text-base font-semibold tabular text-teal-800">{value}</span>
       </div>
       <div className="mt-2.5 w-full">{children}</div>

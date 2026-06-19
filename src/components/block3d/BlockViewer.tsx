@@ -344,6 +344,9 @@ export default function BlockViewer({
           dpr={[1, 2]}
           camera={{ position: [-5.2, 3.0, 4.3], fov: 32 }}
           gl={{ antialias: false, preserveDrawingBuffer: false }}
+          // touch-action: pan-y → JEDEN palec w pionie przewija STRONĘ (koniec
+          // „pułapki scrolla" nad płótnem); poziomy ruch obraca, pinch zoomuje.
+          style={{ touchAction: "pan-y" }}
         >
           <color attach="background" args={["#d6dade"]} />
           <FrameloopGate active={active} />
@@ -361,7 +364,7 @@ export default function BlockViewer({
             onClick={onClose}
             aria-label={viewer3d.closeAria}
             title={viewer3d.closeTitle}
-            className="absolute right-3 top-3 z-10 flex size-8 items-center justify-center rounded-full bg-black/40 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/60 hover:text-white"
+            className="absolute right-3 top-3 z-10 flex size-8 items-center justify-center rounded-full bg-black/40 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/60 hover:text-white [@media(pointer:coarse)]:size-11"
           >
             <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth={2}>
               <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />

@@ -81,7 +81,11 @@ export function VideoPlayer({
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
-    if (reduce) {
+    // PLAKAT-FIRST na telefonie (dotyk) oraz przy reduced-motion: nie
+    // autoodtwarzamy (dane/bateria) — duży przycisk „play" i tak jest widoczny,
+    // bo deck jest przypięty gdy film stoi.
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
+    if (reduce || coarse) {
       userPaused.current = true;
       v.pause();
     } else {
@@ -210,7 +214,6 @@ export function VideoPlayer({
         className="h-full w-full object-cover"
         poster={asset(poster)}
         preload="metadata"
-        autoPlay
         playsInline
         loop
         muted
@@ -262,7 +265,7 @@ export function VideoPlayer({
             type="button"
             onClick={togglePlay}
             aria-label={playing ? "Wstrzymaj film" : "Odtwórz film"}
-            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-colors hover:bg-white/25"
+            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-colors hover:bg-white/25 [@media(pointer:coarse)]:size-11"
           >
             {playing ? <PauseIcon className="size-4" /> : <PlayIcon className="ml-0.5 size-4" />}
           </button>
@@ -278,7 +281,7 @@ export function VideoPlayer({
             onClick={toggleMute}
             aria-label={muted ? "Włącz dźwięk" : "Wycisz"}
             aria-pressed={!muted}
-            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-colors hover:bg-white/25"
+            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-colors hover:bg-white/25 [@media(pointer:coarse)]:size-11"
           >
             {muted ? <VolumeOffIcon className="size-5" /> : <VolumeOnIcon className="size-5" />}
           </button>
