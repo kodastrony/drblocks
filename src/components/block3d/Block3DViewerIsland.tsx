@@ -66,11 +66,17 @@ export function Block3DViewerIsland() {
     };
     const onVis = () => recompute();
 
+    // 'scroll' łapie scroll natywny i Lenisa; 'wheel'/'touchmove' pauzują render JESZCZE
+    // przed zmianą pozycji (przy płynnym scrollu Lenis to ~1 klatka wcześniej = brak zacięć).
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("wheel", onScroll, { passive: true });
+    window.addEventListener("touchmove", onScroll, { passive: true });
     document.addEventListener("visibilitychange", onVis);
     return () => {
       io.disconnect();
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("wheel", onScroll);
+      window.removeEventListener("touchmove", onScroll);
       document.removeEventListener("visibilitychange", onVis);
       clearTimeout(scrollTimer);
     };
