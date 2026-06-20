@@ -66,24 +66,14 @@ function Annotation({
   const dy = base.dy * k;
   const len = Math.hypot(dx, dy) || 1;
   const ux = dx / len, uy = dy / len; // kierunek część → etykieta
-  const nx = -uy, ny = ux; // prostopadła (szerokość grota)
-  // STRZAŁKA: grot TUŻ przy części (celuje w dokładny punkt), baza dalej ku etykiecie,
-  // linia łączy bazę grota z krawędzią etykiety.
-  const tip: [number, number] = [ux * 3, uy * 3];
-  const baseC: [number, number] = [ux * 13, uy * 13];
-  const head =
-    `${tip[0].toFixed(1)},${tip[1].toFixed(1)} ` +
-    `${(baseC[0] + nx * 5).toFixed(1)},${(baseC[1] + ny * 5).toFixed(1)} ` +
-    `${(baseC[0] - nx * 5).toFixed(1)},${(baseC[1] - ny * 5).toFixed(1)}`;
   const tagStyle: CSSProperties = { position: "absolute", left: dx, top: dy, transform: base.tx };
 
   return (
     <Html position={anchor} zIndexRange={[20, 0]} style={{ pointerEvents: "none" }}>
       <div className="relative select-none" style={{ width: 0, height: 0 }}>
-        {/* STRZAŁKA-łącznik: od etykiety DO dokładnego punktu części (grot na części) */}
+        {/* KRESKA-łącznik: od etykiety do kropki na części (sama kreska, BEZ grota/strzałki) */}
         <svg aria-hidden style={{ position: "absolute", left: 0, top: 0, width: 1, height: 1, overflow: "visible" }}>
-          <line x1={dx} y1={dy} x2={baseC[0]} y2={baseC[1]} stroke="rgba(45,189,176,0.92)" strokeWidth={1.6} strokeLinecap="round" />
-          <polygon points={head} fill="rgb(45,189,176)" />
+          <line x1={dx} y1={dy} x2={ux * 4.5} y2={uy * 4.5} stroke="rgba(45,189,176,0.9)" strokeWidth={1.4} strokeLinecap="round" />
         </svg>
         {/* celownik na dokładnym punkcie części (0,0) */}
         <span aria-hidden className="absolute left-0 top-0 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal/20 blur-[2px]" />
@@ -220,7 +210,7 @@ function Scene({
              Korpus betonowy B30         (-0.95, -0.22, 1.00)         down        — (statyczny beton)
              Stalowa stopa regulacyjna   (-0.98, 0.72+lift, 0.50)     up          +lift (rośnie z czapą)
              Śruby M16 (4×)              (-1.24, 0.32, 0.60)          left-down   — (zakotwione, Y stały)
-             Regulacja wysokości         (-0.50, 0.60+lift/2, 1.50)   right-up    +lift/2 (rozwierana szpara)
+             Regulacja wysokości         (0.70, 0.40+lift, 1.20)      right-up    +lift (bok metalowej czapy +Z)
              Chwytak magnetyczny (plus)  (-1.50, 0.46+lift, 0.00)     left        +lift
              Podlewka cementowa (grout)  (-0.30, 0.60+lift/2, 1.50)   right-down  +lift/2
              ───────────────────────────────────────────────────────────────────────────── */
@@ -230,7 +220,7 @@ function Scene({
               <Annotation anchor={[-0.98, 0.72 + lift, 0.5]} label={ann.foot} place="up" compact={compact} />
               <Annotation anchor={[-1.24, 0.32, 0.6]} label={ann.bolts} place="left-down" compact={compact} />
               <Annotation
-                anchor={[-0.5, 0.6 + lift / 2, 1.5]}
+                anchor={[0.7, 0.4 + lift, 1.2]}
                 label={ann.height}
                 sub={`${heightMm} mm`}
                 place={compact ? "up" : "right-up"}
