@@ -66,9 +66,15 @@ export default async function ProductPage({
     description: p.short,
     image: `${SITE}${p.image}`,
     brand: { "@type": "Brand", name: "DrBlocks" },
-    manufacturer: { "@type": "Organization", name: "DrBlocks", url: SITE },
+    manufacturer: { "@type": "Organization", "@id": `${SITE}/#organization`, name: "DrBlocks", url: SITE },
     material: "Beton B30",
     category: "Regulowane bloczki fundamentowe",
+    // pełna specyfikacja techniczna jako dane strukturalne (AI/produkt rozumie parametry)
+    additionalProperty: p.specs.map((s) => ({
+      "@type": "PropertyValue",
+      name: s.k,
+      value: s.v,
+    })),
     url: `${SITE}/${locale}/oferta/${p.slug}`,
   };
 

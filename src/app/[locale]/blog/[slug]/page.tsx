@@ -69,10 +69,21 @@ export default async function BlogPostPage({
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
+    description: post.excerpt,
+    inLanguage: locale,
+    image: `${SITE}/assets/hero-poster.jpg`,
     datePublished: post.date,
     dateModified: post.date,
-    author: { "@type": "Organization", name: "DrBlocks" },
-    publisher: { "@type": "Organization", name: "DrBlocks" },
+    author: { "@type": "Organization", "@id": `${SITE}/#organization`, name: "DrBlocks", url: SITE },
+    publisher: {
+      "@type": "Organization",
+      "@id": `${SITE}/#organization`,
+      name: "DrBlocks",
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE}/assets/cropped-DR-BLOCKS_LOGO_male-czarne-270x270.png`,
+      },
+    },
     mainEntityOfPage: `${SITE}/${locale}/blog/${post.slug}`,
   };
 

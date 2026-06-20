@@ -60,25 +60,49 @@ export default async function LocaleLayout({
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
   const content = getContent(locale);
 
+  // Entity-graph: Organization + WebSite połączone przez @id. Daje wyszukiwarkom
+  // i modelom AI jeden, spójny obiekt „encji marki" (knowledge-graph, GEO).
   const orgJsonLd = {
     "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "DrBlocks",
-    legalName: company.legal,
-    url: SITE,
-    telephone: company.phone,
-    email: company.emailContact,
-    taxID: company.nip,
-    areaServed: ["PL", "DE", "EU"],
-    contactPoint: {
-      "@type": "ContactPoint",
-      telephone: company.phone,
-      email: company.emailSales,
-      contactType: "sales",
-      areaServed: ["PL", "DE", "EU"],
-      availableLanguage: ["pl", "en", "de"],
-    },
-    sameAs: [company.instagram],
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${SITE}/#organization`,
+        name: "DrBlocks",
+        legalName: company.legal,
+        url: SITE,
+        logo: {
+          "@type": "ImageObject",
+          url: `${SITE}/assets/cropped-DR-BLOCKS_LOGO_male-czarne-270x270.png`,
+          width: 270,
+          height: 270,
+        },
+        image: `${SITE}/assets/hero-poster.jpg`,
+        description: content.meta.home.description,
+        telephone: company.phone,
+        email: company.emailContact,
+        taxID: company.nip,
+        areaServed: ["PL", "DE", "EU"],
+        contactPoint: {
+          "@type": "ContactPoint",
+          telephone: company.phone,
+          email: company.emailSales,
+          contactType: "sales",
+          areaServed: ["PL", "DE", "EU"],
+          availableLanguage: ["pl", "en", "de"],
+        },
+        sameAs: [company.instagram],
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${SITE}/#website`,
+        url: SITE,
+        name: "DrBlocks",
+        description: content.meta.home.description,
+        inLanguage: locale,
+        publisher: { "@id": `${SITE}/#organization` },
+      },
+    ],
   };
 
   return (

@@ -654,81 +654,81 @@ export const pl: SiteContent = {
   // ---------------------------------------------------------------------------
   meta: {
     home: {
-      title: "Regulowane bloczki fundamentowe | DrBlocks",
+      title: "Regulowane bloczki fundamentowe bez wylewki | DrBlocks",
       description:
-        "Fundament w jeden dzień bez betonowania. Regulacja 120–200 mm, precyzja ±1 mm, nośność do 5 t. Pod kontenery, domy modułowe, tarasy.",
+        "Fundament w jeden dzień bez betonowania i wykopów. Regulacja wysokości 120–200 mm z precyzją ±1 mm i nośność do 5 t – pod kontenery, domy modułowe i tarasy.",
       keywords: ["bloczki fundamentowe regulowane", "fundament regulowany śrubowy"],
     },
     oferta: {
-      title: "Oferta — regulowane bloczki fundamentowe | DrBlocks",
+      title: "Oferta – regulowane bloczki fundamentowe B30 | DrBlocks",
       description:
-        "Standard i Standard Plus: stalowo-betonowy fundament B30 z regulacją wysokości. Porównaj warianty, nośność i zastosowania. Darmowa wycena.",
+        "Standard i Standard Plus: stalowo-betonowy fundament B30 z regulacją 120–200 mm. Porównaj warianty, nośność i zastosowania. Zamów darmową wycenę online.",
       keywords: [
         "regulowane bloczki fundamentowe",
         "bloczek fundamentowy regulowany cena",
       ],
     },
     "product-standard-block": {
-      title: "Standard Block — bloczek regulowany | DrBlocks",
+      title: "Standard Block – regulowany bloczek fundamentowy | DrBlocks",
       description:
-        "Bloczek fundamentowy z regulacją 120–200 mm, precyzja ±1 mm. Beton B30 + stopa stalowa, do 1 t (5 t z podlewką). Montaż w 1 dzień.",
+        "Regulowany bloczek fundamentowy: wysokość 120–200 mm z precyzją ±1 mm, korpus B30 i stalowa stopa. Nośność do 1 t (5 t z podlewką), montaż w jeden dzień.",
       keywords: [
         "bloczki fundamentowe z regulacją wysokości",
         "stopa fundamentowa regulowana",
       ],
     },
     "product-standard-plus-block": {
-      title: "Standard Plus — bloczek regulowany | DrBlocks",
+      title: "Standard Plus – bloczek regulowany z chwytakiem | DrBlocks",
       description:
-        "Wersja Plus z chwytakiem magnetycznym i obróbką cokołu. Regulacja 120–200 mm ±1 mm, nośność do 5 t z podlewką cementową.",
+        "Standard Plus z magnetycznym chwytakiem do obróbki cokołu. Regulacja 120–200 mm z precyzją ±1 mm, nośność do 5 t z podlewką, montaż bez prac mokrych.",
       keywords: [
         "stopa fundamentowa z gwintem regulowana wysokość",
         "fundament punktowy regulowany",
       ],
     },
     oNas: {
-      title: "O nas — polski producent | DrBlocks",
+      title: "O nas – polski producent bloczków fundamentowych | DrBlocks",
       description:
-        "Polski producent regulowanych bloczków fundamentowych. Dlaczego stworzyliśmy system stalowo-betonowy do lekkich konstrukcji.",
+        "Poznaj DrBlocks – polskiego producenta regulowanych bloczków fundamentowych. Dlaczego stworzyliśmy stalowo-betonowy system poziomowania pod lekkie konstrukcje.",
       keywords: [
         "producent bloczków fundamentowych",
         "regulowany fundament producent",
       ],
     },
     partner: {
-      title: "Zostań partnerem | DrBlocks",
+      title: "Zostań partnerem – program dla producentów | DrBlocks",
       description:
-        "Dołącz do ogólnopolskiej sieci partnerów DrBlocks. Dla producentów domów modułowych i firm ziemnych. Atrakcyjne warunki.",
+        "Dołącz do ogólnopolskiej sieci partnerów DrBlocks. Dla producentów domów modułowych, pawilonów i firm ziemnych: rabaty, leady i wsparcie techniczne.",
       keywords: [
         "program partnerski fundamenty",
         "dystrybutor bloczków fundamentowych",
       ],
     },
     faq: {
-      title: "FAQ — regulowane bloczki fundamentowe | DrBlocks",
+      title: "FAQ – pytania o regulowane bloczki fundamentowe | DrBlocks",
       description:
-        "Odpowiedzi o nośności, montażu, gruncie i cenie. Jaki fundament pod dom modułowy i kontener? Czym różni się od pali śrubowych?",
+        "Odpowiedzi o nośności, montażu, kotwieniu w gruncie i cenie. Jaki fundament pod dom modułowy lub kontener? Czym różni się od pali i fundamentów śrubowych?",
       keywords: [
         "jaki fundament pod dom modułowy",
         "fundament pod kontener",
       ],
     },
     blog: {
-      title: "Blog — fundamenty bez betonowania | DrBlocks",
+      title: "Blog – fundamenty dla budownictwa modułowego | DrBlocks",
       description:
-        "Poradniki o fundamentach pod kontenery, domy modułowe i tarasy. Porównania, koszty, montaż bez wykopów i prac mokrych.",
+        "Poradniki i porównania o fundamentach pod kontenery, domy modułowe, pawilony i tarasy. Koszty, montaż bez wykopów i prac mokrych oraz dobór rozwiązania.",
       keywords: ["fundament bez betonowania", "fundament bez wykopów"],
     },
     "post-tani-bloczek-vs-drblocks": {
-      title: "Tani bloczek vs DrBlocks — pozorna oszczędność | DrBlocks",
+      title: "Tani bloczek vs DrBlocks – pozorna oszczędność | DrBlocks",
       description:
-        "Czy tani bloczek pod pawilon się opłaca? Liczymy ukryte koszty osiadania i poprawek kontra regulowany fundament DrBlocks.",
+        "Czy tani bloczek pod pawilon naprawdę się opłaca? Liczymy ukryte koszty osiadania i poprawek kontra regulowany fundament DrBlocks z poziomowaniem ±1 mm.",
       keywords: ["tani bloczek fundamentowy", "fundament pod pawilon"],
     },
     "post-stopa-fundamentowa-to-najlepsze-rozwiazanie": {
-      title: "Stopa fundamentowa — najlepsze rozwiązanie? | DrBlocks",
+      title: "Stopa fundamentowa – najlepsze rozwiązanie? | DrBlocks",
       description:
-        "Lany fundament czy regulowana stopa stalowa? Porównujemy czas montażu, koszt i precyzję poziomowania ±1 mm.",
+        "Lany fundament czy regulowana stopa stalowa pod lekką konstrukcję? Porównujemy czas montażu, koszt i precyzję poziomowania ±1 mm – kompletny przewodnik.",
       keywords: [
         "stopa fundamentowa regulowana",
         "fundament punktowy a płyta",
@@ -736,9 +736,9 @@ export const pl: SiteContent = {
     },
     "post-bloczek-betonowy-fundamentowy-versus-bloczek-betonowy-fundamentowy-od-dr-blocks":
       {
-        title: "Zwykły bloczek vs bloczek DrBlocks | DrBlocks",
+        title: "Zwykły bloczek vs bloczek DrBlocks – porównanie | DrBlocks",
         description:
-          "Czym regulowany bloczek stalowo-betonowy bije zwykły bloczek 38×24×12? Nośność, regulacja, demontaż — pełne porównanie.",
+          "Czym regulowany bloczek stalowo-betonowy bije zwykły bloczek 38×24×12? Nośność, regulacja wysokości i demontaż – pełne porównanie dla budownictwa modułowego.",
         keywords: [
           "bloczek betonowy fundamentowy",
           "regulowane bloczki fundamentowe",
@@ -746,24 +746,24 @@ export const pl: SiteContent = {
       },
     "post-po-co-stosuje-sie-bloczki-betonowe-fundamentowe-dlaczego-sa-tak-wazne":
       {
-        title: "Po co stosuje się bloczki fundamentowe? | DrBlocks",
+        title: "Po co stosuje się bloczki fundamentowe i kiedy | DrBlocks",
         description:
-          "Jaką rolę pełni bloczek fundamentowy i kiedy regulowany system wygrywa z tradycyjnym. Przewodnik dla inwestorów.",
+          "Jaką rolę pełni bloczek fundamentowy i kiedy regulowany system wygrywa z tradycyjnym betonowaniem? Praktyczny przewodnik dla inwestorów i wykonawców.",
         keywords: [
           "po co bloczki fundamentowe",
           "rodzaje fundamentów punktowych",
         ],
       },
     kontakt: {
-      title: "Kontakt — zamów darmową wycenę | DrBlocks",
+      title: "Kontakt – zamów darmową wycenę fundamentu | DrBlocks",
       description:
-        "Skontaktuj się z DrBlocks: tel. +48 506 057 727, kontakt@drblocks.pl, sprzedaz@drblocks.pl. Przygotujemy wycenę regulowanych bloczków fundamentowych do Twojego projektu.",
+        "Skontaktuj się z DrBlocks: tel. +48 506 057 727 lub kontakt@drblocks.pl. Przygotujemy darmową wycenę regulowanych bloczków fundamentowych do Twojego projektu.",
       keywords: ["kontakt drblocks", "wycena bloczki fundamentowe"],
     },
     privacy: {
-      title: "Polityka prywatności | DrBlocks",
+      title: "Polityka prywatności i pliki cookie – RODO | DrBlocks",
       description:
-        "Polityka prywatności serwisu drblocks.pl – zasady przetwarzania danych osobowych i wykorzystania plików cookies.",
+        "Polityka prywatności serwisu drblocks.pl – zasady przetwarzania danych osobowych (RODO) i wykorzystania plików cookies: administrator, cele i prawa użytkownika.",
     },
   },
 };
