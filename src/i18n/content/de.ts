@@ -654,81 +654,81 @@ export const de: SiteContent = {
   // ---------------------------------------------------------------------------
   meta: {
     home: {
-      title: "Verstellbare Fundamentblöcke | DrBlocks",
+      title: "Verstellbare Fundamentblöcke ohne Beton | DrBlocks",
       description:
-        "Fundament an einem Tag – ohne Beton. Höhenverstellung 120–200 mm, Genauigkeit ±1 mm, Tragkraft bis 5 t. Für Container, Modulhäuser und Terrassen.",
+        "Fundament an einem Tag – ohne Beton. Höhenverstellung 120–200 mm mit ±1 mm Genauigkeit und Tragkraft bis 5 t. Für Container, Modulhäuser und Terrassen.",
       keywords: ["verstellbare Fundamentblöcke", "Schraubfundament Alternative"],
     },
     oferta: {
-      title: "Sortiment — Verstellbare Fundamentblöcke | DrBlocks",
+      title: "Sortiment – Verstellbare Fundamentblöcke B30 | DrBlocks",
       description:
-        "Standard und Standard Plus: Stahl-Beton-Fundament B30 mit Höhenverstellung. Varianten, Tragkraft und Einsatzbereiche vergleichen. Kostenloses Angebot.",
+        "Standard und Standard Plus: Stahl-Beton-Fundament B30 mit Höhenverstellung 120–200 mm. Varianten, Tragkraft und Einsatz vergleichen. Kostenloses Angebot.",
       keywords: [
         "höhenverstellbarer Fundamentblock",
         "Punktfundament verstellbar",
       ],
     },
     "product-standard-block": {
-      title: "Standard Block — Verstellbarer Fundamentblock | DrBlocks",
+      title: "Standard Block – Verstellbarer Fundamentblock | DrBlocks",
       description:
-        "Fundamentblock mit Höhenverstellung 120–200 mm, Genauigkeit ±1 mm. Beton B30 + Stahlfuß, bis 1 t (5 t mit Verguss). Montage an einem Tag.",
+        "Fundamentblock mit Höhenverstellung 120–200 mm und ±1 mm Genauigkeit. Beton B30 und Stahlfuß, bis 1 t (5 t mit Verguss), Montage an einem einzigen Tag.",
       keywords: [
         "höhenverstellbares Punktfundament",
         "Gewindefundament",
       ],
     },
     "product-standard-plus-block": {
-      title: "Standard Plus — Verstellbarer Fundamentblock | DrBlocks",
+      title: "Standard Plus – Verstellbarer Block mit Greifer | DrBlocks",
       description:
-        "Plus-Variante mit Magnetgreifer und Sockelverkleidung. Höhenverstellung 120–200 mm ±1 mm, Tragkraft bis 5 t mit Zementverguss.",
+        "Plus-Variante mit Magnetgreifer für die Sockelverkleidung. Höhenverstellung 120–200 mm mit ±1 mm, Tragkraft bis 5 t mit Zementverguss und ohne Nassarbeiten.",
       keywords: [
         "verstellbare Fundamentfüße",
         "Stützfundament verstellbar",
       ],
     },
     oNas: {
-      title: "Über uns — Hersteller | DrBlocks",
+      title: "Über uns – Hersteller verstellbarer Fundamente | DrBlocks",
       description:
-        "Polnischer Hersteller verstellbarer Fundamentblöcke. Warum wir ein Stahl-Beton-System für leichte Modulkonstruktionen entwickelt haben.",
+        "Lernen Sie DrBlocks kennen – den polnischen Hersteller verstellbarer Fundamentblöcke. Warum wir ein Stahl-Beton-Nivelliersystem für leichte Bauten entwickelten.",
       keywords: [
         "Hersteller verstellbare Fundamentblöcke",
         "Fundamentblock Hersteller",
       ],
     },
     partner: {
-      title: "Partner werden | DrBlocks",
+      title: "Partner werden – Programm für Hersteller | DrBlocks",
       description:
-        "Werden Sie DrBlocks-Partner. Für Modulhaus-Hersteller und Erdbau-Firmen in der EU. Attraktive Konditionen und gegenseitige Empfehlung.",
+        "Werden Sie DrBlocks-Partner: für Modulhaus- und Pavillon-Hersteller sowie Erdbaufirmen. Attraktive Konditionen, Rabatte und technische Unterstützung inklusive.",
       keywords: [
         "Fundamentblock Vertriebspartner",
         "Schraubfundament Partner",
       ],
     },
     faq: {
-      title: "FAQ — Verstellbare Fundamentblöcke | DrBlocks",
+      title: "FAQ – Verstellbare Fundamentblöcke erklärt | DrBlocks",
       description:
-        "Antworten zu Tragkraft, Montage, Boden und Kosten. Welches Fundament für Modulhaus und Container? Vorteile gegenüber dem Schraubfundament.",
+        "Antworten zu Tragkraft, Montage, Verankerung im Boden und Kosten. Welches Fundament für Modulhaus oder Container? Vorteile gegenüber dem Schraubfundament.",
       keywords: [
         "Fundament Modulhaus",
         "Fundament für Container",
       ],
     },
     blog: {
-      title: "Ratgeber — Fundament ohne Beton | DrBlocks",
+      title: "Ratgeber – Fundamente für das modulare Bauen | DrBlocks",
       description:
-        "Ratgeber zu Fundamenten für Container, Modulhäuser und Terrassen. Vergleiche, Kosten, Montage ohne Aushub und Nassarbeiten.",
+        "Ratgeber und Vergleiche zu Fundamenten für Container, Modulhäuser, Pavillons und Terrassen. Kosten, Montage ohne Aushub und Nassarbeiten sowie Auswahlhilfe.",
       keywords: ["Fundament ohne Beton", "Fundament ohne Buddeln"],
     },
     "post-tani-bloczek-vs-drblocks": {
-      title: "Billiger Block vs DrBlocks — Scheinersparnis | DrBlocks",
+      title: "Billiger Block vs DrBlocks – Scheinersparnis | DrBlocks",
       description:
-        "Lohnt sich ein billiger Block unter dem Pavillon? Wir rechnen die versteckten Setzungskosten gegen ein verstellbares DrBlocks-Fundament.",
+        "Lohnt sich ein billiger Block unter dem Pavillon wirklich? Wir rechnen versteckte Setzungs- und Nachbesserungskosten gegen ein verstellbares DrBlocks-Fundament.",
       keywords: ["Fundament Pavillon", "Stelzlager Tragkraft"],
     },
     "post-stopa-fundamentowa-to-najlepsze-rozwiazanie": {
       title: "Ist das Streifenfundament wirklich am besten? | DrBlocks",
       description:
-        "Betonfundament oder verstellbarer Stahlfuß? Wir vergleichen Montagezeit, Kosten und ±1 mm Nivelliergenauigkeit.",
+        "Betonfundament oder verstellbarer Stahlfuß für leichte Bauten? Wir vergleichen Montagezeit, Kosten und Nivelliergenauigkeit von ±1 mm – der Ratgeber.",
       keywords: [
         "Punktfundament verstellbar",
         "Stützfundament",
@@ -736,9 +736,9 @@ export const de: SiteContent = {
     },
     "post-bloczek-betonowy-fundamentowy-versus-bloczek-betonowy-fundamentowy-od-dr-blocks":
       {
-        title: "Normaler Block vs DrBlocks-Block | DrBlocks",
+        title: "Normaler Block vs DrBlocks-Block – Vergleich | DrBlocks",
         description:
-          "Wie ein verstellbarer Stahl-Beton-Block den einfachen Mauerblock schlägt: Tragkraft, Verstellung, Rückbau – vollständiger Vergleich.",
+          "Wie ein verstellbarer Stahl-Beton-Block den einfachen Mauerblock schlägt: Tragkraft, Höhenverstellung und Rückbau – ein vollständiger Vergleich.",
         keywords: [
           "höhenverstellbarer Fundamentblock",
           "Gewindefundament",
@@ -746,24 +746,24 @@ export const de: SiteContent = {
       },
     "post-po-co-stosuje-sie-bloczki-betonowe-fundamentowe-dlaczego-sa-tak-wazne":
       {
-        title: "Wozu Fundamentblöcke? | DrBlocks",
+        title: "Wozu dienen Fundamentblöcke – und wann? | DrBlocks",
         description:
-          "Welche Rolle ein Fundamentblock spielt und wann ein verstellbares System gewinnt. Ratgeber für Bauherren.",
+          "Welche Rolle ein Fundamentblock spielt und wann ein verstellbares System das Betonieren schlägt. Ein praktischer Ratgeber für Bauherren und Fachbetriebe.",
         keywords: [
           "wozu Fundamentblöcke",
           "Punktfundament verstellbar",
         ],
       },
     kontakt: {
-      title: "Kontakt — Partner werden | DrBlocks",
+      title: "Kontakt – kostenloses Fundament-Angebot | DrBlocks",
       description:
-        "Kontaktieren Sie DrBlocks: Tel. +48 506 057 727, kontakt@drblocks.pl, sprzedaz@drblocks.pl. Wir erstellen Ihr Angebot für verstellbare Fundamentblöcke.",
+        "Kontaktieren Sie DrBlocks: Tel. +48 506 057 727 oder kontakt@drblocks.pl. Wir erstellen Ihr kostenloses Angebot für verstellbare Fundamentblöcke.",
       keywords: ["Kontakt DrBlocks", "Angebot Fundamentblöcke"],
     },
     privacy: {
-      title: "Datenschutzerklärung | DrBlocks",
+      title: "Datenschutzerklärung und Cookies (DSGVO) | DrBlocks",
       description:
-        "Datenschutzerklärung für drblocks.pl – Grundsätze zur Verarbeitung personenbezogener Daten und zum Einsatz von Cookies.",
+        "Datenschutzerklärung für drblocks.pl – Verarbeitung personenbezogener Daten nach DSGVO und Einsatz von Cookies: Verantwortlicher, Zwecke und Ihre Rechte.",
     },
   },
 };

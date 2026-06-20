@@ -654,81 +654,81 @@ export const en: SiteContent = {
   // ---------------------------------------------------------------------------
   meta: {
     home: {
-      title: "Adjustable Foundation Blocks | DrBlocks",
+      title: "Adjustable Foundation Blocks – Footing in a Day | DrBlocks",
       description:
-        "Foundation in one day — no concrete, no digging. 120–200 mm height adjustment, ±1 mm precision, up to 5 t load. For containers, modular homes and decks.",
+        "Foundation in one day — no concrete, no digging. 120–200 mm adjustment with ±1 mm precision and up to 5 t load. For containers, modular homes and decks.",
       keywords: ["adjustable foundation blocks", "screw pile alternative"],
     },
     oferta: {
-      title: "Adjustable Foundation Blocks — Range | DrBlocks",
+      title: "Adjustable Foundation Blocks B30 – Range | DrBlocks",
       description:
-        "Standard and Standard Plus: B30 concrete + steel screw-thread footing. Compare load ratings, height range and applications. Free quote.",
+        "Standard and Standard Plus: B30 concrete and steel screw-thread footing with 120–200 mm adjustment. Compare load ratings and applications. Get a free quote.",
       keywords: [
         "adjustable foundation blocks",
         "adjustable pier block price",
       ],
     },
     "product-standard-block": {
-      title: "Standard Block — Adjustable Footing | DrBlocks",
+      title: "Standard Block – Adjustable Foundation Block | DrBlocks",
       description:
-        "Height-adjustable foundation block, 120–200 mm, ±1 mm. B30 concrete + steel foot, up to 1 t (5 t grouted). Installed in one day.",
+        "Height-adjustable foundation block: 120–200 mm with ±1 mm precision, B30 body and steel foot. Up to 1 t (5 t grouted), installed in a single day.",
       keywords: [
         "height-adjustable foundation block",
         "threaded foundation block",
       ],
     },
     "product-standard-plus-block": {
-      title: "Standard Plus — Adjustable Footing | DrBlocks",
+      title: "Standard Plus – Adjustable Block with Grabber | DrBlocks",
       description:
-        "Plus version with magnetic grabber and skirting panel finish. 120–200 mm ±1 mm adjustment, up to 5 t load with cement grout.",
+        "Standard Plus with a magnetic grabber for skirting finish. 120–200 mm adjustment with ±1 mm precision, up to 5 t load with cement grout and no wet trades.",
       keywords: [
         "adjustable pier blocks with magnetic grabber",
         "modular home foundation block",
       ],
     },
     oNas: {
-      title: "About DrBlocks — The Manufacturer | DrBlocks",
+      title: "About Us – Adjustable Foundation Block Maker | DrBlocks",
       description:
-        "The Polish manufacturer of adjustable foundation blocks. Why we built a steel-and-concrete system for light modular structures.",
+        "Meet DrBlocks — the Polish manufacturer of adjustable foundation blocks. Why we built a steel-and-concrete levelling system for light modular structures.",
       keywords: [
         "adjustable foundation block manufacturer",
         "modular foundation manufacturer",
       ],
     },
     partner: {
-      title: "Become a Partner | DrBlocks",
+      title: "Become a Partner – Programme for Manufacturers | DrBlocks",
       description:
-        "Join the DrBlocks partner network. For modular building manufacturers and groundwork contractors across the EU. Attractive terms.",
+        "Join the DrBlocks partner network: for modular building and pavilion manufacturers and groundwork contractors. Discounts, leads and technical support.",
       keywords: [
         "foundation block distributor",
         "modular foundation partner programme",
       ],
     },
     faq: {
-      title: "FAQ — Adjustable Foundation Blocks | DrBlocks",
+      title: "FAQ – Adjustable Foundation Blocks Explained | DrBlocks",
       description:
-        "Answers on load capacity, installation, ground conditions and price. Best foundation for a modular home or container? How it compares to screw piles.",
+        "Answers on load capacity, installation, ground anchoring and price. Best foundation for a modular home or container? How it compares to screw piles and piers.",
       keywords: [
         "foundation for modular building",
         "container foundation blocks",
       ],
     },
     blog: {
-      title: "Blog — Foundations Without Concrete | DrBlocks",
+      title: "Blog – Foundations for Modular Construction | DrBlocks",
       description:
-        "Guides on foundations for containers, modular homes and decks. Comparisons, costs and same-day, no-dig installation.",
+        "Guides and comparisons on foundations for containers, modular homes, pavilions and decks. Costs, no-dig installation and choosing the right solution for you.",
       keywords: ["foundation without concrete", "one-day foundation installation"],
     },
     "post-tani-bloczek-vs-drblocks": {
-      title: "Cheap Blocks vs DrBlocks — False Economy | DrBlocks",
+      title: "Cheap Blocks vs DrBlocks – False Economy | DrBlocks",
       description:
-        "Do cheap pier blocks under a pavilion really pay off? We price the hidden cost of settling and remedial work vs an adjustable DrBlocks foundation.",
+        "Do cheap pier blocks under a pavilion really pay off? We price the hidden cost of settling and remedial work against an adjustable DrBlocks foundation.",
       keywords: ["cheap foundation pier blocks", "pavilion foundation"],
     },
     "post-stopa-fundamentowa-to-najlepsze-rozwiazanie": {
-      title: "Is a Concrete Footing Really Best? | DrBlocks",
+      title: "Is a Concrete Footing Really the Best Choice? | DrBlocks",
       description:
-        "Poured footing or adjustable steel foot? We compare installation time, cost and ±1 mm levelling precision.",
+        "Poured footing or an adjustable steel foot for a light structure? We compare installation time, cost and ±1 mm levelling precision — a complete guide.",
       keywords: [
         "adjustable foundation pier",
         "foundation alternatives to concrete",
@@ -736,9 +736,9 @@ export const en: SiteContent = {
     },
     "post-bloczek-betonowy-fundamentowy-versus-bloczek-betonowy-fundamentowy-od-dr-blocks":
       {
-        title: "Standard Block vs DrBlocks Block | DrBlocks",
+        title: "Standard Block vs DrBlocks Block – Compared | DrBlocks",
         description:
-          "How an adjustable steel-and-concrete block outperforms a plain masonry block: load capacity, height adjustment, removability — full comparison.",
+          "How an adjustable steel-and-concrete block outperforms a plain masonry block: load capacity, height adjustment and removability — a full comparison.",
         keywords: [
           "precast concrete adjustable footing",
           "adjustable foundation blocks",
@@ -746,24 +746,24 @@ export const en: SiteContent = {
       },
     "post-po-co-stosuje-sie-bloczki-betonowe-fundamentowe-dlaczego-sa-tak-wazne":
       {
-        title: "Why Use Foundation Blocks? | DrBlocks",
+        title: "Why Use Foundation Blocks, and When Exactly? | DrBlocks",
         description:
-          "What a foundation block does and when an adjustable system beats the traditional approach. A practical guide for builders and investors.",
+          "What a foundation block does and when an adjustable system beats the traditional poured approach. A practical guide for builders and investors alike.",
         keywords: [
           "what are foundation blocks for",
           "point foundation types",
         ],
       },
     kontakt: {
-      title: "Contact — Become a partner | DrBlocks",
+      title: "Contact – Free Adjustable Foundation Quote | DrBlocks",
       description:
-        "Contact DrBlocks: tel. +48 506 057 727, kontakt@drblocks.pl, sprzedaz@drblocks.pl. We'll prepare a quote for adjustable foundation blocks tailored to your project.",
+        "Contact DrBlocks: tel. +48 506 057 727 or kontakt@drblocks.pl. We will prepare a free quote for adjustable foundation blocks tailored to your project.",
       keywords: ["contact drblocks", "adjustable foundation block quote"],
     },
     privacy: {
-      title: "Privacy Policy | DrBlocks",
+      title: "Privacy Policy and Cookie Notice (GDPR) | DrBlocks",
       description:
-        "Privacy policy for drblocks.pl — how we handle personal data and use cookies.",
+        "Privacy policy for drblocks.pl — how we process personal data under GDPR and use cookies: the data controller, the purposes and your rights as a user.",
     },
   },
 };
