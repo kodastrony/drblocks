@@ -117,6 +117,53 @@ export function PartnerMap({ t }: { t: MapStrings }) {
   // a lista pod mapą dostaje te same numery. Pełna, dwukierunkowa korelacja
   // „pinezka ↔ wiersz", czytelna nawet przy 360 px.
   const labelMode = cw >= 520;
+
+  // Telefon: kilka firm leży niemal w jednym punkcie (Bytom ×2, Radom ×2 + Ślepowron),
+  // więc kółka się nakładały i nie było widać, że jest ich 8. Rozsuwamy je relaksacją
+  // siłową (odpychanie + słaba sprężyna do prawdziwego miejsca) i każde łączymy LINIĄ
+  // z prawdziwym punktem na mapie — pod różnymi kątami, więc widać wszystkie 8.
+  const clusterPos = useMemo(() => {
+    if (labelMode) return screen;
+    const n = screen.length;
+    const R = 16; // promień kółka numeru
+    const minD = 2 * R + 6; // min. odstęp środków
+    const M = R + 4; // margines od krawędzi
+    const pos = screen.map((p, i) => ({
+      x: p.x + Math.cos(i * 2.39) * 1.5,
+      y: p.y + Math.sin(i * 2.39) * 1.5,
+    }));
+    for (let it = 0; it < 140; it++) {
+      for (let i = 0; i < n; i++) {
+        for (let j = i + 1; j < n; j++) {
+          let dx = pos[j].x - pos[i].x;
+          let dy = pos[j].y - pos[i].y;
+          let d = Math.hypot(dx, dy);
+          if (d < 0.001) {
+            dx = Math.cos(i * 1.7);
+            dy = Math.sin(i * 1.7);
+            d = 1;
+          }
+          if (d < minD) {
+            const push = (minD - d) / 2;
+            const ux = dx / d;
+            const uy = dy / d;
+            pos[i].x -= ux * push;
+            pos[i].y -= uy * push;
+            pos[j].x += ux * push;
+            pos[j].y += uy * push;
+          }
+        }
+      }
+      for (let i = 0; i < n; i++) {
+        pos[i].x += (screen[i].x - pos[i].x) * 0.05;
+        pos[i].y += (screen[i].y - pos[i].y) * 0.05;
+        pos[i].x = clamp(pos[i].x, M, cw - M);
+        pos[i].y = clamp(pos[i].y, M, ch - M);
+      }
+    }
+    return pos;
+  }, [screen, cw, ch, labelMode]);
+
   const listItemRefs = useRef<(HTMLLIElement | null)[]>([]);
   const reducedMotion = () =>
     typeof window !== "undefined" &&
@@ -269,41 +316,86 @@ export function PartnerMap({ t }: { t: MapStrings }) {
           })}
         </div>
 
-        {/* TELEFON: numerowane, klikalne pinezki (44 px cel dotyku) zsynchronizowane z listą */}
+        {/* TELEFON: rozsunięte, numerowane kółka + linie do PRAWDZIWYCH miejsc na mapie
+            (pod różnymi kątami) → widać wszystkie 8 firm, mimo że część leży blisko siebie */}
         {!labelMode && (
-          <div className="absolute inset-0">
-            {partners.map((p, i) => {
-              const pt = screen[i];
-              const on = i === emphasized;
-              const prod = p.category === "producent";
-              const bg = prod ? (on ? "#0b6b61" : "#0f8c82") : on ? "#0a5bb8" : "#046bd2";
-              return (
-                <button
-                  key={p.name}
-                  type="button"
-                  onClick={() => selectPin(i)}
-                  aria-label={`${p.name}, ${p.city}`}
-                  className="absolute flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
-                  style={{ left: pt.x, top: pt.y, width: 44, height: 44, zIndex: on ? 40 : 20 }}
-                >
-                  <span
-                    className={clsx(
-                      "flex items-center justify-center rounded-full font-oswald font-bold leading-none text-white shadow-[var(--shadow-card)] ring-2 transition-all",
-                      on ? "size-7 text-[12px] ring-white" : "size-[22px] text-[11px] ring-white/80",
-                    )}
-                    style={{ backgroundColor: bg }}
+          <>
+            <svg
+              className="pointer-events-none absolute inset-0 h-full w-full"
+              viewBox={`0 0 ${cw} ${ch}`}
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              {/* linia: prawdziwe miejsce → rozsunięte kółko */}
+              {partners.map((p, i) => {
+                const tp = screen[i];
+                const cp = clusterPos[i];
+                const on = i === emphasized;
+                return (
+                  <line
+                    key={`ln-${p.name}`}
+                    x1={tp.x}
+                    y1={tp.y}
+                    x2={cp.x}
+                    y2={cp.y}
+                    stroke={on ? "#0f8c82" : "#94a3b8"}
+                    strokeOpacity={on ? 0.95 : 0.6}
+                    strokeWidth={on ? 1.6 : 1}
+                  />
+                );
+              })}
+              {/* kropka w prawdziwym miejscu */}
+              {partners.map((p, i) => {
+                const tp = screen[i];
+                const prod = p.category === "producent";
+                return (
+                  <circle
+                    key={`dot-${p.name}`}
+                    cx={tp.x}
+                    cy={tp.y}
+                    r={3.4}
+                    fill={prod ? "#0f8c82" : "#046bd2"}
+                    stroke="#ffffff"
+                    strokeWidth={1.4}
+                  />
+                );
+              })}
+            </svg>
+
+            <div className="absolute inset-0">
+              {partners.map((p, i) => {
+                const cp = clusterPos[i];
+                const on = i === emphasized;
+                const prod = p.category === "producent";
+                const bg = prod ? (on ? "#0b6b61" : "#0f8c82") : on ? "#0a5bb8" : "#046bd2";
+                return (
+                  <button
+                    key={p.name}
+                    type="button"
+                    onClick={() => selectPin(i)}
+                    aria-label={`${p.name}, ${p.city}`}
+                    className="absolute flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
+                    style={{ left: cp.x, top: cp.y, width: 44, height: 44, zIndex: on ? 40 : 20 }}
                   >
-                    {i + 1}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+                    <span
+                      className={clsx(
+                        "flex items-center justify-center rounded-full border-2 border-white font-oswald font-bold leading-none text-white shadow-[var(--shadow-card)] transition-transform",
+                        on ? "size-8 scale-110 text-[13px]" : "size-[26px] text-[12px]",
+                      )}
+                      style={{ backgroundColor: bg }}
+                    >
+                      {i + 1}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </>
         )}
 
         {/* TELEFON: dymek aktywnego partnera (jeden naraz → brak nachodzenia) */}
         {!labelMode && active != null && (() => {
-          const pt = screen[active];
+          const pt = clusterPos[active];
           const above = pt.y > ch / 2;
           const p = partners[active];
           return (

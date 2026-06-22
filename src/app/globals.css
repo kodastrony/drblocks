@@ -127,18 +127,15 @@
    zamknięty (zamiast `inert`), z opóźnieniem by zdążył wyjechać. prefers-reduced-
    motion (reguła wyżej) zeruje czasy → natychmiast. */
 .mobile-menu {
+  /* TYLKO transform (GPU) — panel jest stale na własnej warstwie (will-change),
+     więc otwarcie to czysty, natychmiastowy slide bez reflow/repaint reszty strony.
+     Bez `visibility` (które wymuszałoby pierwsze malowanie przy każdym otwarciu). */
   transform: translateX(100%);
-  visibility: hidden;
-  transition:
-    transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
-    visibility 0s linear 0.32s;
+  will-change: transform;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .mobile-menu[data-open] {
   transform: translateX(0);
-  visibility: visible;
-  transition:
-    transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
-    visibility 0s;
 }
 .mobile-menu .menu-item {
   opacity: 0;

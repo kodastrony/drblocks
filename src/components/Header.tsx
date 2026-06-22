@@ -25,8 +25,6 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const menuBtnRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
-  // zawsze-aktualna ścieżka — żeby rozróżnić „zamknięcie przez nawigację" od X/Esc
-  const pathnameRef = useRef(pathname);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -36,7 +34,6 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
   }, []);
 
   useEffect(() => {
-    pathnameRef.current = pathname;
     setOpen(false);
     setDrop(null);
   }, [pathname]);
@@ -67,47 +64,29 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
       if (window.location.hash !== url.hash) {
         window.history.pushState(null, "", url.pathname + url.search + url.hash);
       }
-      // krótkie opóźnienie: pozwól menu się zamknąć i ODBLOKOWAĆ body (position:fixed)
-      // zanim przewiniemy do sekcji (inaczej skok nie zadziała przy zablokowanym body)
+      // krótkie opóźnienie: pozwól menu się zamknąć i zdjąć blokadę overflow zanim
+      // przewiniemy do sekcji (przy overflow:hidden programowy scroll też nie zadziała)
       window.setTimeout(() => el.scrollIntoView(), 60);
     };
     document.addEventListener("click", onClick, true);
     return () => document.removeEventListener("click", onClick, true);
   }, []);
 
-  // Blokada przewijania tła przy otwartym menu — wersja odporna na telefony.
-  // `overflow:hidden` na <body> NIE blokuje przewijania dotykiem w iOS Safari,
-  // więc „przypinamy" body (position:fixed + zapamiętana pozycja).
+  // Blokada przewijania tła przy otwartym menu — TANIA wersja: tylko `overflow:hidden`
+  // na <html>/<body>. NIE używamy `position:fixed` — na ciężkiej stronie wymuszało
+  // ono pełny reflow (zacięcie ~0,5 s) i „odpinało" sticky header (znikał). Pozycja
+  // scrolla zostaje nienaruszona, więc po zamknięciu nic nie skacze.
   useEffect(() => {
     if (!open) return;
+    const html = document.documentElement;
     const body = document.body;
-    const scrollY = window.scrollY;
-    const openedAt = pathnameRef.current;
-    const prev = {
-      position: body.style.position,
-      top: body.style.top,
-      left: body.style.left,
-      right: body.style.right,
-      width: body.style.width,
-      overflow: body.style.overflow,
-    };
-    body.style.position = "fixed";
-    body.style.top = `-${scrollY}px`;
-    body.style.left = "0";
-    body.style.right = "0";
-    body.style.width = "100%";
+    const prevHtml = html.style.overflow;
+    const prevBody = body.style.overflow;
+    html.style.overflow = "hidden";
     body.style.overflow = "hidden";
     return () => {
-      body.style.position = prev.position;
-      body.style.top = prev.top;
-      body.style.left = prev.left;
-      body.style.right = prev.right;
-      body.style.width = prev.width;
-      body.style.overflow = prev.overflow;
-      // Przywróć pozycję scrolla TYLKO przy zamknięciu BEZ nawigacji (X/Esc, ta sama
-      // ścieżka). Przy kliknięciu pozycji menu (nawigacja) NIE przywracamy — nowa
-      // podstrona ma zostać na samej górze (obsługuje to handler zmiany trasy).
-      if (pathnameRef.current === openedAt) window.scrollTo(0, scrollY);
+      html.style.overflow = prevHtml;
+      body.style.overflow = prevBody;
     };
   }, [open]);
 
@@ -262,12 +241,11 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
         </div>
       </div>
 
-      {/* Mobilne menu — ZAWSZE w DOM, wysuwane czystymi CSS-transition (klasa
-          `.mobile-menu` + atrybut data-open w globals.css). Brak framer-motion =
-          brak rozgrzewki/montażu → otwiera się NATYCHMIAST, a transition odpala się
-          ZA KAŻDYM razem (jednorazowe @keyframes nie restartowało się). Nieprzezro-
-          czyste tło = brak animowania opacity nad rozmytym headerem. `visibility`
-          (w CSS) chowa panel z taba/AT gdy zamknięty. */}
+      {/* Mobilne menu — ZAWSZE w DOM, na własnej warstwie GPU, wysuwane czystym
+          transformem (klasa `.mobile-menu` + atrybut data-open w globals.css). Brak
+          framer-motion / position:fixed / reflow → otwiera się NATYCHMIAST i płynnie,
+          a transition odpala się ZA KAŻDYM razem. `inert` przy zamknięciu wyłącza
+          fokus/klik (panel jest tylko przesunięty za ekran). */}
       <div
         ref={dialogRef}
         role="dialog"
@@ -275,6 +253,7 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
         aria-label={ui.mobileNavAria}
         aria-hidden={!open}
         data-open={open ? "" : undefined}
+        inert={!open}
         className="mobile-menu fixed inset-0 z-[60] overflow-y-auto overscroll-contain bg-navy lg:hidden"
       >
         <div className="sticky top-0 z-10 flex h-[68px] items-center justify-between border-b border-white/10 bg-navy px-5">
