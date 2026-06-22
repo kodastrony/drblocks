@@ -501,7 +501,7 @@ export const en: SiteContent = {
       ],
       stats: [
         { value: "±1 mm", label: "Precision" },
-        { value: "up to 5 t", label: "Load capacity (grouted)" },
+        { value: "up to 5 t", label: "per support", muted: true },
         { value: "1 Day", label: "Installation" },
         { value: "0", label: "Wet trades" },
       ],

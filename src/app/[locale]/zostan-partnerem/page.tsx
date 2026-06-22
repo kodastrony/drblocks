@@ -120,7 +120,11 @@ export default async function PartnerPage({ params }: { params: Promise<{ locale
           <div className="grid grid-cols-2 gap-4">
             {p.growth.stats.map((stat) => (
               <div key={stat.label} className="rounded-2xl border border-line bg-mist/60 p-6 text-center">
-                <div className="font-oswald text-3xl font-bold tabular-nums text-teal-700 sm:text-4xl">
+                <div
+                  className={`font-oswald text-3xl font-bold tabular-nums sm:text-4xl ${
+                    stat.muted ? "text-mute" : "text-teal-700"
+                  }`}
+                >
                   {stat.value}
                 </div>
                 <div className="mt-1.5 text-xs font-semibold uppercase tracking-wider text-mute">

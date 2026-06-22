@@ -199,7 +199,7 @@ export type SiteContent = {
     growth: {
       heading: string;
       paragraphs: string[];
-      stats: { value: string; label: string }[];
+      stats: { value: string; label: string; muted?: boolean }[];
       cta: string;
     };
     paths: {
