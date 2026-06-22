@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -21,7 +22,11 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [drop, setDrop] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+
+  // portal montujemy dopiero po stronie klienta (createPortal potrzebuje `document`)
+  useEffect(() => setMounted(true), []);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const menuBtnRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -238,19 +243,22 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
         </div>
       </div>
 
-      {/* Mobilne menu — renderowane WARUNKOWO (montaż dopiero po otwarciu). Dzięki
-          temu: brak stałej, pełnoekranowej warstwy GPU/`will-change` (która wieszała
-          iOS Safari → „odśwież stronę"), brak `inert`, a animacja CSS @keyframes
-          odpala się ZA KAŻDYM otwarciem (świeży montaż). Lekki montaż (zwykły JSX,
-          bez framer-motion) → otwiera się od razu, slide na GPU. */}
-      {open && (
-        <div
-          ref={dialogRef}
-          role="dialog"
-          aria-modal="true"
-          aria-label={ui.mobileNavAria}
-          className="mobile-menu fixed inset-0 z-[60] overflow-y-auto overscroll-contain bg-navy lg:hidden"
-        >
+      {/* Mobilne menu — przez PORTAL do <body>. KLUCZOWE: panel NIE może być w <header>,
+          bo header (sticky + backdrop-blur po scrollu) tworzy „containing block" dla
+          elementów `position:fixed` → przy zescrollowanej stronie menu lądowało poza
+          ekranem (otwierało się tylko na samej górze). Portal do body = pozycja zawsze
+          względem viewportu. Renderowane warunkowo (montaż przy otwarciu) + animacja
+          CSS @keyframes (odpala się za każdym otwarciem). Bez framer-motion / will-change. */}
+      {mounted &&
+        open &&
+        createPortal(
+          <div
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={ui.mobileNavAria}
+            className="mobile-menu fixed inset-0 z-[60] overflow-y-auto overscroll-contain bg-navy lg:hidden"
+          >
           <div className="sticky top-0 z-10 flex h-[68px] items-center justify-between border-b border-white/10 bg-navy px-5">
               <Image
                 src={asset("/assets/logo-light.png")}
@@ -345,8 +353,9 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
                 </a>
               </div>
             </nav>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </header>
   );
 }
