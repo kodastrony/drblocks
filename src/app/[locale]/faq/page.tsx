@@ -47,6 +47,7 @@ export default async function FaqPage({ params }: { params: Promise<{ locale: st
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <PageHeader
+        crumbsLabel={ui.breadcrumbAria}
         title={faq.heading}
         lead={faq.lead}
         crumbs={[

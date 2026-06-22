@@ -94,6 +94,7 @@ export default async function BlogPostPage({
   return (
     <>
       <PageHeader
+        crumbsLabel={ui.breadcrumbAria}
         eyebrow={formatDate(post.date)}
         title={post.title}
         crumbs={[

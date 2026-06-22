@@ -47,6 +47,7 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <PageHeader
+        crumbsLabel={ui.breadcrumbAria}
         title={blog.heading}
         lead={blog.lead}
         crumbs={[

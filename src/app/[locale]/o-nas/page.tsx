@@ -39,6 +39,7 @@ export default async function ONasPage({ params }: { params: Promise<{ locale: s
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <PageHeader
+        crumbsLabel={ui.breadcrumbAria}
         title={about.heading}
         crumbs={[
           { label: ui.breadcrumbHome, href: localizedHref(locale, "/") },

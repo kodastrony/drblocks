@@ -50,6 +50,7 @@ export default async function KontaktPage({ params }: { params: Promise<{ locale
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <PageHeader
+        crumbsLabel={ui.breadcrumbAria}
         title={contact.heading}
         lead={contact.lead}
         crumbs={[

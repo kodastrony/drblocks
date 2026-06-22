@@ -32,6 +32,7 @@ export default async function PolitykaPage({ params }: { params: Promise<{ local
   return (
     <>
       <PageHeader
+        crumbsLabel={ui.breadcrumbAria}
         title={privacy.title}
         crumbs={[
           { label: ui.breadcrumbHome, href: localizedHref(locale, "/") },

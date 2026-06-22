@@ -10,11 +10,13 @@ export function PageHeader({
   title,
   lead,
   crumbs,
+  crumbsLabel = "Okruszki",
 }: {
   eyebrow?: string;
   title: string;
   lead?: string;
   crumbs: Crumb[];
+  crumbsLabel?: string;
 }) {
   return (
     <section className="relative overflow-hidden border-b border-line bg-mist">
@@ -24,7 +26,7 @@ export function PageHeader({
         aria-hidden
       />
       <Container className="relative py-14 lg:py-20">
-        <nav aria-label="Okruszki" className="flex flex-wrap items-center gap-2 text-sm text-steel">
+        <nav aria-label={crumbsLabel} className="flex flex-wrap items-center gap-2 text-sm text-steel">
           {crumbs.map((c, i) => (
             <span key={c.label} className="flex items-center gap-2">
               {c.href ? (
