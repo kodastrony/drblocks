@@ -107,9 +107,11 @@ export default async function LocaleLayout({
 
   return (
     <LocaleProvider locale={locale} content={content}>
+      {/* Skip-to-content: widoczny TYLKO przy nawigacji KLAWIATURĄ (focus-visible),
+          nigdy przy myszy/dotyku/fokusie programowym — a11y bez „głupiego" przycisku. */}
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-navy focus:px-4 focus:py-2 focus:text-white"
+        className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:left-4 focus-visible:top-4 focus-visible:z-[100] focus-visible:rounded-lg focus-visible:bg-navy focus-visible:px-4 focus-visible:py-2 focus-visible:text-white"
       >
         {content.ui.skipToContent}
       </a>
