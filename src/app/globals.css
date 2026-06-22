@@ -38,7 +38,10 @@
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
-    scroll-behavior: smooth;
+    /* scroll-behavior celowo AUTO (natychmiastowo): nawigacja zawsze ląduje na
+       górze podstrony bez animowanego „przewijania przez sekcje"; kotwice skaczą
+       od razu z odsadzeniem `scroll-mt-*`. Najpewniejsze i najlżejsze (słaby sprzęt). */
+    scroll-behavior: auto;
   }
   body {
     font-family: var(--font-body);
@@ -118,14 +121,15 @@
 }
 
 /* Mobilne menu — lekka kaskada pozycji liczona na kompozytorze (transform+opacity),
-   bez kosztu na głównym wątku (zamiast 9 instancji framer-motion). Globalna reguła
-   prefers-reduced-motion powyżej neutralizuje tę animację. */
+   bez kosztu na głównym wątku (zamiast framer-motion). Panel jest ZAWSZE w DOM, więc
+   animację odpalamy DOPIERO po otwarciu (parent [data-open]) — i re-odpalamy przy
+   każdym otwarciu. Globalna reguła prefers-reduced-motion powyżej ją neutralizuje. */
 @keyframes menu-item-in {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.menu-item {
-  animation: menu-item-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+[data-open] .menu-item {
+  animation: menu-item-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 /* Responsywna baza dla karuzeli logotypów (wysokość logo + odstęp).
@@ -141,20 +145,3 @@
   .logo-row { --logo-h: 5.75rem; --logo-gap: 2.5rem; } /* 92px / 40px — desktop */
 }
 
-/* Lenis smooth scroll (only applied while Lenis is active) */
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-.lenis.lenis-smooth iframe {
-  pointer-events: none;
-}

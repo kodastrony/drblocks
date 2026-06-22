@@ -25,6 +25,8 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const menuBtnRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+  // zawsze-aktualna ścieżka — żeby rozróżnić „zamknięcie przez nawigację" od X/Esc
+  const pathnameRef = useRef(pathname);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -34,24 +36,19 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
   }, []);
 
   useEffect(() => {
+    pathnameRef.current = pathname;
     setOpen(false);
     setDrop(null);
   }, [pathname]);
 
   // Blokada przewijania tła przy otwartym menu — wersja odporna na telefony.
   // `overflow:hidden` na <body> NIE blokuje przewijania dotykiem w iOS Safari,
-  // więc DODATKOWO „przypinamy" body (position:fixed + zapamiętana pozycja) i
-  // zatrzymujemy Lenisa (jego pętla rAF inaczej dalej przewija stronę pod spodem
-  // kółkiem/gładzikiem). Po zamknięciu wszystko przywracamy 1:1.
+  // więc „przypinamy" body (position:fixed + zapamiętana pozycja).
   useEffect(() => {
-    const lenis = (window as unknown as { lenis?: { stop: () => void; start: () => void } }).lenis;
-    if (!open) {
-      lenis?.start();
-      return;
-    }
-    lenis?.stop();
+    if (!open) return;
     const body = document.body;
     const scrollY = window.scrollY;
+    const openedAt = pathnameRef.current;
     const prev = {
       position: body.style.position,
       top: body.style.top,
@@ -73,8 +70,10 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
       body.style.right = prev.right;
       body.style.width = prev.width;
       body.style.overflow = prev.overflow;
-      window.scrollTo(0, scrollY);
-      lenis?.start();
+      // Przywróć pozycję scrolla TYLKO przy zamknięciu BEZ nawigacji (X/Esc, ta sama
+      // ścieżka). Przy kliknięciu pozycji menu (nawigacja) NIE przywracamy — nowa
+      // podstrona ma zostać na samej górze (obsługuje to handler zmiany trasy).
+      if (pathnameRef.current === openedAt) window.scrollTo(0, scrollY);
     };
   }, [open]);
 
@@ -229,24 +228,24 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
         </div>
       </div>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            ref={dialogRef}
-            role="dialog"
-            aria-modal="true"
-            aria-label={ui.mobileNavAria}
-            data-lenis-prevent
-            // NIEPRZEZROCZYSTY panel wjeżdżający z prawej = sam transform (GPU), bez
-            // animowania opacity NAD rozmytym (backdrop-blur) headerem → zero kosztownego
-            // przeliczania rozmycia co klatkę = brak zacięć i „opóźnienia" otwarcia.
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "tween", duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-[60] overflow-y-auto overscroll-contain bg-navy lg:hidden"
-          >
-            <div className="sticky top-0 z-10 flex h-[68px] items-center justify-between border-b border-white/10 bg-navy px-5">
+      {/* Mobilne menu — ZAWSZE w DOM, wysuwane czystą animacją CSS (transform).
+          Brak framer-motion = brak rozgrzewki biblioteki i montażu przy kliknięciu
+          → otwiera się NATYCHMIAST. Nieprzezroczyste tło = brak animowania opacity
+          nad rozmytym headerem. `inert` przy zamknięciu wyłącza fokus/klik. */}
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={ui.mobileNavAria}
+        aria-hidden={!open}
+        data-open={open ? "" : undefined}
+        inert={!open}
+        className={clsx(
+          "fixed inset-0 z-[60] overflow-y-auto overscroll-contain bg-navy transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform motion-reduce:transition-none lg:hidden",
+          open ? "translate-x-0" : "pointer-events-none translate-x-full",
+        )}
+      >
+        <div className="sticky top-0 z-10 flex h-[68px] items-center justify-between border-b border-white/10 bg-navy px-5">
               <Image
                 src={asset("/assets/logo-light.png")}
                 alt="DrBlocks"
@@ -340,9 +339,7 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
                 </a>
               </div>
             </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </div>
     </header>
   );
 }
