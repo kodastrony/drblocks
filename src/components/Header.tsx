@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -40,6 +40,40 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
     setOpen(false);
     setDrop(null);
   }, [pathname]);
+
+  // Kotwice W OBRĘBIE tej samej podstrony (np. „Jak to działa" → /pl/#jak-to-dziala
+  // gdy już jesteśmy na /pl): ścieżka się NIE zmienia, więc menu nie zamknęłoby się
+  // samo i nic by się nie przewinęło. Łapiemy klik w fazie capture (przed nawigacją
+  // Next), zamykamy menu i sami płynnie przewijamy do sekcji (z offsetem scroll-mt).
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = (e.target as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
+      if (!a || a.target === "_blank") return;
+      let url: URL;
+      try {
+        url = new URL(a.href, window.location.href);
+      } catch {
+        return;
+      }
+      if (url.origin !== window.location.origin) return;
+      if (url.pathname !== window.location.pathname || !url.hash) return; // tylko ta sama strona + #hash
+      const el = document.getElementById(decodeURIComponent(url.hash.slice(1)));
+      if (!el) return;
+      // przejmujemy: stop dla Next/Link, zamykamy menu, skok do sekcji po odblokowaniu body
+      e.preventDefault();
+      e.stopPropagation();
+      setOpen(false);
+      if (window.location.hash !== url.hash) {
+        window.history.pushState(null, "", url.pathname + url.search + url.hash);
+      }
+      // krótkie opóźnienie: pozwól menu się zamknąć i ODBLOKOWAĆ body (position:fixed)
+      // zanim przewiniemy do sekcji (inaczej skok nie zadziała przy zablokowanym body)
+      window.setTimeout(() => el.scrollIntoView(), 60);
+    };
+    document.addEventListener("click", onClick, true);
+    return () => document.removeEventListener("click", onClick, true);
+  }, []);
 
   // Blokada przewijania tła przy otwartym menu — wersja odporna na telefony.
   // `overflow:hidden` na <body> NIE blokuje przewijania dotykiem w iOS Safari,
@@ -228,10 +262,12 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
         </div>
       </div>
 
-      {/* Mobilne menu — ZAWSZE w DOM, wysuwane czystą animacją CSS (transform).
-          Brak framer-motion = brak rozgrzewki biblioteki i montażu przy kliknięciu
-          → otwiera się NATYCHMIAST. Nieprzezroczyste tło = brak animowania opacity
-          nad rozmytym headerem. `inert` przy zamknięciu wyłącza fokus/klik. */}
+      {/* Mobilne menu — ZAWSZE w DOM, wysuwane czystymi CSS-transition (klasa
+          `.mobile-menu` + atrybut data-open w globals.css). Brak framer-motion =
+          brak rozgrzewki/montażu → otwiera się NATYCHMIAST, a transition odpala się
+          ZA KAŻDYM razem (jednorazowe @keyframes nie restartowało się). Nieprzezro-
+          czyste tło = brak animowania opacity nad rozmytym headerem. `visibility`
+          (w CSS) chowa panel z taba/AT gdy zamknięty. */}
       <div
         ref={dialogRef}
         role="dialog"
@@ -239,11 +275,7 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
         aria-label={ui.mobileNavAria}
         aria-hidden={!open}
         data-open={open ? "" : undefined}
-        inert={!open}
-        className={clsx(
-          "fixed inset-0 z-[60] overflow-y-auto overscroll-contain bg-navy transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform motion-reduce:transition-none lg:hidden",
-          open ? "translate-x-0" : "pointer-events-none translate-x-full",
-        )}
+        className="mobile-menu fixed inset-0 z-[60] overflow-y-auto overscroll-contain bg-navy lg:hidden"
       >
         <div className="sticky top-0 z-10 flex h-[68px] items-center justify-between border-b border-white/10 bg-navy px-5">
               <Image
@@ -267,7 +299,7 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
                 <div
                   key={item.label}
                   className="menu-item"
-                  style={{ animationDelay: `${0.05 + i * 0.04}s` }}
+                  style={{ "--menu-delay": `${0.05 + i * 0.04}s` } as CSSProperties}
                 >
                   <Link
                     href={href(item.href)}
@@ -293,13 +325,13 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
               <Link
                 href={href("/o-nas")}
                 className="menu-item block border-b border-white/10 py-3.5 font-display text-2xl font-semibold text-white"
-                style={{ animationDelay: `${0.05 + nav.length * 0.04}s` }}
+                style={{ "--menu-delay": `${0.05 + nav.length * 0.04}s` } as CSSProperties}
               >
                 {ui.footerCompany}
               </Link>
               <div
                 className="menu-item mt-6 flex items-center gap-2"
-                style={{ animationDelay: `${0.05 + (nav.length + 1) * 0.04}s` }}
+                style={{ "--menu-delay": `${0.05 + (nav.length + 1) * 0.04}s` } as CSSProperties}
               >
                 {locales.map((l) => {
                   const rest = (pathname || `/${locale}`).replace(/^\/(pl|en|de)(?=\/|$)/, "");
@@ -323,7 +355,7 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
               </div>
               <div
                 className="menu-item mt-4 flex flex-col gap-3"
-                style={{ animationDelay: `${0.05 + (nav.length + 2) * 0.04}s` }}
+                style={{ "--menu-delay": `${0.05 + (nav.length + 2) * 0.04}s` } as CSSProperties}
               >
                 <Link
                   href={href("/kontakt")}

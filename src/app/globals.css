@@ -120,16 +120,37 @@
   to { transform: translateX(-50%); }
 }
 
-/* Mobilne menu — lekka kaskada pozycji liczona na kompozytorze (transform+opacity),
-   bez kosztu na głównym wątku (zamiast framer-motion). Panel jest ZAWSZE w DOM, więc
-   animację odpalamy DOPIERO po otwarciu (parent [data-open]) — i re-odpalamy przy
-   każdym otwarciu. Globalna reguła prefers-reduced-motion powyżej ją neutralizuje. */
-@keyframes menu-item-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Mobilne menu — panel ZAWSZE w DOM, sterowany atrybutem [data-open].
+   Wszystko na CZYSTYCH TRANSITION (nie @keyframes), więc animacja ODPALA SIĘ ZA
+   KAŻDYM razem (jednorazowe `animation` nie restartowało się przy 2. otwarciu).
+   transform = GPU (płynne, słaby sprzęt); `visibility` chowa panel z taba/AT gdy
+   zamknięty (zamiast `inert`), z opóźnieniem by zdążył wyjechać. prefers-reduced-
+   motion (reguła wyżej) zeruje czasy → natychmiast. */
+.mobile-menu {
+  transform: translateX(100%);
+  visibility: hidden;
+  transition:
+    transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s linear 0.32s;
 }
-[data-open] .menu-item {
-  animation: menu-item-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+.mobile-menu[data-open] {
+  transform: translateX(0);
+  visibility: visible;
+  transition:
+    transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s;
+}
+.mobile-menu .menu-item {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mobile-menu[data-open] .menu-item {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: var(--menu-delay, 0s);
 }
 
 /* Responsywna baza dla karuzeli logotypów (wysokość logo + odstęp).
