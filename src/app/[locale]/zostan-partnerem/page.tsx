@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getContent, localizedHref } from "@/i18n";
-import { locales, defaultLocale, isLocale, localeHreflang, type Locale } from "@/i18n/config";
+import { pageMeta, breadcrumbJsonLd } from "@/i18n/meta";
+import { locales, defaultLocale, isLocale, type Locale } from "@/i18n/config";
 import { PartnerMap } from "@/components/partner/PartnerMap";
 import { PartnerForm } from "@/components/partner/PartnerForm";
 import { PartnerBenefits } from "@/components/partner/PartnerBenefits";
 
-const SITE = "https://drblocks.pl";
 const PATH = "/zostan-partnerem";
 
 export function generateStaticParams() {
@@ -21,20 +21,7 @@ export async function generateMetadata({
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
   const m = getContent(locale).meta.partner;
-  const languages: Record<string, string> = { "x-default": `${SITE}/${defaultLocale}${PATH}` };
-  for (const l of locales) languages[localeHreflang[l]] = `${SITE}/${l}${PATH}`;
-  return {
-    title: m.title,
-    description: m.description,
-    keywords: m.keywords,
-    alternates: { canonical: `/${locale}${PATH}`, languages },
-    openGraph: {
-      title: m.title,
-      description: m.description,
-      url: `${SITE}/${locale}${PATH}`,
-      images: [{ url: "/assets/hero-poster.jpg", width: 640, height: 480, alt: m.title }],
-    },
-  };
+  return pageMeta({ locale, path: PATH, title: m.title, description: m.description, keywords: m.keywords });
 }
 
 const Check = () => (
@@ -50,14 +37,10 @@ export default async function PartnerPage({ params }: { params: Promise<{ locale
   const p = c.partner;
   const href = (h: string) => localizedHref(locale, h);
 
-  const breadcrumbLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: c.ui.breadcrumbHome, item: `${SITE}/${locale}` },
-      { "@type": "ListItem", position: 2, name: p.hero.title, item: `${SITE}/${locale}${PATH}` },
-    ],
-  };
+  const breadcrumbLd = breadcrumbJsonLd(locale, [
+    { name: c.ui.breadcrumbHome, path: "/" },
+    { name: p.hero.title },
+  ]);
 
   return (
     <>

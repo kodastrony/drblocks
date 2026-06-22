@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Markdown } from "@/components/Markdown";
 import { ArrowRight } from "@/components/Icons";
 import { getContent, localizedHref } from "@/i18n";
+import { pageMeta, breadcrumbJsonLd } from "@/i18n/meta";
 import { locales, isLocale, defaultLocale, localeHreflang, type Locale } from "@/i18n/config";
 import { blogBodies } from "@/lib/blog-content";
 
@@ -31,17 +32,14 @@ export async function generateMetadata({
   const post = c.blog.posts.find((p) => p.slug === slug);
   const m = c.meta[`post-${slug}`];
   if (!post) return {};
-  const languages: Record<string, string> = {
-    "x-default": `${SITE}/${defaultLocale}/blog/${slug}`,
-  };
-  for (const l of locales) languages[localeHreflang[l]] = `${SITE}/${l}/blog/${slug}`;
-  return {
-    title: m ? { absolute: m.title } : post.title,
+  const meta = pageMeta({
+    locale,
+    path: `/blog/${slug}`,
+    title: m ? m.title : post.title,
     description: m?.description ?? post.excerpt,
     keywords: m?.keywords,
-    alternates: { canonical: `/${locale}/blog/${slug}`, languages },
-    openGraph: { type: "article", title: post.title, description: post.excerpt },
-  };
+  });
+  return { ...meta, openGraph: { ...meta.openGraph, type: "article" } };
 }
 
 export default async function BlogPostPage({
@@ -70,8 +68,8 @@ export default async function BlogPostPage({
     "@type": "BlogPosting",
     headline: post.title,
     description: post.excerpt,
-    inLanguage: locale,
-    image: `${SITE}/assets/hero-poster.jpg`,
+    inLanguage: localeHreflang[locale],
+    image: `${SITE}/assets/og-default.jpg`,
     datePublished: post.date,
     dateModified: post.date,
     author: { "@type": "Organization", "@id": `${SITE}/#organization`, name: "DrBlocks", url: SITE },
@@ -86,6 +84,12 @@ export default async function BlogPostPage({
     },
     mainEntityOfPage: `${SITE}/${locale}/blog/${post.slug}`,
   };
+
+  const breadcrumbLd = breadcrumbJsonLd(locale, [
+    { name: ui.breadcrumbHome, path: "/" },
+    { name: blog.heading, path: "/blog" },
+    { name: post.title },
+  ]);
 
   return (
     <>
@@ -124,6 +128,7 @@ export default async function BlogPostPage({
       </article>
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
     </>
   );
 }

@@ -5,10 +5,9 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { getContent, localizedHref } from "@/i18n";
-import { locales, isLocale, defaultLocale, localeHreflang, type Locale } from "@/i18n/config";
+import { pageMeta, breadcrumbJsonLd } from "@/i18n/meta";
+import { locales, isLocale, defaultLocale, type Locale } from "@/i18n/config";
 import { asset } from "@/lib/asset";
-
-const SITE = "https://drblocks.pl";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -22,14 +21,7 @@ export async function generateMetadata({
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
   const m = getContent(locale).meta.oNas;
-  const languages: Record<string, string> = { "x-default": `${SITE}/${defaultLocale}/o-nas` };
-  for (const l of locales) languages[localeHreflang[l]] = `${SITE}/${l}/o-nas`;
-  return {
-    title: { absolute: m.title },
-    description: m.description,
-    keywords: m.keywords,
-    alternates: { canonical: `/${locale}/o-nas`, languages },
-  };
+  return pageMeta({ locale, path: "/o-nas", title: m.title, description: m.description, keywords: m.keywords });
 }
 
 export default async function ONasPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -38,9 +30,14 @@ export default async function ONasPage({ params }: { params: Promise<{ locale: s
   const c = getContent(locale);
   const { about, hero, ui, nav } = c;
   const aboutLabel = nav.find((n) => n.href === "/o-nas")?.label ?? ui.footerCompany;
+  const breadcrumbLd = breadcrumbJsonLd(locale, [
+    { name: ui.breadcrumbHome, path: "/" },
+    { name: aboutLabel },
+  ]);
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <PageHeader
         title={about.heading}
         crumbs={[

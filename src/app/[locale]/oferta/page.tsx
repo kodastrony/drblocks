@@ -5,9 +5,8 @@ import { Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
 import { ProductCard } from "@/components/ProductCard";
 import { Check } from "@/components/Icons";
 import { getContent, localizedHref } from "@/i18n";
-import { locales, isLocale, defaultLocale, localeHreflang, type Locale } from "@/i18n/config";
-
-const SITE = "https://drblocks.pl";
+import { pageMeta, breadcrumbJsonLd } from "@/i18n/meta";
+import { locales, isLocale, defaultLocale, type Locale } from "@/i18n/config";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -21,14 +20,7 @@ export async function generateMetadata({
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
   const m = getContent(locale).meta.oferta;
-  const languages: Record<string, string> = { "x-default": `${SITE}/${defaultLocale}/oferta` };
-  for (const l of locales) languages[localeHreflang[l]] = `${SITE}/${l}/oferta`;
-  return {
-    title: { absolute: m.title },
-    description: m.description,
-    keywords: m.keywords,
-    alternates: { canonical: `/${locale}/oferta`, languages },
-  };
+  return pageMeta({ locale, path: "/oferta", title: m.title, description: m.description, keywords: m.keywords });
 }
 
 export default async function OfertaPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -49,8 +41,14 @@ export default async function OfertaPage({ params }: { params: Promise<{ locale:
     return <span className="tabular text-navy">{v}</span>;
   }
 
+  const breadcrumbLd = breadcrumbJsonLd(locale, [
+    { name: ui.breadcrumbHome, path: "/" },
+    { name: cmp.heading },
+  ]);
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <PageHeader
         title={products.heading}
         lead={products.intro}

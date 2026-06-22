@@ -5,9 +5,8 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { Stagger, StaggerItem } from "@/components/ui/Reveal";
 import { ArrowRight } from "@/components/Icons";
 import { getContent, localizedHref } from "@/i18n";
-import { locales, isLocale, defaultLocale, localeHreflang, type Locale } from "@/i18n/config";
-
-const SITE = "https://drblocks.pl";
+import { pageMeta, breadcrumbJsonLd } from "@/i18n/meta";
+import { locales, isLocale, defaultLocale, type Locale } from "@/i18n/config";
 
 const intlLocale: Record<Locale, string> = { pl: "pl-PL", en: "en-GB", de: "de-DE" };
 
@@ -23,14 +22,7 @@ export async function generateMetadata({
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
   const m = getContent(locale).meta.blog;
-  const languages: Record<string, string> = { "x-default": `${SITE}/${defaultLocale}/blog` };
-  for (const l of locales) languages[localeHreflang[l]] = `${SITE}/${l}/blog`;
-  return {
-    title: { absolute: m.title },
-    description: m.description,
-    keywords: m.keywords,
-    alternates: { canonical: `/${locale}/blog`, languages },
-  };
+  return pageMeta({ locale, path: "/blog", title: m.title, description: m.description, keywords: m.keywords });
 }
 
 export default async function BlogPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -46,8 +38,14 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
       year: "numeric",
     }).format(new Date(iso));
 
+  const breadcrumbLd = breadcrumbJsonLd(locale, [
+    { name: ui.breadcrumbHome, path: "/" },
+    { name: blog.heading },
+  ]);
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <PageHeader
         title={blog.heading}
         lead={blog.lead}

@@ -9,7 +9,8 @@ import { Button } from "@/components/ui/Button";
 import { ProductCard } from "@/components/ProductCard";
 import { Check, Phone } from "@/components/Icons";
 import { getContent, localizedHref } from "@/i18n";
-import { locales, isLocale, defaultLocale, localeHreflang, type Locale } from "@/i18n/config";
+import { pageMeta } from "@/i18n/meta";
+import { locales, isLocale, defaultLocale, type Locale } from "@/i18n/config";
 import { company } from "@/lib/company";
 import { asset } from "@/lib/asset";
 
@@ -30,16 +31,7 @@ export async function generateMetadata({
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
   const m = getContent(locale).meta[`product-${slug}`];
   if (!m) return {};
-  const languages: Record<string, string> = {
-    "x-default": `${SITE}/${defaultLocale}/oferta/${slug}`,
-  };
-  for (const l of locales) languages[localeHreflang[l]] = `${SITE}/${l}/oferta/${slug}`;
-  return {
-    title: { absolute: m.title },
-    description: m.description,
-    keywords: m.keywords,
-    alternates: { canonical: `/${locale}/oferta/${slug}`, languages },
-  };
+  return pageMeta({ locale, path: `/oferta/${slug}`, title: m.title, description: m.description, keywords: m.keywords });
 }
 
 export default async function ProductPage({

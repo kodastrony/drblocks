@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { getContent, localizedHref } from "@/i18n";
-import { locales, isLocale, defaultLocale, localeHreflang, type Locale } from "@/i18n/config";
-
-const SITE = "https://drblocks.pl";
+import { pageMeta } from "@/i18n/meta";
+import { locales, isLocale, defaultLocale, type Locale } from "@/i18n/config";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -18,15 +17,8 @@ export async function generateMetadata({
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
   const m = getContent(locale).meta.privacy;
-  const languages: Record<string, string> = {
-    "x-default": `${SITE}/${defaultLocale}/polityka-prywatnosci`,
-  };
-  for (const l of locales) languages[localeHreflang[l]] = `${SITE}/${l}/polityka-prywatnosci`;
   return {
-    title: { absolute: m.title },
-    description: m.description,
-    keywords: m.keywords,
-    alternates: { canonical: `/${locale}/polityka-prywatnosci`, languages },
+    ...pageMeta({ locale, path: "/polityka-prywatnosci", title: m.title, description: m.description, keywords: m.keywords }),
     robots: { index: false, follow: true },
   };
 }
