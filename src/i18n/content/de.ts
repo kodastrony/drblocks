@@ -501,7 +501,7 @@ export const de: SiteContent = {
       ],
       stats: [
         { value: "±1 mm", label: "Genauigkeit" },
-        { value: "bis 5 t", label: "pro Stütze", muted: true },
+        { value: "bis 5 t", label: "pro Stütze" },
         { value: "1 Tag", label: "Montage" },
         { value: "0", label: "Nassarbeiten" },
       ],

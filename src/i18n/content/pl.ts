@@ -501,7 +501,7 @@ export const pl: SiteContent = {
       ],
       stats: [
         { value: "±1 mm", label: "Precyzja" },
-        { value: "do 5 ton", label: "na jedną podporę", muted: true },
+        { value: "do 5 ton", label: "na jedną podporę" },
         { value: "1 dzień", label: "Montaż" },
         { value: "0", label: "Prac mokrych" },
       ],
