@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -72,21 +72,18 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
     return () => document.removeEventListener("click", onClick, true);
   }, []);
 
-  // Blokada przewijania tła przy otwartym menu — TANIA wersja: tylko `overflow:hidden`
-  // na <html>/<body>. NIE używamy `position:fixed` — na ciężkiej stronie wymuszało
-  // ono pełny reflow (zacięcie ~0,5 s) i „odpinało" sticky header (znikał). Pozycja
-  // scrolla zostaje nienaruszona, więc po zamknięciu nic nie skacze.
+  // Blokada przewijania tła przy otwartym menu — TYLKO `overflow:hidden` na <body>.
+  // NIE na <html> (iOS Safari ma błąd: overflow:hidden na <html> + elementy fixed
+  // → zacina/„zjada" scroll). NIE `position:fixed` (wymuszało pełny reflow). Menu i
+  // tak zakrywa cały ekran nieprzezroczyście, więc ewentualny przeciek scrolla na iOS
+  // jest niewidoczny. Pozycja scrolla nienaruszona → po zamknięciu nic nie skacze.
   useEffect(() => {
     if (!open) return;
-    const html = document.documentElement;
     const body = document.body;
-    const prevHtml = html.style.overflow;
-    const prevBody = body.style.overflow;
-    html.style.overflow = "hidden";
+    const prev = body.style.overflow;
     body.style.overflow = "hidden";
     return () => {
-      html.style.overflow = prevHtml;
-      body.style.overflow = prevBody;
+      body.style.overflow = prev;
     };
   }, [open]);
 
@@ -241,22 +238,20 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
         </div>
       </div>
 
-      {/* Mobilne menu — ZAWSZE w DOM, na własnej warstwie GPU, wysuwane czystym
-          transformem (klasa `.mobile-menu` + atrybut data-open w globals.css). Brak
-          framer-motion / position:fixed / reflow → otwiera się NATYCHMIAST i płynnie,
-          a transition odpala się ZA KAŻDYM razem. `inert` przy zamknięciu wyłącza
-          fokus/klik (panel jest tylko przesunięty za ekran). */}
-      <div
-        ref={dialogRef}
-        role="dialog"
-        aria-modal="true"
-        aria-label={ui.mobileNavAria}
-        aria-hidden={!open}
-        data-open={open ? "" : undefined}
-        inert={!open}
-        className="mobile-menu fixed inset-0 z-[60] overflow-y-auto overscroll-contain bg-navy lg:hidden"
-      >
-        <div className="sticky top-0 z-10 flex h-[68px] items-center justify-between border-b border-white/10 bg-navy px-5">
+      {/* Mobilne menu — renderowane WARUNKOWO (montaż dopiero po otwarciu). Dzięki
+          temu: brak stałej, pełnoekranowej warstwy GPU/`will-change` (która wieszała
+          iOS Safari → „odśwież stronę"), brak `inert`, a animacja CSS @keyframes
+          odpala się ZA KAŻDYM otwarciem (świeży montaż). Lekki montaż (zwykły JSX,
+          bez framer-motion) → otwiera się od razu, slide na GPU. */}
+      {open && (
+        <div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label={ui.mobileNavAria}
+          className="mobile-menu fixed inset-0 z-[60] overflow-y-auto overscroll-contain bg-navy lg:hidden"
+        >
+          <div className="sticky top-0 z-10 flex h-[68px] items-center justify-between border-b border-white/10 bg-navy px-5">
               <Image
                 src={asset("/assets/logo-light.png")}
                 alt="DrBlocks"
@@ -278,7 +273,7 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
                 <div
                   key={item.label}
                   className="menu-item"
-                  style={{ "--menu-delay": `${0.05 + i * 0.04}s` } as CSSProperties}
+                  style={{ animationDelay: `${0.05 + i * 0.04}s` }}
                 >
                   <Link
                     href={href(item.href)}
@@ -304,13 +299,13 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
               <Link
                 href={href("/o-nas")}
                 className="menu-item block border-b border-white/10 py-3.5 font-display text-2xl font-semibold text-white"
-                style={{ "--menu-delay": `${0.05 + nav.length * 0.04}s` } as CSSProperties}
+                style={{ animationDelay: `${0.05 + nav.length * 0.04}s` }}
               >
                 {ui.footerCompany}
               </Link>
               <div
                 className="menu-item mt-6 flex items-center gap-2"
-                style={{ "--menu-delay": `${0.05 + (nav.length + 1) * 0.04}s` } as CSSProperties}
+                style={{ animationDelay: `${0.05 + (nav.length + 1) * 0.04}s` }}
               >
                 {locales.map((l) => {
                   const rest = (pathname || `/${locale}`).replace(/^\/(pl|en|de)(?=\/|$)/, "");
@@ -334,7 +329,7 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
               </div>
               <div
                 className="menu-item mt-4 flex flex-col gap-3"
-                style={{ "--menu-delay": `${0.05 + (nav.length + 2) * 0.04}s` } as CSSProperties}
+                style={{ animationDelay: `${0.05 + (nav.length + 2) * 0.04}s` }}
               >
                 <Link
                   href={href("/kontakt")}
@@ -350,7 +345,8 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
                 </a>
               </div>
             </nav>
-      </div>
+        </div>
+      )}
     </header>
   );
 }
