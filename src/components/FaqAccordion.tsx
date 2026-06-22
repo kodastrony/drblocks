@@ -14,26 +14,32 @@ export function FaqAccordion({ items }: { items: { q: string; a: string }[] }) {
         const isOpen = open === i;
         return (
           <div key={i}>
-            <h3>
+            {/* h2 (not h3) — the FAQ page H1 → these, so jumping to h3 would skip a level */}
+            <h2>
               <button
                 type="button"
+                id={`faq-q-${i}`}
                 onClick={() => setOpen(isOpen ? null : i)}
                 aria-expanded={isOpen}
+                aria-controls={`faq-a-${i}`}
                 className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left transition-colors hover:bg-mist/50 sm:px-6"
               >
                 <span className="text-base font-semibold text-navy sm:text-lg">{item.q}</span>
                 <span
                   className={`flex size-8 shrink-0 items-center justify-center rounded-full border transition-colors ${
-                    isOpen ? "border-teal bg-teal text-white" : "border-line text-slate"
+                    isOpen ? "border-teal-700 bg-teal-700 text-white" : "border-line text-slate"
                   }`}
                 >
                   {isOpen ? <Minus className="size-4" /> : <Plus className="size-4" />}
                 </span>
               </button>
-            </h3>
+            </h2>
             <AnimatePresence initial={false}>
               {isOpen && (
                 <motion.div
+                  id={`faq-a-${i}`}
+                  role="region"
+                  aria-labelledby={`faq-q-${i}`}
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}

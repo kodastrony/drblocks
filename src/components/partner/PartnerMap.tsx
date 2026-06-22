@@ -306,7 +306,7 @@ export function PartnerMap({ t }: { t: MapStrings }) {
                 className={clsx(
                   "absolute flex items-center justify-center whitespace-nowrap rounded-md px-2 text-center font-display text-[12px] font-semibold leading-none shadow-[var(--shadow-card)] transition-colors duration-200",
                   on
-                    ? "z-20 border border-teal bg-teal text-white"
+                    ? "z-20 border border-teal-700 bg-teal-700 text-white"
                     : "z-10 border border-line bg-white text-navy hover:border-teal/50 hover:text-teal-800",
                 )}
               >

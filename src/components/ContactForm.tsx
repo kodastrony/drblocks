@@ -102,7 +102,7 @@ export function ContactForm({ defaultMessage = "" }: { defaultMessage?: string }
     const [before, after] = f.successBody.split("{phone}");
     return (
       <div className="rounded-2xl border border-teal/30 bg-teal-50 p-8 text-center">
-        <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-teal text-white">
+        <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-teal-700 text-white">
           <Check className="size-7" />
         </div>
         <h3 className="mt-5 text-xl">{f.successHeading}</h3>
@@ -187,7 +187,7 @@ export function ContactForm({ defaultMessage = "" }: { defaultMessage?: string }
         <button
           type="submit"
           disabled={status === "submitting"}
-          className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-navy px-6 py-4 text-[15px] font-semibold text-white transition-colors hover:bg-teal disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
+          className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-navy px-6 py-4 text-[15px] font-semibold text-white transition-colors hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
         >
           {status === "submitting" ? (
             f.submitting

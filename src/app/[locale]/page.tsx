@@ -8,6 +8,7 @@ import { WhyUs } from "@/components/sections/WhyUs";
 import { Calculator } from "@/components/sections/Calculator";
 import { ExpertsCta } from "@/components/sections/ExpertsCta";
 import { getContent } from "@/i18n";
+import { asset } from "@/lib/asset";
 import { locales, isLocale, defaultLocale, localeHreflang, type Locale } from "@/i18n/config";
 
 const SITE = "https://drblocks.pl";
@@ -38,18 +39,11 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
 
-  const webSiteLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "DrBlocks",
-    url: `${SITE}/${locale}`,
-    inLanguage: localeHreflang[locale],
-    publisher: { "@type": "Organization", name: "DrBlocks", url: SITE },
-  };
-
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteLd) }} />
+      {/* Preload the hero poster — it's the LCP frame for the homepage (React 19
+          hoists this <link> to <head>). The full video stays preload=metadata. */}
+      <link rel="preload" as="image" href={asset("/assets/drblocks-film-poster.jpg")} fetchPriority="high" />
       <Hero />
       <TrustBar locale={locale} />
       <HowItWorks locale={locale} />

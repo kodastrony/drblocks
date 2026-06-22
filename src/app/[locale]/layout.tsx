@@ -38,13 +38,13 @@ export async function generateMetadata({
       siteName: "DrBlocks",
       title: m.title,
       description: m.description,
-      images: [{ url: "/assets/hero-poster.jpg", width: 640, height: 480, alt: m.title }],
+      images: [{ url: "/assets/og-default.jpg", width: 1200, height: 630, alt: m.title }],
     },
     twitter: {
       card: "summary_large_image",
       title: m.title,
       description: m.description,
-      images: ["/assets/hero-poster.jpg"],
+      images: ["/assets/og-default.jpg"],
     },
   };
 }
@@ -77,7 +77,7 @@ export default async function LocaleLayout({
           width: 270,
           height: 270,
         },
-        image: `${SITE}/assets/hero-poster.jpg`,
+        image: `${SITE}/assets/og-default.jpg`,
         description: content.meta.home.description,
         telephone: company.phone,
         email: company.emailContact,
@@ -99,7 +99,7 @@ export default async function LocaleLayout({
         url: SITE,
         name: "DrBlocks",
         description: content.meta.home.description,
-        inLanguage: locale,
+        inLanguage: localeHreflang[locale],
         publisher: { "@id": `${SITE}/#organization` },
       },
     ],

@@ -6,7 +6,7 @@ type Variant = "primary" | "accent" | "outline" | "ghost" | "light";
 
 const variants: Record<Variant, string> = {
   primary: "bg-navy text-white hover:bg-ink shadow-[0_10px_30px_-12px_rgba(15,23,42,0.5)]",
-  accent: "bg-teal text-white hover:bg-teal-600 shadow-[0_10px_30px_-12px_rgba(45,189,176,0.7)]",
+  accent: "bg-teal-700 text-white hover:bg-teal-800 shadow-[0_10px_30px_-12px_rgba(45,189,176,0.7)]",
   outline: "border border-line-strong text-navy hover:border-navy hover:bg-navy hover:text-white",
   ghost: "text-navy hover:text-teal-700",
   light: "bg-white text-navy hover:bg-mist",

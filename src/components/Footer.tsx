@@ -43,7 +43,7 @@ export function Footer({ locale, content }: { locale: Locale; content: SiteConte
               href={company.instagram}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex size-10 items-center justify-center rounded-lg border border-white/15 text-white/70 transition-colors hover:border-teal hover:text-teal"
+              className="mt-5 inline-flex size-11 items-center justify-center rounded-lg border border-white/15 text-white/70 transition-colors hover:border-teal hover:text-teal"
               aria-label="Instagram DrBlocks"
             >
               <Instagram className="size-5" />

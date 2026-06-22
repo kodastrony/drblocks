@@ -5,9 +5,8 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { getContent, localizedHref } from "@/i18n";
-import { locales, isLocale, defaultLocale, localeHreflang, type Locale } from "@/i18n/config";
-
-const SITE = "https://drblocks.pl";
+import { pageMeta, breadcrumbJsonLd } from "@/i18n/meta";
+import { locales, isLocale, defaultLocale, type Locale } from "@/i18n/config";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -21,14 +20,7 @@ export async function generateMetadata({
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
   const m = getContent(locale).meta.faq;
-  const languages: Record<string, string> = { "x-default": `${SITE}/${defaultLocale}/faq` };
-  for (const l of locales) languages[localeHreflang[l]] = `${SITE}/${l}/faq`;
-  return {
-    title: { absolute: m.title },
-    description: m.description,
-    keywords: m.keywords,
-    alternates: { canonical: `/${locale}/faq`, languages },
-  };
+  return pageMeta({ locale, path: "/faq", title: m.title, description: m.description, keywords: m.keywords });
 }
 
 export default async function FaqPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -46,9 +38,14 @@ export default async function FaqPage({ params }: { params: Promise<{ locale: st
       acceptedAnswer: { "@type": "Answer", text: i.a },
     })),
   };
+  const breadcrumbLd = breadcrumbJsonLd(locale, [
+    { name: ui.breadcrumbHome, path: "/" },
+    { name: faq.heading },
+  ]);
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <PageHeader
         title={faq.heading}
         lead={faq.lead}

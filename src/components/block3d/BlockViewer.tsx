@@ -354,7 +354,7 @@ export default function BlockViewer({
 
   return (
     <div className="overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#1e2a38] to-[#11171f] shadow-2xl">
-      <div className="relative h-[380px] w-full sm:h-[480px]">
+      <div className="relative h-[380px] w-full sm:h-[480px]" role="img" aria-label={viewer3d.posterAlt}>
         <Canvas
           shadows
           flat
@@ -409,7 +409,7 @@ export default function BlockViewer({
                 onClick={() => setVariant(v)}
                 aria-pressed={variant === v}
                 className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
-                  variant === v ? "bg-teal text-white shadow" : "text-white/60 hover:text-white"
+                  variant === v ? "bg-teal-700 text-white shadow" : "text-white/60 hover:text-white"
                 }`}
               >
                 {v === "plus" ? "Plus" : "Standard"}

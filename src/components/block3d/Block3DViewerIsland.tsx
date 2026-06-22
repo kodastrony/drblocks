@@ -104,7 +104,7 @@ export function Block3DViewerIsland() {
         sizes="(max-width: 1024px) 100vw, 50vw"
         className="object-contain p-10 transition-transform duration-500 group-hover:scale-105"
       />
-      <span className="absolute left-4 top-4 rounded-full bg-teal px-3 py-1 font-oswald text-[10px] font-semibold uppercase tracking-wider text-white">
+      <span className="absolute left-4 top-4 rounded-full bg-teal-800 px-3 py-1 font-oswald text-[10px] font-semibold uppercase tracking-wider text-white">
         {viewer3d.badge}
       </span>
       <span className="absolute bottom-5 left-1/2 inline-flex -translate-x-1/2 items-center gap-2 rounded-full bg-white/95 px-5 py-2.5 text-sm font-semibold text-navy shadow-[var(--shadow-lift)] transition-transform duration-300 group-hover:scale-105">

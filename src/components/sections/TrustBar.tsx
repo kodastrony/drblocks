@@ -45,6 +45,7 @@ export function TrustBar({ locale }: { locale: Locale }) {
                     alt={copy === 1 ? "" : logo.alt}
                     width={logo.w}
                     height={logo.h}
+                    loading="lazy"
                     decoding="async"
                     style={{ height: `calc(var(--logo-h) * ${logo.scale})`, width: "auto" }}
                     className="max-w-none object-contain opacity-90 transition-opacity duration-300 hover:opacity-100"

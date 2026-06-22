@@ -5,10 +5,9 @@ import { Reveal } from "@/components/ui/Reveal";
 import { ContactForm } from "@/components/ContactForm";
 import { Phone, Mail, Instagram } from "@/components/Icons";
 import { getContent, localizedHref } from "@/i18n";
-import { locales, isLocale, defaultLocale, localeHreflang, type Locale } from "@/i18n/config";
+import { pageMeta, breadcrumbJsonLd } from "@/i18n/meta";
+import { locales, isLocale, defaultLocale, type Locale } from "@/i18n/config";
 import { company } from "@/lib/company";
-
-const SITE = "https://drblocks.pl";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -22,14 +21,7 @@ export async function generateMetadata({
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
   const m = getContent(locale).meta.kontakt;
-  const languages: Record<string, string> = { "x-default": `${SITE}/${defaultLocale}/kontakt` };
-  for (const l of locales) languages[localeHreflang[l]] = `${SITE}/${l}/kontakt`;
-  return {
-    title: { absolute: m.title },
-    description: m.description,
-    keywords: m.keywords,
-    alternates: { canonical: `/${locale}/kontakt`, languages },
-  };
+  return pageMeta({ locale, path: "/kontakt", title: m.title, description: m.description, keywords: m.keywords });
 }
 
 export default async function KontaktPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -49,8 +41,14 @@ export default async function KontaktPage({ params }: { params: Promise<{ locale
     },
   ];
 
+  const breadcrumbLd = breadcrumbJsonLd(locale, [
+    { name: ui.breadcrumbHome, path: "/" },
+    { name: contact.heading },
+  ]);
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <PageHeader
         title={contact.heading}
         lead={contact.lead}

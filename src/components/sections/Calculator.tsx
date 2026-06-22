@@ -332,7 +332,7 @@ export function Calculator() {
                       onClick={() => setShape(s.v)}
                       aria-pressed={shape === s.v}
                       className={`inline-flex min-h-[44px] items-center justify-center rounded-lg px-3.5 py-2 text-sm font-semibold transition-colors ${
-                        shape === s.v ? "bg-teal text-white shadow-sm" : "text-steel hover:text-navy"
+                        shape === s.v ? "bg-teal-700 text-white shadow-sm" : "text-steel hover:text-navy"
                       }`}
                     >
                       {s.l}
@@ -425,7 +425,7 @@ export function Calculator() {
                 >
                   <span
                     className={`flex size-9 shrink-0 items-center justify-center rounded-lg transition-colors ${
-                      grout ? "bg-teal text-white" : "bg-mist text-mute"
+                      grout ? "bg-teal-700 text-white" : "bg-mist text-mute"
                     }`}
                     aria-hidden
                   >
@@ -491,8 +491,12 @@ export function Calculator() {
           {/* Only the preview lives in this column (no flowing content below it),
               so when it pins nothing can scroll up and overlap it. */}
           <div className="min-w-0">
-            <div className="lg:sticky lg:top-24">
+            <div className="lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto">
               <StepHead n={3}>Twój wynik</StepHead>
+              {/* SR live region: ogłasza zmiany wyniku przy przeciąganiu suwaków */}
+              <p className="sr-only" aria-live="polite">
+                {layout.counts.total} {bloczki(layout.counts.total)}
+              </p>
               <div className="mt-4 rounded-2xl border border-line bg-paper p-4 shadow-[var(--shadow-lift)] sm:p-5">
                 {/* tablica wyniku — jedyny ciemny akcent */}
                 <div className="rounded-2xl bg-navy px-5 py-4">
@@ -572,7 +576,7 @@ export function Calculator() {
 
                 <Link
                   href={href(inquiry)}
-                  className="group mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-teal px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_10px_30px_-12px_rgba(45,189,176,0.7)] transition-colors hover:bg-teal-600"
+                  className="group mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-teal-700 px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_10px_30px_-12px_rgba(45,189,176,0.7)] transition-colors hover:bg-teal-800"
                 >
                   Wyślij zapytanie o dokładną wycenę
                   <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />

@@ -227,7 +227,7 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
           </a>
           <Link
             href={href("/kontakt")}
-            className="hidden rounded-xl bg-navy px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_30px_-12px_rgba(15,23,42,0.5)] transition-colors hover:bg-teal sm:inline-flex"
+            className="hidden rounded-xl bg-navy px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_30px_-12px_rgba(15,23,42,0.5)] transition-colors hover:bg-teal-700 sm:inline-flex"
           >
             {ui.freeQuote}
           </Link>
@@ -326,7 +326,7 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
                       className={clsx(
                         "rounded-lg border px-3.5 py-2 text-sm font-semibold transition-colors",
                         l === locale
-                          ? "border-teal bg-teal text-white"
+                          ? "border-teal-700 bg-teal-700 text-white"
                           : "border-white/20 text-white/75 hover:border-white/40 hover:text-white",
                       )}
                     >
@@ -341,7 +341,7 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
               >
                 <Link
                   href={href("/kontakt")}
-                  className="rounded-xl bg-teal px-5 py-4 text-center font-semibold text-white"
+                  className="rounded-xl bg-teal-700 px-5 py-4 text-center font-semibold text-white"
                 >
                   {ui.freeQuote}
                 </Link>
