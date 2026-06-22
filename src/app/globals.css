@@ -117,6 +117,17 @@
   to { transform: translateX(-50%); }
 }
 
+/* Mobilne menu — lekka kaskada pozycji liczona na kompozytorze (transform+opacity),
+   bez kosztu na głównym wątku (zamiast 9 instancji framer-motion). Globalna reguła
+   prefers-reduced-motion powyżej neutralizuje tę animację. */
+@keyframes menu-item-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.menu-item {
+  animation: menu-item-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* Responsywna baza dla karuzeli logotypów (wysokość logo + odstęp).
    Pojedyncze marki skalują te wartości przez własne `scale`/`pad`. */
 .logo-row {

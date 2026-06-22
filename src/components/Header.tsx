@@ -237,10 +237,13 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
             aria-modal="true"
             aria-label={ui.mobileNavAria}
             data-lenis-prevent
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            // NIEPRZEZROCZYSTY panel wjeżdżający z prawej = sam transform (GPU), bez
+            // animowania opacity NAD rozmytym (backdrop-blur) headerem → zero kosztownego
+            // przeliczania rozmycia co klatkę = brak zacięć i „opóźnienia" otwarcia.
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "tween", duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="fixed inset-0 z-[60] overflow-y-auto overscroll-contain bg-navy lg:hidden"
           >
             <div className="sticky top-0 z-10 flex h-[68px] items-center justify-between border-b border-white/10 bg-navy px-5">
@@ -262,11 +265,10 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
             </div>
             <nav aria-label={ui.mobileNavAria} className="flex flex-col gap-1 px-5 pb-10 pt-4">
               {nav.map((item, i) => (
-                <motion.div
+                <div
                   key={item.label}
-                  initial={{ opacity: 0, x: -16 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.05 + i * 0.05 }}
+                  className="menu-item"
+                  style={{ animationDelay: `${0.05 + i * 0.04}s` }}
                 >
                   <Link
                     href={href(item.href)}
@@ -287,15 +289,19 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
                       ))}
                     </div>
                   )}
-                </motion.div>
+                </div>
               ))}
               <Link
                 href={href("/o-nas")}
-                className="border-b border-white/10 py-3.5 font-display text-2xl font-semibold text-white"
+                className="menu-item block border-b border-white/10 py-3.5 font-display text-2xl font-semibold text-white"
+                style={{ animationDelay: `${0.05 + nav.length * 0.04}s` }}
               >
                 {ui.footerCompany}
               </Link>
-              <div className="mt-6 flex items-center gap-2">
+              <div
+                className="menu-item mt-6 flex items-center gap-2"
+                style={{ animationDelay: `${0.05 + (nav.length + 1) * 0.04}s` }}
+              >
                 {locales.map((l) => {
                   const rest = (pathname || `/${locale}`).replace(/^\/(pl|en|de)(?=\/|$)/, "");
                   return (
@@ -316,7 +322,10 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
                   );
                 })}
               </div>
-              <div className="mt-4 flex flex-col gap-3">
+              <div
+                className="menu-item mt-4 flex flex-col gap-3"
+                style={{ animationDelay: `${0.05 + (nav.length + 2) * 0.04}s` }}
+              >
                 <Link
                   href={href("/kontakt")}
                   className="rounded-xl bg-teal px-5 py-4 text-center font-semibold text-white"
