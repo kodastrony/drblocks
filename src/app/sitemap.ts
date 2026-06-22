@@ -45,8 +45,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
     for (const post of blog.posts) {
       routes.push({
+        // Real publish date (matches BlogPosting dateModified) rather than the
+        // build timestamp, so crawlers get a stable, meaningful lastmod signal.
         url: `${BASE}/${locale}/blog/${post.slug}`,
-        lastModified: now,
+        lastModified: new Date(post.date),
         changeFrequency: "yearly",
         priority: 0.5,
       });
