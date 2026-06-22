@@ -112,6 +112,34 @@ export function PartnerMap({ t }: { t: MapStrings }) {
 
   const emphArc = emphasized != null ? arcPath(emphasized) : null;
 
+  // < 520 px (telefon/tablet w pionie): zamiast czipów-etykiet pokazujemy
+  // NUMEROWANE, klikalne pinezki w skali pikselowej + dymek aktywnego partnera,
+  // a lista pod mapą dostaje te same numery. Pełna, dwukierunkowa korelacja
+  // „pinezka ↔ wiersz", czytelna nawet przy 360 px.
+  const labelMode = cw >= 520;
+  const listItemRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const reducedMotion = () =>
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // tap w pinezkę → podświetl partnera i przewiń jego wiersz listy do widoku
+  const selectPin = (i: number) => {
+    setActive(i);
+    if (!labelMode)
+      listItemRefs.current[i]?.scrollIntoView({
+        behavior: reducedMotion() ? "auto" : "smooth",
+        block: "center",
+      });
+  };
+  // tap w wiersz listy → podświetl partnera i przewiń mapę (pinezka + dymek) do widoku
+  const selectRow = (i: number) => {
+    setActive(i);
+    if (!labelMode)
+      wrapRef.current?.scrollIntoView({
+        behavior: reducedMotion() ? "auto" : "smooth",
+        block: "center",
+      });
+  };
+
   return (
     <div className="grid gap-5 lg:grid-cols-[1fr_340px]">
       {/* MAP — light engineering blueprint */}
@@ -156,8 +184,8 @@ export function PartnerMap({ t }: { t: MapStrings }) {
             </circle>
           )}
 
-          {/* partner pins — clean survey markers */}
-          {partners.map((p, i) => {
+          {/* partner pins — clean survey markers (desktop; telefon ma własne numerowane piny) */}
+          {labelMode && partners.map((p, i) => {
             const [x, y] = PTS[i];
             const on = i === emphasized;
             const col = p.category === "producent" ? "#0f8c82" : "#046bd2";
@@ -241,6 +269,61 @@ export function PartnerMap({ t }: { t: MapStrings }) {
           })}
         </div>
 
+        {/* TELEFON: numerowane, klikalne pinezki (44 px cel dotyku) zsynchronizowane z listą */}
+        {!labelMode && (
+          <div className="absolute inset-0">
+            {partners.map((p, i) => {
+              const pt = screen[i];
+              const on = i === emphasized;
+              const prod = p.category === "producent";
+              const bg = prod ? (on ? "#0b6b61" : "#0f8c82") : on ? "#0a5bb8" : "#046bd2";
+              return (
+                <button
+                  key={p.name}
+                  type="button"
+                  onClick={() => selectPin(i)}
+                  aria-label={`${p.name}, ${p.city}`}
+                  className="absolute flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
+                  style={{ left: pt.x, top: pt.y, width: 44, height: 44, zIndex: on ? 40 : 20 }}
+                >
+                  <span
+                    className={clsx(
+                      "flex items-center justify-center rounded-full font-oswald font-bold leading-none text-white shadow-[var(--shadow-card)] ring-2 transition-all",
+                      on ? "size-7 text-[12px] ring-white" : "size-[22px] text-[11px] ring-white/80",
+                    )}
+                    style={{ backgroundColor: bg }}
+                  >
+                    {i + 1}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* TELEFON: dymek aktywnego partnera (jeden naraz → brak nachodzenia) */}
+        {!labelMode && active != null && (() => {
+          const pt = screen[active];
+          const above = pt.y > ch / 2;
+          const p = partners[active];
+          return (
+            <div
+              className="pointer-events-none absolute z-50 rounded-lg border border-teal bg-white px-2.5 py-1 text-center shadow-[var(--shadow-lift)]"
+              style={{
+                left: clamp(pt.x, 70, cw - 70),
+                top: above ? pt.y - 22 : pt.y + 22,
+                transform: `translate(-50%, ${above ? "-100%" : "0"})`,
+                maxWidth: cw - 16,
+              }}
+            >
+              <span className="block whitespace-nowrap font-display text-[13px] font-bold leading-tight text-navy">
+                {p.name}
+              </span>
+              <span className="block text-[11px] leading-tight text-steel">{p.city}</span>
+            </div>
+          );
+        })()}
+
         {/* legend */}
         <div className="absolute bottom-3 left-3 flex flex-col gap-1 rounded-lg border border-line bg-white/90 px-3 py-2 text-[11px] text-steel">
           <span className="flex items-center gap-2">
@@ -268,25 +351,43 @@ export function PartnerMap({ t }: { t: MapStrings }) {
             const on = i === emphasized;
             const prod = p.category === "producent";
             return (
-              <li key={p.name}>
+              <li
+                key={p.name}
+                ref={(el) => {
+                  listItemRefs.current[i] = el;
+                }}
+              >
                 <button
                   type="button"
                   onMouseEnter={() => setHover(i)}
                   onMouseLeave={() => setHover(null)}
-                  onClick={() => setActive(i)}
+                  onClick={() => selectRow(i)}
                   className={clsx(
                     "flex w-full items-center justify-between gap-3 px-5 py-3.5 text-left transition-colors",
                     on ? "bg-mist" : "hover:bg-mist/50",
                   )}
                 >
                   <span className="flex items-center gap-3.5">
-                    <span
-                      className={clsx(
-                        "size-2.5 shrink-0 rounded-full ring-2 ring-offset-2 ring-offset-mist transition-all",
-                        prod ? "bg-teal-700" : "bg-[#046bd2]",
-                        on ? (prod ? "ring-teal-700/25" : "ring-[#046bd2]/25") : "ring-transparent",
-                      )}
-                    />
+                    {labelMode ? (
+                      <span
+                        className={clsx(
+                          "size-2.5 shrink-0 rounded-full ring-2 ring-offset-2 ring-offset-mist transition-all",
+                          prod ? "bg-teal-700" : "bg-[#046bd2]",
+                          on ? (prod ? "ring-teal-700/25" : "ring-[#046bd2]/25") : "ring-transparent",
+                        )}
+                      />
+                    ) : (
+                      // telefon: numer dopasowany do numerowanej pinezki na mapie
+                      <span
+                        className={clsx(
+                          "flex size-6 shrink-0 items-center justify-center rounded-full font-oswald text-[11px] font-bold leading-none text-white ring-2 transition-all",
+                          on ? "ring-teal/40" : "ring-transparent",
+                        )}
+                        style={{ backgroundColor: prod ? "#0f8c82" : "#046bd2" }}
+                      >
+                        {i + 1}
+                      </span>
+                    )}
                     <span>
                       <span className="block font-display text-[15px] font-semibold leading-tight text-navy">{p.name}</span>
                       <span className="mt-0.5 block text-sm text-steel">{p.city}</span>

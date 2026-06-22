@@ -38,16 +38,49 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
     setDrop(null);
   }, [pathname]);
 
+  // Blokada przewijania tła przy otwartym menu — wersja odporna na telefony.
+  // `overflow:hidden` na <body> NIE blokuje przewijania dotykiem w iOS Safari,
+  // więc DODATKOWO „przypinamy" body (position:fixed + zapamiętana pozycja) i
+  // zatrzymujemy Lenisa (jego pętla rAF inaczej dalej przewija stronę pod spodem
+  // kółkiem/gładzikiem). Po zamknięciu wszystko przywracamy 1:1.
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    const lenis = (window as unknown as { lenis?: { stop: () => void; start: () => void } }).lenis;
+    if (!open) {
+      lenis?.start();
+      return;
+    }
+    lenis?.stop();
+    const body = document.body;
+    const scrollY = window.scrollY;
+    const prev = {
+      position: body.style.position,
+      top: body.style.top,
+      left: body.style.left,
+      right: body.style.right,
+      width: body.style.width,
+      overflow: body.style.overflow,
+    };
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
+    body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "";
+      body.style.position = prev.position;
+      body.style.top = prev.top;
+      body.style.left = prev.left;
+      body.style.right = prev.right;
+      body.style.width = prev.width;
+      body.style.overflow = prev.overflow;
+      window.scrollTo(0, scrollY);
+      lenis?.start();
     };
   }, [open]);
 
   useEffect(() => {
     if (!open) return;
-    closeBtnRef.current?.focus();
+    closeBtnRef.current?.focus({ preventScroll: true });
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setOpen(false);
@@ -72,7 +105,7 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
     document.addEventListener("keydown", onKey);
     return () => {
       document.removeEventListener("keydown", onKey);
-      menuBtnRef.current?.focus();
+      menuBtnRef.current?.focus({ preventScroll: true });
     };
   }, [open]);
 
@@ -203,11 +236,12 @@ export function Header({ locale, content }: { locale: Locale; content: SiteConte
             role="dialog"
             aria-modal="true"
             aria-label={ui.mobileNavAria}
+            data-lenis-prevent
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[60] overflow-y-auto bg-navy lg:hidden"
+            className="fixed inset-0 z-[60] overflow-y-auto overscroll-contain bg-navy lg:hidden"
           >
             <div className="sticky top-0 z-10 flex h-[68px] items-center justify-between border-b border-white/10 bg-navy px-5">
               <Image

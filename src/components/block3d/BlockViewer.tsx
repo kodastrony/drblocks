@@ -146,12 +146,14 @@ function Scene({
   heightMm,
   showLabels,
   grout,
+  lowPower,
 }: {
   variant: Variant;
   liftMm: number;
   heightMm: number;
   showLabels: boolean;
   grout: boolean;
+  lowPower: boolean;
 }) {
   const reduce = useReducedMotion();
   const { viewer3d } = useContent();
@@ -164,10 +166,12 @@ function Scene({
   const [auto, setAuto] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const armIdle = useCallback(() => {
-    if (reduce) return;
+    // na telefonach NIE włączamy auto-obrotu — ciągła pętla renderu (cienie,
+    // post-processing) niepotrzebnie obciąża słabszy GPU i grzeje baterię.
+    if (reduce || lowPower) return;
     if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(() => setAuto(true), 3500);
-  }, [reduce]);
+  }, [reduce, lowPower]);
   useEffect(() => {
     armIdle();
     return () => {
@@ -178,14 +182,16 @@ function Scene({
   return (
     <>
       <GradientBackground />
-      <SoftShadows size={26} samples={12} focus={0.85} />
+      {/* PCSS (miękkie cienie) tylko na mocniejszym sprzęcie — na telefonie zwykłe
+          cienie PCF (tańsze) zamiast wielokrotnego próbkowania na każdy fragment. */}
+      {!lowPower && <SoftShadows size={26} samples={12} focus={0.85} />}
       <ambientLight intensity={0.16} />
       {/* światło kluczowe — mocny kontrast, jasne refleksy na stali */}
       <directionalLight
         position={[3.5, 6.5, 4.5]}
         intensity={3.0}
         castShadow
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={lowPower ? [1024, 1024] : [2048, 2048]}
         shadow-bias={-0.0004}
         shadow-normalBias={0.02}
       >
@@ -197,7 +203,7 @@ function Scene({
       <directionalLight position={[1, 3, -6]} intensity={1.1} color="#cfe8ff" />
 
       <group position={[0, 0.05, 0]}>
-        <BlockModel variant={variant} liftMm={liftMm} grout={grout} />
+        <BlockModel variant={variant} liftMm={liftMm} grout={grout} lowPower={lowPower} />
         {showLabels && (() => {
           // lift w jednostkach modelu (jak w BlockModel: (liftMm/55)·maxLift, maxLift=0.5)
           const lift = (liftMm / 55) * 0.5;
@@ -248,7 +254,7 @@ function Scene({
         scale={9}
         blur={2.6}
         far={3}
-        resolution={2048}
+        resolution={lowPower ? 512 : 2048}
         color="#10141c"
       />
 
@@ -269,7 +275,7 @@ function Scene({
         dampingFactor={0.09}
         rotateSpeed={0.55}
         zoomSpeed={0.7}
-        autoRotate={auto && !showLabels}
+        autoRotate={auto && !showLabels && !lowPower}
         autoRotateSpeed={0.5}
         minDistance={3.2}
         maxDistance={7.5}
@@ -282,13 +288,24 @@ function Scene({
         onEnd={armIdle}
       />
 
-      <EffectComposer multisampling={0}>
-        <N8AO aoRadius={0.5} intensity={4.2} distanceFalloff={0.6} halfRes quality="high" />
-        <Bloom intensity={0.1} luminanceThreshold={0.85} luminanceSmoothing={0.25} mipmapBlur />
-        <BrightnessContrast brightness={0.0} contrast={0.08} />
-        <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-        <SMAA />
-      </EffectComposer>
+      {/* Na telefonie minimalny łańcuch przebiegów: ACES tone-mapping (Canvas jest
+          `flat`, więc bez niego kolor byłby spłaszczony) + SMAA na krawędzie.
+          Najcięższe przebiegi pełnoekranowe (N8AO, Bloom) pomijamy — na małym
+          ekranie są ledwo widoczne, a dominują koszt GPU i powodują zacinanie. */}
+      {lowPower ? (
+        <EffectComposer multisampling={0}>
+          <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
+          <SMAA />
+        </EffectComposer>
+      ) : (
+        <EffectComposer multisampling={0}>
+          <N8AO aoRadius={0.5} intensity={4.2} distanceFalloff={0.6} halfRes quality="high" />
+          <Bloom intensity={0.1} luminanceThreshold={0.85} luminanceSmoothing={0.25} mipmapBlur />
+          <BrightnessContrast brightness={0.0} contrast={0.08} />
+          <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
+          <SMAA />
+        </EffectComposer>
+      )}
     </>
   );
 }
@@ -318,6 +335,17 @@ export default function BlockViewer({
   const [heightMm, setHeightMm] = useState(120);
   const [showLabels, setShowLabels] = useState(false);
   const [grout, setGrout] = useState(false);
+  // Tryb „oszczędny" wykrywany RAZ, synchronicznie (komponent jest importowany z
+  // ssr:false, więc `window` istnieje już przy pierwszym renderze → poprawne dpr
+  // od startu, bez kosztownej pierwszej klatki w jakości desktopowej). Telefon /
+  // ekran dotykowy / wąski ekran / mało rdzeni ⇒ lżejszy potok renderowania.
+  const [lowPower] = useState(() => {
+    if (typeof window === "undefined") return false;
+    const coarse = window.matchMedia?.("(pointer: coarse)").matches ?? false;
+    const narrow = window.innerWidth <= 640;
+    const fewCores = (navigator.hardwareConcurrency ?? 8) <= 4;
+    return coarse || narrow || fewCores;
+  });
   // Wysokość posadowienia 120–200 mm steruje uniesieniem czarnej stopy PROPORCJONALNIE
   // do wysokości: przy 120 mm stopa jest już wysunięta (~0,30 jednostki modelu), przy
   // 200 mm osiąga maksimum (0,50). BlockModel: lift = liftMm/55 · 0,5; 120/200·55≈33 → 0,30,
@@ -331,7 +359,7 @@ export default function BlockViewer({
           shadows
           flat
           frameloop={active ? "always" : "never"}
-          dpr={[1, 2]}
+          dpr={lowPower ? [1, 1.5] : [1, 2]}
           camera={{ position: [-5.2, 3.0, 4.3], fov: 32 }}
           gl={{ antialias: false, preserveDrawingBuffer: false }}
           // touch-action: pan-y → JEDEN palec w pionie przewija STRONĘ (koniec
@@ -340,7 +368,7 @@ export default function BlockViewer({
         >
           <color attach="background" args={["#d6dade"]} />
           <FrameloopGate active={active} />
-          <Scene variant={variant} liftMm={liftMm} heightMm={heightMm} showLabels={showLabels} grout={grout} />
+          <Scene variant={variant} liftMm={liftMm} heightMm={heightMm} showLabels={showLabels} grout={grout} lowPower={lowPower} />
         </Canvas>
 
         <div className="pointer-events-none absolute left-4 top-4">

@@ -264,7 +264,9 @@ export function Calculator() {
             sticky preview has room to travel while you scroll the inputs. */}
         <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_22rem] lg:gap-10">
           {/* ============ KROKI 1–2: WYBÓR + KONFIGURACJA ============ */}
-          <div className="space-y-6">
+          {/* min-w-0: bez tego siatka pozwala kolumnie rozpychać się do min-content
+              dzieci (siatka presetów) i na 320 px treść wychodziła ~20 px poza ekran. */}
+          <div className="min-w-0 space-y-6">
             {/* KROK 1 — zastosowanie */}
             <div className="rounded-2xl border border-line bg-paper p-5 shadow-[var(--shadow-card)] sm:p-6">
               <StepHead n={1}>Co posadawiasz?</StepHead>
@@ -456,12 +458,39 @@ export function Calculator() {
               </div>
 
             </div>
+
+            {/* TELEFON: zwięzłe, „przyklejone" podsumowanie wyniku — żywa informacja
+                zwrotna przy przeciąganiu suwaków (pełny panel wyniku jest niżej).
+                Trzyma się nad paskiem CTA (env safe-area), nie zachodzi na niego. */}
+            <div className="sticky bottom-[calc(68px_+_env(safe-area-inset-bottom))] z-30 lg:hidden">
+              <div className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-navy/95 px-4 py-2.5 shadow-[var(--shadow-lift)] backdrop-blur">
+                <div className="flex items-baseline gap-2">
+                  <span className="font-oswald text-2xl font-bold leading-none tabular text-teal">
+                    {layout.counts.total}
+                  </span>
+                  <span className="text-sm text-white/80">{bloczki(layout.counts.total)}</span>
+                </div>
+                {shape !== "container" && (
+                  <div className="flex min-w-0 flex-1 items-center justify-end gap-2">
+                    <div className="h-1.5 w-20 shrink-0 overflow-hidden rounded-full bg-white/15">
+                      <div
+                        className={`h-full rounded-full ${overCapacity ? "bg-amber-400" : "bg-teal"}`}
+                        style={{ width: `${Math.min(100, (layout.worstLoad / capacity) * 100)}%` }}
+                      />
+                    </div>
+                    <span className="shrink-0 font-oswald text-[11px] font-semibold tabular text-white/70">
+                      {pl(layout.worstLoad, 0)}/{pl(capacity, 0)} kg
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* ============ KROK 3: WYNIK — sticky live preview ============ */}
           {/* Only the preview lives in this column (no flowing content below it),
               so when it pins nothing can scroll up and overlap it. */}
-          <div>
+          <div className="min-w-0">
             <div className="lg:sticky lg:top-24">
               <StepHead n={3}>Twój wynik</StepHead>
               <div className="mt-4 rounded-2xl border border-line bg-paper p-4 shadow-[var(--shadow-lift)] sm:p-5">

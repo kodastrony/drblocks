@@ -93,8 +93,12 @@ function heightToNormal(height: HTMLCanvasElement, strength: number, repeat = 1)
 /* beton B30 FORMOWANY (as-cast): kruszywo SCHOWANE pod mleczkiem cementowym →
    matowa chłodno-szara powierzchnia, miękkie chmurkowe plamy, rzadkie ciemne pory
    (bug-holes), delikatne ślady szalunku. NIE terrazzo. */
-function makeConcrete() {
-  const size = 1024;
+function makeConcrete(lowPower = false) {
+  // na telefonie 512 px zamiast 1024 — Sobel (heightToNormal) i pętle ziarna
+  // skalują się z polem (size²), więc to ~4× mniej pracy na głównym wątku przy
+  // pierwszym otwarciu modelu (koniec „zacięcia" w momencie tapnięcia).
+  const size = lowPower ? 512 : 1024;
+  const k = lowPower ? 0.25 : 1; // gęstość ziarna proporcjonalna do pola
   const rnd = Math.random;
   const alb = newCanvas(size), hgt = newCanvas(size), rgh = newCanvas(size);
   const a = alb.getContext("2d")!, h = hgt.getContext("2d")!, r = rgh.getContext("2d")!;
@@ -112,7 +116,7 @@ function makeConcrete() {
     a.fillStyle = g; a.beginPath(); a.arc(x, y, rad, 0, Math.PI * 2); a.fill();
   }
   // 2) „ghost aggregate" — ledwo widoczne kruszywo pod skórką (ta sama szarość)
-  for (let i = 0; i < 500; i++) {
+  for (let i = 0; i < 500 * k; i++) {
     const x = rnd() * size, y = rnd() * size, rad = 8 + rnd() * 18;
     const v = 168 + ((rnd() * 8) | 0) - 4; // ±4
     a.fillStyle = `rgba(${v},${v},${v - 3},0.22)`;
@@ -122,7 +126,7 @@ function makeConcrete() {
     h.beginPath(); h.arc(x, y, rad, 0, Math.PI * 2); h.fill();
   }
   // 3) drobne ziarno — mała amplituda, bez koloru
-  for (let i = 0; i < 55000; i++) {
+  for (let i = 0; i < 55000 * k; i++) {
     const x = rnd() * size, y = rnd() * size, v = 165 + rnd() * 12; // ±6
     a.fillStyle = `rgba(${v},${v},${v - 3},0.3)`;
     a.fillRect(x, y, 1, 1);
@@ -148,7 +152,7 @@ function makeConcrete() {
     for (let i = 0; i < 5; i++) pit(cx + (rnd() - 0.5) * 44, cy + (rnd() - 0.5) * 44, 0.8 + rnd() * 2);
   }
   // 6) drobna wariacja chropowatości ±0.04 (kruszy jednolity połysk)
-  for (let i = 0; i < 9000; i++) {
+  for (let i = 0; i < 9000 * k; i++) {
     const x = rnd() * size, y = rnd() * size, v = 218 + ((rnd() * 20) | 0) - 10;
     r.fillStyle = `rgba(${v},${v},${v},0.3)`; r.fillRect(x, y, 2, 2);
   }
@@ -196,8 +200,9 @@ function makeGalv() {
    Duże, miękkie „kwiaty" spangle (niski kontrast) + KIERUNKOWE smugi szczotki
    + wyraźniejsze rysy/zadrapania + zmienna chropowatość. Tak jak na zdjęciach IRL
    (zwłaszcza wir szczotkowania widoczny z góry). */
-function makeGalvPlate() {
-  const size = 512;
+function makeGalvPlate(lowPower = false) {
+  const size = lowPower ? 256 : 512;
+  const kd = lowPower ? 0.4 : 1; // mniej smug/rys na telefonie (tańszy Sobel + pętle)
   const rnd = Math.random;
   const rgh = newCanvas(size), hgt = newCanvas(size);
   const r = rgh.getContext("2d")!, h = hgt.getContext("2d")!;
@@ -205,7 +210,7 @@ function makeGalvPlate() {
   h.fillStyle = "#808080"; h.fillRect(0, 0, size, size);
 
   // 1) duże, miękkie kwiaty ocynku (spangle) — niski kontrast
-  for (let i = 0; i < 90; i++) {
+  for (let i = 0; i < 90 * kd; i++) {
     const cx = rnd() * size, cy = rnd() * size;
     const n = 5 + ((rnd() * 4) | 0), rad = 24 + rnd() * 48;
     const rv = 100 + ((rnd() * 30) | 0); // 0.39–0.51 — wąski zakres
@@ -222,7 +227,7 @@ function makeGalvPlate() {
     r.fill(); h.fill();
   }
   // 2) KIERUNKOWE smugi szczotki (lekko ukośne) — sygnatura giętej blachy
-  for (let i = 0; i < 1600; i++) {
+  for (let i = 0; i < 1600 * kd; i++) {
     const y = rnd() * size, x = rnd() * size, len = 30 + rnd() * 120;
     const drift = (rnd() - 0.5) * 6;
     const hv = 120 + ((rnd() * 22) | 0) - 11;
@@ -236,7 +241,7 @@ function makeGalvPlate() {
     }
   }
   // 3) wyraźne rysy/zadrapania (ciemniejsze w rough = gładsze, błyszczące przetarcia)
-  for (let i = 0; i < 60; i++) {
+  for (let i = 0; i < 60 * kd; i++) {
     const x = rnd() * size, y = rnd() * size, len = 20 + rnd() * 80;
     const ang = (rnd() - 0.5) * 0.9;
     const dx = Math.cos(ang) * len, dy = Math.sin(ang) * len;
@@ -246,7 +251,7 @@ function makeGalvPlate() {
     h.beginPath(); h.moveTo(x, y); h.lineTo(x + dx, y + dy); h.stroke();
   }
   // 4) mikro-ziarno (metaliczne migotanie)
-  for (let i = 0; i < 6000; i++) {
+  for (let i = 0; i < 6000 * kd; i++) {
     const v = 95 + ((rnd() * 36) | 0);
     r.fillStyle = `rgba(${v},${v},${v},0.15)`;
     r.fillRect(rnd() * size, rnd() * size, 1, 1);
@@ -461,10 +466,12 @@ export function BlockModel({
   variant = "standard",
   liftMm = 0,
   grout = false,
+  lowPower = false,
 }: {
   variant?: Variant;
   liftMm?: number;
   grout?: boolean;
+  lowPower?: boolean;
 }) {
   // wkręt chwytaka: POZIOMO (jak śruby obok) — łeb prosto na zewnątrz (−X), ostrze w głąb czapy
   const gripQuat = useMemo(
@@ -475,9 +482,9 @@ export function BlockModel({
   const gripY = 0.22;
 
   const { geos, mats, textures, groutFaces } = useMemo(() => {
-    const concreteTex = makeConcrete();
+    const concreteTex = makeConcrete(lowPower);
     const galvTex = makeGalv();
-    const galvPlateTex = makeGalvPlate();
+    const galvPlateTex = makeGalvPlate(lowPower);
     const logoTex = makeLogoBadge();
     const badgeShadowTex = makeBadgeShadow();
     // klony tekstur dla BOKÓW podlewki — repeat.y sterowany wg `lift` (bez rozciągania).
@@ -576,7 +583,9 @@ export function BlockModel({
     // BoxGeometry kolejność ścian: [+X,-X,+Y,-Y,+Z,-Z] → boki 0,1,4,5; góra/dół 2,3
     const groutFaces = [mats.groutSide, mats.groutSide, mats.groutCap, mats.groutCap, mats.groutSide, mats.groutSide];
     return { geos, mats, textures, groutFaces };
-  }, []);
+    // `lowPower` jest stałe przez całe życie komponentu (ustalane raz przy starcie),
+    // więc to nadal jednorazowe wyliczenie — tylko poprawne wg trybu urządzenia.
+  }, [lowPower]);
 
   // geos/mats/textures pochodzą z useMemo([]) → są stałe; sprzątanie tylko przy odmontowaniu
   useEffect(() => {

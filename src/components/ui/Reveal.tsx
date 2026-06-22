@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import clsx from "clsx";
 
@@ -15,6 +16,28 @@ export function Reveal({
   y?: number;
 }) {
   const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  // SSR i pierwsza klatka renderują treść WIDOCZNĄ (bez opacity:0 w statycznym
+  // HTML) — dzięki temu nagłówki/treść nigdy nie zostają puste, gdy JS się nie
+  // wykona (odporność + SEO). Animację „wejścia" włączamy tylko dla elementów,
+  // które przy montażu są PONIŻEJ widoku (te nad zgięciem zostają od razu
+  // namalowane — bez mignięcia). Reszta odsłania się przy przewijaniu jak dotąd.
+  const [mode, setMode] = useState<"static" | "animate">("static");
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const inView = r.top < window.innerHeight && r.bottom > 0;
+    if (!inView) setMode("animate");
+  }, []);
+
+  if (mode === "static") {
+    return (
+      <div ref={ref} className={className}>
+        {children}
+      </div>
+    );
+  }
   return (
     <motion.div
       className={className}
