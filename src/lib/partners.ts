@@ -35,6 +35,6 @@ export const partners: Partner[] = [
   { name: "Cont4You", city: "Warszawa", coords: [52.2297, 21.0122], category: "producent" },
   // Ofiar Firleja 7, 26-600 Radom
   { name: "NoviPawilony", city: "Radom", coords: [51.4185, 21.178], category: "producent" },
-  // ul. Portowa 10, 85-757 Bydgoszcz (La Mare — pływające/modułowe domy)
-  { name: "La Mare", city: "Bydgoszcz", coords: [53.1238, 18.0947], category: "producent" },
+  // ul. Portowa 10, 85-757 Bydgoszcz (Fordon) — La Mare, pływające/modułowe domy
+  { name: "La Mare Houseboats", city: "Bydgoszcz", coords: [53.122, 18.0963], category: "producent" },
 ];
