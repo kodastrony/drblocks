@@ -1,8 +1,8 @@
 // DrBlocks partner network. Locale-independent (names, cities, coordinates).
 // Display copy (headings, legend, categories) comes from the content dictionary.
 //
-// All eight are PRODUCERS of modular buildings / pavilions / containers — none is
-// an earthworks contractor. Coordinates are the exact street addresses (so pins
+// All nine are PRODUCERS of modular buildings / pavilions / containers / houseboats
+// — none is an earthworks contractor. Coordinates are the exact street addresses (so pins
 // sit at the real spot); the list shows only the city. Two pairs share a city
 // (Radom: Artpawilony + NoviPawilony · Bytom: JR + Komato) — their pins are at the
 // real per-address points and the labels are spread by the collision layout.
@@ -35,4 +35,6 @@ export const partners: Partner[] = [
   { name: "Cont4You", city: "Warszawa", coords: [52.2297, 21.0122], category: "producent" },
   // Ofiar Firleja 7, 26-600 Radom
   { name: "NoviPawilony", city: "Radom", coords: [51.4185, 21.178], category: "producent" },
+  // ul. Portowa 10, 85-757 Bydgoszcz (La Mare — pływające/modułowe domy)
+  { name: "La Mare", city: "Bydgoszcz", coords: [53.1238, 18.0947], category: "producent" },
 ];
